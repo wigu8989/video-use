@@ -1,0 +1,15 @@
+=====START cerita:`<p>Untuk menyambut Diwali
+=====END opsi:['32','48','60','64']
+ cerita:`<p>Untuk menyambut Diwali, Priya menggambar <b>rangoli</b> dari bubuk berwarna di depan rumahnya. Rangoli itu tersusun dari beberapa <b>lapis</b> kelopak yang melingkar. Setiap lapis punya warna sendiri.</p><ul><li><b>Lapis 1</b> (paling dalam) punya <b>4</b> kelopak.</li><li>Setiap lapis berikutnya punya kelopak <b>dua kali lebih banyak</b> dari lapis sebelumnya. Contoh: lapis 2 punya 4 × 2 = <b>8</b> kelopak.</li></ul><p>Priya baru menggambar 3 lapis. Garis putus-putus biru adalah tempat <b>lapis ke-4</b> yang belum digambar.</p>`,
+ visual(){const L=[[4,30,9,17,'#C2185B'],[8,62,8,15,'#F57C00'],[16,96,6,12,'#F5B700'],[32,130,4.6,10,'#1E88E5']];let s=`<svg class="fig" viewBox="-6 -6 312 312" style="max-width:330px" role="img" aria-label="Rangoli tiga lapis dengan tempat lapis keempat"><circle cx="150" cy="150" r="152" style="fill:var(--paper)"/><circle id="q6ring" cx="150" cy="150" r="130" fill="none" stroke="#1E88E5" stroke-width="3" stroke-dasharray="5 7"/>`;
+  L.forEach(([n,r,rx,ry,c],li)=>{s+=`<g id="q6l${li}" ${li===3?'style="display:none"':''}>`;for(let i=0;i<n;i++){const a=i*360/n,x=(150+r*Math.cos(a*Math.PI/180)).toFixed(1),y=(150+r*Math.sin(a*Math.PI/180)).toFixed(1),e=`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${c}" transform="rotate(${a+90} ${x} ${y})"/>`;s+=li===3?`<g class="pop" style="animation-delay:${(i*.035).toFixed(2)}s">${e}</g>`:e}s+='</g>'});
+  s+=`<circle cx="150" cy="150" r="10" fill="#7B2CBF"/></svg>`;
+  const dot=c=>`<span style="width:14px;height:14px;border-radius:50%;background:${c};display:inline-block"></span>`;
+  s+=`<div class="row"><span class="chip">${dot('#C2185B')}Lapis 1: 4 kelopak</span><span class="chip">${dot('#F57C00')}Lapis 2: 8 kelopak</span><span class="chip">${dot('#F5B700')}Lapis 3: 16 kelopak</span><span class="chip" id="q6c4" style="border:2px dashed #1E88E5">${dot('#1E88E5')}Lapis 4: ? kelopak</span></div><div class="row"><span class="chip" id="q6sum" style="border-color:var(--c);font-size:19px">Jumlah semua kelopak: ?</span></div>`;return s},
+ tanya:'Jika lapis ke-4 sudah selesai digambar, berapa jumlah <b>semua</b> kelopak pada rangoli itu (lapis 1 + lapis 2 + lapis 3 + lapis 4)?',
+ opsi:['32','48','60','64'],jawab:2,
+=====DONE
+=====START  reveal(el){const l=$(el,'#q6l3')
+=====END  reveal(el){const l=$(el,'#q6l3')
+ reveal(el){const l=$(el,'#q6l3'),g=$(el,'#q6ring'),c=$(el,'#q6c4'),t=$(el,'#q6sum');if(l)l.style.display='';if(g)g.style.display='none';if(c)c.lastChild.textContent='Lapis 4: 32 kelopak';if(t)later(()=>{t.textContent='Jumlah semua kelopak: 4 + 8 + 16 + 32 = 60'},1300)}},
+=====DONE

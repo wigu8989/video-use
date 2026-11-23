@@ -1,0 +1,384 @@
+
+const HI='<circle r="13" fill="url(#xHi)"/>';
+const IC0={
+ monyet:`<circle cx="-13" cy="-4" r="6" fill="#8B5A2B"/><circle cx="13" cy="-4" r="6" fill="#8B5A2B"/><circle cx="-13" cy="-4" r="3" fill="#E8B88A"/><circle cx="13" cy="-4" r="3" fill="#E8B88A"/><circle r="13" fill="#A0703F"/><ellipse cy="4" rx="9" ry="7.5" fill="#E8B88A"/><ellipse cx="-4.5" cy="-3" rx="3.4" ry="4" fill="#E8B88A"/><ellipse cx="4.5" cy="-3" rx="3.4" ry="4" fill="#E8B88A"/><circle cx="-4" cy="-2" r="1.7" fill="#1B1B1B"/><circle cx="4" cy="-2" r="1.7" fill="#1B1B1B"/><path d="M-4 6 q4 3 8 0" stroke="#5A3416" stroke-width="1.6" fill="none" stroke-linecap="round"/>${HI}`,
+ gajah:`<ellipse cx="-12" cy="-1" rx="8" ry="10" fill="#B6C0CA"/><ellipse cx="12" cy="-1" rx="8" ry="10" fill="#B6C0CA"/><ellipse cy="0" rx="12" ry="12" fill="#9AA6B2"/><path d="M0 8 q0 8 -6 10" stroke="#9AA6B2" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="-5" cy="-2" r="1.9" fill="#111"/><circle cx="5" cy="-2" r="1.9" fill="#111"/>${HI}`,
+ burung:`<path d="M-14 4 l-6 -4 v8z" fill="#2A6FBF"/><ellipse cx="-2" cy="4" rx="12" ry="9" fill="#3D8BE0"/><circle cx="8" cy="-5" r="7" fill="#3D8BE0"/><path d="M14 -5 l6 2 l-6 2z" fill="#F5A623"/><circle cx="9" cy="-6" r="1.6" fill="#111"/><path d="M-6 1 q-6 -10 6 -8" fill="#2A6FBF"/>`,
+ katak:`<ellipse cy="5" rx="14" ry="9" fill="#3FA34D"/><circle cx="-7" cy="-5" r="6" fill="#3FA34D"/><circle cx="7" cy="-5" r="6" fill="#3FA34D"/><circle cx="-7" cy="-6" r="3" fill="#fff"/><circle cx="7" cy="-6" r="3" fill="#fff"/><circle cx="-7" cy="-6" r="1.5" fill="#111"/><circle cx="7" cy="-6" r="1.5" fill="#111"/><path d="M-6 6 q6 4 12 0" stroke="#1F6B33" stroke-width="1.6" fill="none"/>`,
+ ikan:`<path d="M-13 0 L-20 -7 L-19 0 L-20 7Z" fill="#FF9F43"/><path d="M-14 0 Q-2 -11 13 0 Q-2 11 -14 0Z" fill="#FF9F43"/><path d="M-14 0 Q-2 -11 13 0 Q-2 11 -14 0Z" fill="url(#xShade)"/><circle cx="7" cy="-2" r="2" fill="#111"/>`,
+ bebek:`<ellipse cy="5" rx="13" ry="8" fill="#F5C518"/><circle cx="8" cy="-6" r="7" fill="#F5C518"/><path d="M14 -6 l7 1 l-7 3z" fill="#F57C00"/><circle cx="9" cy="-7" r="1.4" fill="#111"/><path d="M-6 3 q4 -6 10 -2" stroke="#D9A800" stroke-width="2" fill="none"/>`,
+ pisang:`<path d="M-14 -8 Q-12 14 14 8 Q-2 7 -9 -10 Z" fill="#F5C518" stroke="#B88400" stroke-width="1.5"/><path d="M-14 -8 l-2 -3" stroke="#6B4220" stroke-width="2.5"/>`,
+ mangga:`<g transform="rotate(20)"><ellipse cy="2" rx="11" ry="14" fill="#F5A623"/><ellipse cy="2" rx="11" ry="14" fill="url(#xHi)"/></g><path d="M2 -12 q6 -6 12 -4 q-6 4 -12 4z" fill="#30A46C"/>`,
+ kelapa:`<circle r="13" fill="#7A4A2A"/>${HI}<circle cx="-4" cy="-3" r="2" fill="#3A2416"/><circle cx="4" cy="-3" r="2" fill="#3A2416"/><circle cy="4" r="2" fill="#3A2416"/>`,
+ semangka:`<path d="M-16 -4 A16 16 0 0 0 16 -4 Z" fill="#3FA34D"/><path d="M-13 -4 A13 13 0 0 0 13 -4 Z" fill="#EF5B5B"/>${[[-6,0],[0,4],[6,0]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="1.3" ry="2" fill="#2A1A10"/>`).join('')}`,
+ nanas:`<path d="M0 -6 l-6 -12 M0 -6 l0 -13 M0 -6 l6 -12" stroke="#3FA34D" stroke-width="3.5" stroke-linecap="round"/><ellipse cy="5" rx="9" ry="12" fill="#F5B83D"/><path d="M-7 0 l14 10 M7 0 l-14 10 M-8 8 l14 -8" stroke="#C98E00" stroke-width="1.2"/>`,
+};
+
+/* ---------- gambar ---------- */
+const G=(inner,s=56,cls='')=>`<svg class="${cls}" viewBox="-20 -20 40 40" width="${s}" height="${s}" aria-hidden="true">${inner}</svg>`;
+const DEFS=`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="xHi" cx=".35" cy=".28" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".5" stop-color="#fff" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><linearGradient id="xShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient><linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46C3E0"/><stop offset="1" stop-color="#0E6F96"/></linearGradient><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8EDBF5"/><stop offset="1" stop-color="#D6F5FF"/></linearGradient><radialGradient id="sandG" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#FFF1C9"/><stop offset="1" stop-color="#E7C17E"/></radialGradient></defs></svg>`;
+const COL={red:'#E5484D',blue:'#3D7BE0',yellow:'#F5C518',green:'#3FA34D',orange:'#F58A1F',purple:'#8E5BD8',grey:'#BCC4CC'};
+const apple=(c=COL.red)=>`<path d="M0 -7 C-6 -13 -16 -10 -15 1 C-14 11 -6 16 0 12 C6 16 14 11 15 1 C16 -10 6 -13 0 -7Z" fill="${c}"/><path d="M0 -7 C-6 -13 -16 -10 -15 1 C-14 11 -6 16 0 12 C6 16 14 11 15 1 C16 -10 6 -13 0 -7Z" fill="url(#xHi)"/><path d="M0 -7 q1 -6 4 -9" stroke="#6B4220" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M2 -12 q7 -5 11 0 q-6 4 -11 0Z" fill="${c===COL.grey?'#A9B1B9':'#3FA34D'}"/>`;
+const banana=(c=COL.yellow)=>IC0.pisang.split('#F5C518').join(c).split('#B88400').join(c===COL.grey?'#9AA3AC':'#B88400');
+const frog=(c=COL.green)=>IC0.katak.split('#3FA34D').join(c).split('#1F6B33').join(c===COL.grey?'#7E8790':'#1F6B33');
+const balloon=c=>`<path d="M0 8 q-5 5 0 11" stroke="#6B7A88" stroke-width="1.3" fill="none"/><ellipse cy="-5" rx="11.5" ry="13.5" fill="${c}"/><ellipse cy="-5" rx="11.5" ry="13.5" fill="url(#xShade)" opacity=".7"/><ellipse cx="-4.5" cy="-11" rx="3" ry="5" fill="#fff" opacity=".5" transform="rotate(20 -4.5 -11)"/><path d="M-2.5 8.2 h5 l-2.5 3z" fill="${c}"/>`;
+const ball=c=>`<circle r="15" fill="${c}"/><path d="M-15 0 Q0 -8 15 0 M-6 -14 Q-2 0 -6 14 M6 -14 Q2 0 6 14" stroke="#fff" stroke-width="2.4" fill="none" opacity=".9"/><circle r="15" fill="url(#xHi)"/>`;
+const paint=c=>`<path d="M-12 -4 h24 l-2 16 q-10 4 -20 0z" fill="#EDEFF2" stroke="#9AA3AC" stroke-width="1.2"/><ellipse cy="-4" rx="12" ry="4" fill="${c}"/><path d="M-6 -4 q-1 8 2 10" stroke="${c}" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M6 -16 l-3 10" stroke="#8B5A2B" stroke-width="3" stroke-linecap="round"/><path d="M3 -7 l-1 4" stroke="${c}" stroke-width="4" stroke-linecap="round"/>`;
+const NUMC=['','#E5484D','#F58A1F','#E0A100','#3FA34D','#13A6A0','#3D7BE0','#5B5BD6','#8E5BD8','#D9448A','#7A4A2A'];
+const numCard=n=>{let d='';const per=n>5?5:n;for(let i=0;i<n;i++){const r=Math.floor(i/5),c=i%5,w=(r===0?per:n-5);d+=`<circle cx="${((c-(w-1)/2)*5.2).toFixed(1)}" cy="${10+r*5}" r="2" fill="${NUMC[n]}"/>`}
+  return `<rect x="-17" y="-18" width="34" height="36" rx="8" fill="#fff" stroke="${NUMC[n]}" stroke-width="2.5"/><text y="${n>5?-1:1}" text-anchor="middle" font-family="Fredoka,system-ui,sans-serif" font-weight="700" font-size="${n===10?17:21}" fill="${NUMC[n]}">${n}</text>${d}`};
+const drop=(c,s)=>`<ellipse cy="17" rx="13" ry="3" fill="${c}" opacity=".45"/><path d="M0 -18 C9 -5 13 1 13 6 a13 13 0 0 1 -26 0 C-13 1 -9 -5 0 -18Z" fill="${c}" stroke="${s}" stroke-width="1.6"/><ellipse cx="-5" cy="3" rx="3" ry="5.5" fill="#fff" opacity=".65"/>`;
+const grains=(pts)=>pts.map(([x,y,r])=>`<ellipse cx="${x}" cy="${y}" rx="2.6" ry="1.3" fill="#fff" stroke="#CFC6B0" stroke-width=".6" transform="rotate(${r} ${x} ${y})"/>`).join('');
+const glass=c=>`<path d="M-11 -16 h22 l-3 32 h-16z" fill="#EAF6FB" stroke="#8FB3C4" stroke-width="1.6"/><path d="M-10 -5 h20 l-2.2 21 h-15.6z" fill="${c}"/><path d="M-7 -13 l1.5 25" stroke="#fff" stroke-width="2.4" opacity=".8" stroke-linecap="round"/>`;
+const IC={...IC0,
+ egg:`<ellipse cy="2" rx="11.5" ry="15" fill="#FFF4E0" stroke="#CDB48C" stroke-width="1.6"/><ellipse cx="-4" cy="-4" rx="3" ry="5" fill="#fff"/>`,
+ cookie:`<circle r="15" fill="#D9A05B" stroke="#A86B2D" stroke-width="1.6"/><circle r="15" fill="url(#xHi)" opacity=".5"/>${[[-6,-6],[5,-7],[-1,1],[7,4],[-7,6],[1,9]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.3" fill="#5A3416"/>`).join('')}`,
+ candy:`<path d="M-9 0 l-10 -8 v16z M9 0 l10 -8 v16z" fill="#F2557A" stroke="#B8284F" stroke-width="1.2"/><circle r="10" fill="#F2557A" stroke="#B8284F" stroke-width="1.2"/><path d="M-5 -8 q6 8 0 16 M2 -10 q6 10 0 20" stroke="#fff" stroke-width="2.4" fill="none"/>`,
+ orangef:`<circle cy="2" r="15" fill="#F58A1F"/><circle cy="2" r="15" fill="url(#xHi)"/>${[[-6,-2],[4,-5],[6,6],[-4,8],[0,1]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r=".9" fill="#C8650A"/>`).join('')}<path d="M0 -13 v-3" stroke="#6B4220" stroke-width="2"/><path d="M1 -14 q7 -8 13 -3 q-6 6 -13 3z" fill="#3FA34D"/>`,
+ water:drop('#5BB8F0','#2A7FC0'),milk:drop('#FFFFFF','#9FB0BC'),juice:drop('#FFA43A','#D07812'),honey:drop('#F2B21B','#A9700A'),
+ rice:`<path d="M-18 15 Q-12 -9 0 -12 Q12 -9 18 15Z" fill="#FBF7EC" stroke="#CFC6B0" stroke-width="1.6"/>${grains([[-8,8,20],[-2,2,-30],[5,9,10],[9,3,-20],[0,-6,40],[-10,13,-10],[12,12,30],[3,14,-40],[-5,-2,0]])}`,
+ sugar:`${[[-12,10],[-4,10],[4,10],[12,10],[-8,2],[0,2],[8,2],[-4,-6],[4,-6],[0,-14]].map(([x,y])=>`<rect x="${x-4}" y="${y-4}" width="8" height="8" rx="1.5" fill="#FFFFFF" stroke="#A9B8C6" stroke-width="1.2"/>`).join('')}`,
+ g_milk:glass('#FFFFFF'),g_water:glass('#7DCBF5'),g_juice:glass('#FFA43A'),
+ bottle:`<rect x="-4.5" y="-20" width="9" height="5" rx="1.5" fill="#3D7BE0"/><path d="M-4 -15 h8 q9 4 9 12 v17 q0 4 -4 4 h-18 q-4 0 -4 -4 v-17 q0 -8 9 -12z" fill="#CFEFFF" stroke="#4E9AC6" stroke-width="1.6"/><path d="M-12 2 h24 v8 h-24z" fill="#3D7BE0"/><path d="M-6 -4 v18" stroke="#fff" stroke-width="2" opacity=".7"/>`,
+ bowl:`<path d="M-16 -1 q16 -16 32 0z" fill="#FBF7EC" stroke="#CFC6B0" stroke-width="1.4"/>${grains([[-6,-5,20],[2,-8,-30],[8,-4,10],[-1,-3,40]])}<path d="M-18 -1 h36 q-2 17 -18 17 q-16 0 -18 -17z" fill="#E5484D" stroke="#A8282D" stroke-width="1.4"/><path d="M-15 6 h30" stroke="#FFD5D5" stroke-width="1.6"/>`,
+ sugarbag:`<path d="M-13 -13 h26 l2 30 h-30z" fill="#F4EBDD" stroke="#A9935F" stroke-width="1.6"/><path d="M-13 -13 l3 -5 h20 l3 5" fill="#E6D8BF" stroke="#A9935F" stroke-width="1.4"/><rect x="-11" y="-1" width="22" height="9" rx="2" fill="#3D7BE0"/><text y="5.8" text-anchor="middle" font-size="6.6" font-family="Fredoka,system-ui,sans-serif" font-weight="700" fill="#fff">SUGAR</text>`,
+ jar:`<rect x="-12" y="-17" width="24" height="7" rx="2" fill="#B5783F" stroke="#7A4A22"/><path d="M-13 -10 h26 v22 q0 5 -5 5 h-16 q-5 0 -5 -5z" fill="#F2B21B" stroke="#A9700A" stroke-width="1.6"/><path d="M-12 -10 q4 6 7 0 q3 7 7 0 q3 5 6 0" fill="#B5783F" opacity=".5"/><rect x="-8" y="0" width="16" height="8" rx="2" fill="#FFF3C4"/>`,
+ jbox:`<path d="M-11 -11 h22 v28 h-22z" fill="#FFA43A" stroke="#C9700F" stroke-width="1.6"/><path d="M-11 -11 l4 -5 h22 l-4 5z" fill="#FFC26E" stroke="#C9700F" stroke-width="1.2"/><path d="M6 -16 l3 -6" stroke="#E5484D" stroke-width="2.5" stroke-linecap="round"/><circle cy="4" r="6" fill="#F58A1F" stroke="#fff" stroke-width="1.6"/>`,
+};
+const sm=(ic,x,y,s=.5)=>`<g transform="translate(${x} ${y}) scale(${s})">${ic}</g>`;
+const W={};
+const add=(en,id,pic)=>W[en]={en,id,pic};
+[['apple','apel',()=>apple()],['egg','telur',()=>IC.egg],['cookie','kue kering',()=>IC.cookie],['banana','pisang',()=>IC.pisang],['candy','permen',()=>IC.candy],['orange','jeruk',()=>IC.orangef],
+ ['water','air',()=>IC.water],['milk','susu',()=>IC.milk],['juice','jus',()=>IC.juice],['rice','nasi',()=>IC.rice],['sugar','gula',()=>IC.sugar],['honey','madu',()=>IC.honey],
+ ['countable','bisa dihitung',()=>sm(apple(),-10,-6,.45)+sm(apple(),9,-6,.45)+sm(apple(),0,9,.45)],['uncountable','tidak bisa dihitung',()=>sm(IC.water,-8,-2,.6)+sm(IC.rice,9,6,.55)],
+ ['an apple','sebuah apel',()=>apple()],['an egg','sebutir telur',()=>IC.egg],['an orange','sebuah jeruk',()=>IC.orangef],['a banana','sebuah pisang',()=>IC.pisang],['a cookie','sebuah kue kering',()=>IC.cookie],['some milk','sedikit susu',()=>IC.g_milk],
+ ['a glass of milk','segelas susu',()=>IC.g_milk],['a bottle of water','sebotol air',()=>IC.bottle],['a bowl of rice','semangkuk nasi',()=>IC.bowl],['a bag of sugar','sekantong gula',()=>IC.sugarbag],['a jar of honey','sestoples madu',()=>IC.jar],['a box of juice','sekotak jus',()=>IC.jbox],
+].forEach(([e,i,f])=>add(e,i,f));
+const pic=(k,s=56,c='')=>G(W[k].pic(),s,c);
+const row=(ic,n,s=64)=>()=>`<div class="bigpic row">${[...Array(n)].map(()=>G(ic,s)).join('')}</div>`;
+const NUMW=['one','two','three','four','five','six','seven','eight','nine','ten'];
+const CU=[{id:'c',label:'Countable',sub:'bisa dihitung'},{id:'u',label:'Uncountable',sub:'tidak bisa dihitung'}];
+
+/* ---------- data pulau ---------- */
+const ISL=[
+ {key:'market',art:'fruits',en:'Fruit Market',idn:'Pasar Buah',topic:'Countable',c:'#E9801C',cb:'#FFEBD6',icon:()=>apple(),words:['apple','egg','cookie','banana','candy','orange'],
+  rule:['We can count apples: one apple, two apples, three apples.','Benda yang bisa dihitung disebut countable. Kalau lebih dari satu, tambahkan -s: apple → apples.'],
+  Q:[{t:'listen',say:'egg',opts:['apple','egg','cookie','candy']},
+     {t:'match',pairs:['apple','cookie','candy']},
+     {t:'read',showHTML:row(apple(),3),ask:['How many apples? Choose the right words.','Ada berapa apel? Pilih jawaban yang benar.'],opts:['three apple','three apples','one apples'],ans:'three apples',ansMean:'tiga apel',note:'Lebih dari satu apel, tambahkan <b>-s</b>: one apple, two apple<b>s</b>, three apple<b>s</b>.'},
+     {t:'spell',word:'egg',extra:['a','k']},
+     {t:'count',item:'egg',n:4,total:7,zone:'basket',say:'Put four eggs in the basket.',sayHTML:'Put <u>four</u> eggs in the basket.',sub:'Artinya: "Masukkan empat telur ke keranjang."',ins:['Listen and do it. Drag the eggs into the basket.','Dengarkan perintahnya, lalu seret telur ke keranjang.'],counter:'Eggs in the basket',note:'<b>four eggs</b> = empat telur. Telur bisa dihitung: one egg, two eggs, three eggs, four eggs!',ansEN:'four eggs',answerSay:'one egg, two eggs, three eggs, four eggs',tray:'eggs'},
+     {t:'build',words:['I','have','two','cookies.'],mean:'Aku punya dua kue kering.',showHTML:row(IC.cookie,2,90)}]},
+ {key:'milk',art:'colors',en:'Milk Falls',idn:'Air Terjun Susu',topic:'Uncountable',c:'#2F8FD0',cb:'#DDF0FF',icon:()=>IC.milk,words:['water','milk','juice','rice','sugar','honey'],
+  rule:['We cannot count water, milk, or rice. We say some water.','Benda yang tidak bisa dihitung disebut uncountable. Tidak pakai -s dan tidak pakai a atau an.'],
+  Q:[{t:'listen',say:'milk',opts:['water','milk','juice','honey']},
+     {t:'match',pairs:['water','rice','honey']},
+     {t:'read',show:'sugar',opts:['rice','sugar','milk']},
+     {t:'spell',word:'rice',extra:['s','a']},
+     {t:'read',showHTML:()=>`<div class="bigpic">${G(IC.g_water,130)}</div>`,ask:['Which one is correct?','Mana yang benar?'],opts:['two waters','some water','a water'],ans:'some water',ansMean:'sedikit air',note:'Air tidak bisa dihitung satu per satu. Kita bilang <b>some water</b>, bukan "two waters" atau "a water".'},
+     {t:'build',words:['I','drink','some','milk.'],mean:'Aku minum susu.',showHTML:()=>`<div class="bigpic">${G(IC.g_milk,110)}</div>`}]},
+ {key:'ship',art:'ship',en:'Sorting Ship',idn:'Kapal Pemilah',topic:'Count it or not?',c:'#1E8E7E',cb:'#D8F3EE',icon:()=>sm(apple(),-7,-4,.55)+sm(IC.water,8,4,.55),words:['countable','uncountable'],
+  rule:['Countable: we can count it. Uncountable: we cannot count it.','Countable = bisa dihitung (apple, egg). Uncountable = tidak bisa dihitung (water, rice).'],
+  Q:[{t:'sort',bins:CU,items:[['i1','apple','c'],['i2','water','u'],['i3','egg','c'],['i4','rice','u'],['i5','cookie','c'],['i6','milk','u']],ansEN:'Countable: apple, egg, cookie · Uncountable: water, rice, milk',answerSay:'Countable: apple, egg, cookie. Uncountable: water, rice, milk.',note:'Apel, telur, dan kue kering bisa dihitung satu per satu. Air, nasi, dan susu tidak bisa.'},
+     {t:'read',show:'milk',ask:['Can we count milk?','Apakah susu bisa dihitung?'],opts:['Yes, we can.','No, we cannot.'],ans:'No, we cannot.',ansMean:'Tidak bisa.',note:'Susu adalah cairan. Kita tidak bisa bilang "satu susu, dua susu". Milk is <b>uncountable</b>.'},
+     {t:'read',showHTML:()=>`<div class="bigpic row">${['apple','juice','cookie'].map(k=>pic(k,80)).join('')}</div>`,ask:['Which one is uncountable?','Mana yang tidak bisa dihitung?'],opts:['apple','juice','cookie'],ans:'juice',ansMean:'jus',note:'Jus adalah minuman cair, jadi <b>uncountable</b>. Apple dan cookie bisa dihitung.'},
+     {t:'sort',bins:CU,items:[['j1','sugar','u'],['j2','banana','c'],['j3','honey','u'],['j4','candy','c'],['j5','juice','u'],['j6','orange','c']],ansEN:'Countable: banana, candy, orange · Uncountable: sugar, honey, juice',answerSay:'Countable: banana, candy, orange. Uncountable: sugar, honey, juice.',note:'Pisang, permen, dan jeruk bisa dihitung. Gula, madu, dan jus tidak bisa.'},
+     {t:'read',showHTML:()=>`<div class="bigpic row">${['sugar','egg','water'].map(k=>pic(k,80)).join('')}</div>`,ask:['Which one is countable?','Mana yang bisa dihitung?'],opts:['sugar','egg','water'],ans:'egg',ansMean:'telur',note:'Telur bisa dihitung: one egg, two eggs. Gula dan air tidak bisa.'},
+     {t:'build',words:['We','can','count','eggs.'],mean:'Kita bisa menghitung telur.',showHTML:row(IC.egg,3,70)}]},
+ {key:'bakery',art:'bakery',en:'Bakery Bay',idn:'Teluk Roti',topic:'a · an · some',c:'#C0533A',cb:'#FFE4DB',icon:()=>IC.cookie,words:['an apple','an egg','an orange','a banana','a cookie','some milk'],
+  rule:['Use an before a, e, i, o, u: an apple, an egg. Use a for other letters: a cookie. Use some for uncountable: some milk.','Pakai an sebelum huruf vokal (a, i, u, e, o). Pakai a untuk huruf lain. Pakai some untuk benda yang tidak bisa dihitung.'],
+  Q:[{t:'read',show:'egg',ask:['Choose the right words.','Pilih jawaban yang benar.'],opts:['a egg','an egg','two egg'],ans:'an egg',ansMean:'sebutir telur',note:'<b>egg</b> dimulai huruf vokal <b>e</b>, jadi pakai <b>an</b>: an egg.'},
+     {t:'read',show:'cookie',ask:['Choose the right words.','Pilih jawaban yang benar.'],opts:['an cookie','a cookie','two cookie'],ans:'a cookie',ansMean:'sebuah kue kering',note:'<b>cookie</b> dimulai huruf <b>c</b>, bukan huruf vokal, jadi pakai <b>a</b>: a cookie.'},
+     {t:'sort',bins:[{id:'a',label:'a',sub:'a banana'},{id:'an',label:'an',sub:'an apple'},{id:'s',label:'some',sub:'some milk'}],items:[['k1','banana','a'],['k2','apple','an'],['k3','milk','s'],['k4','cookie','a'],['k5','orange','an'],['k6','water','s']],
+      ins:['Sort them: a, an, or some?','Pilah: pakai a, an, atau some?'],ansEN:'a banana, a cookie · an apple, an orange · some milk, some water',answerSay:'a banana, a cookie. an apple, an orange. some milk, some water.',note:'<b>an</b> untuk apple dan orange (huruf vokal). <b>a</b> untuk banana dan cookie. <b>some</b> untuk milk dan water karena tidak bisa dihitung.'},
+     {t:'read',showHTML:()=>`<div class="bigpic">${G(IC.g_juice,130)}</div>`,ask:['Choose the right words.','Pilih jawaban yang benar.'],opts:['a juice','an juice','some juice'],ans:'some juice',ansMean:'sedikit jus',note:'Jus tidak bisa dihitung, jadi pakai <b>some</b>: some juice.'},
+     {t:'listen',say:'I have an orange.',mean:'Aku punya sebuah jeruk.',sentence:true,opts:['a orange','an orange','some orange'],ans:'an orange',ansEN:'an orange',ins:['Listen. What do you hear?','Dengarkan. Kata apa yang kamu dengar?'],note:'"I have <b>an orange</b>." artinya "Aku punya sebuah jeruk." <b>orange</b> dimulai huruf vokal <b>o</b>, jadi pakai <b>an</b>.'},
+     {t:'build',words:['I','want','an','apple.'],mean:'Aku mau sebuah apel.',showHTML:()=>`<div class="bigpic">${G(apple(),110)}</div>`}]},
+ {key:'picnic',art:'picnic',en:'Picnic Hill',idn:'Bukit Piknik',topic:'a glass of…',c:'#6A9F2A',cb:'#E7F5D6',icon:()=>IC.g_milk,words:['a glass of milk','a bottle of water','a bowl of rice','a bag of sugar','a jar of honey','a box of juice'],
+  rule:['We cannot count milk, but we can count the glass: a glass of milk, two glasses of milk.','Susu tidak bisa dihitung, tapi wadahnya bisa: a glass of milk (segelas susu).'],
+  Q:[{t:'match',pairs:['a glass of milk','a bowl of rice','a bottle of water'],ins:['Drag the words to the right picture.','Seret kata ke gambar yang cocok.']},
+     {t:'read',show:'a jar of honey',ask:['What is this? Choose the right words.','Ini apa? Pilih jawaban yang benar.'],opts:['a glass of honey','a jar of honey','a bowl of honey'],ans:'a jar of honey',ansMean:'sestoples madu',note:'Madu ada di dalam toples (jar). Kita bisa menghitung toplesnya: <b>a jar of honey</b>.'},
+     {t:'listen',say:'a bag of sugar',opts:['a bowl of sugar','a bag of sugar','a bottle of sugar'],note:'<b>a bag of sugar</b> artinya sekantong gula.'},
+     {t:'build',words:['I','want','a','glass','of','juice.'],mean:'Aku mau segelas jus.',showHTML:()=>`<div class="bigpic">${G(IC.g_juice,100)}</div>`},
+     {t:'collect',zone:'mat',items:[['p1','apple'],['p2','a bottle of water'],['p3','apple'],['p4','a glass of milk'],['p5','egg'],['p6','apple']],want:{apple:2,'a glass of milk':1},
+      say:'Put two apples and a glass of milk on the mat.',sayHTML:'Put <u>two apples</u> and <u>a glass of milk</u> on the mat.',sub:'Artinya: "Taruh dua apel dan segelas susu di atas tikar."',
+      ins:['Listen and do it. Drag the food to the picnic mat.','Dengarkan perintahnya, lalu seret makanan ke tikar piknik.'],ansEN:'two apples and a glass of milk',answerSay:'two apples and a glass of milk',note:'<b>two apples</b> = dua apel (pakai -s). <b>a glass of milk</b> = segelas susu.',tray:'food'},
+     {t:'read',showHTML:row(IC.bottle,2,100),ask:['Which one is correct?','Mana yang benar?'],opts:['two waters','two bottles of water','two water'],ans:'two bottles of water',ansMean:'dua botol air',note:'Air tidak bisa dihitung, tapi botolnya bisa! two bottle<b>s</b> of water.'}]},
+];
+
+const TYPE={listen:'Listen',read:'Read',match:'Match',spell:'Spell',build:'Sentence',count:'Count',collect:'Choose',sort:'Sort'};
+
+/* ---------- penyimpanan ---------- */
+const SKEY='countableCove.v1';
+let SAVE={};try{SAVE=JSON.parse(localStorage.getItem(SKEY)||'{}')||{}}catch(e){SAVE={}}
+const persist=()=>{try{localStorage.setItem(SKEY,JSON.stringify(SAVE))}catch(e){}};
+
+/* ---------- suara ---------- */
+const HAS_TTS='speechSynthesis' in window&&'SpeechSynthesisUtterance' in window;
+let VO=null;
+function pickVoice(){try{const vs=speechSynthesis.getVoices();VO=vs.find(v=>/en[-_]US/i.test(v.lang)&&/Google|Samantha|Aria|Jenny|Natural/i.test(v.name))||vs.find(v=>/en[-_]US/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null}catch(e){}}
+if(HAS_TTS){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice}catch(e){}}
+function say(t,rate=.8){return new Promise(res=>{if(!HAS_TTS){res();return}try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';if(VO)u.voice=VO;u.rate=rate;u.pitch=1.08;let done=false;const fin=()=>{if(!done){done=true;res()}};u.onend=fin;u.onerror=fin;setTimeout(fin,1200+t.length*160/rate);speechSynthesis.speak(u)}catch(e){res()}})}
+let AC=null;
+function tone(f,d=.12,type='sine',v=.18,when=0){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime+when,o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+d+.02)}catch(e){}}
+const sfx={pop:()=>tone(660,.08,'triangle',.15),ok:()=>{[523,659,784,1046].forEach((f,i)=>tone(f,.18,'triangle',.16,i*.09))},bad:()=>{tone(220,.18,'square',.07);tone(180,.22,'square',.06,.12)},fan:()=>{[523,659,784,659,784,1046].forEach((f,i)=>tone(f,.22,'triangle',.15,i*.13))}};
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
+const spkBtn=(text,label='Dengarkan',cls='')=>`<button class="spk ${cls}" data-say="${text.replace(/"/g,'&quot;')}">${SPK}${label}</button>`;
+
+/* ---------- confetti ---------- */
+function confetti(){const c=document.getElementById('fx'),x=c.getContext('2d');if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;c.width=innerWidth;c.height=innerHeight;const cols=['#FFC93C','#FF6F59','#2FB86A','#3D7BE0','#E0466E','#8E5BD8'];const P=[...Array(140)].map(()=>({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight*.35,vx:(Math.random()-.5)*12,vy:-Math.random()*12-4,r:Math.random()*6+4,c:cols[Math.random()*6|0],a:Math.random()*6,s:Math.random()*.3-.15}));let f=0;(function tick(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=p.s;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});if(++f<150)requestAnimationFrame(tick);else x.clearRect(0,0,c.width,c.height)})()}
+
+/* ---------- penyusun soal ---------- */
+const shuffle=(a,seed)=>{a=a.slice();let s=seed||7;for(let i=a.length-1;i>0;i--){s=(s*9301+49297)%233280;const j=Math.floor(s/233280*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function build0(q,isl,qi){
+  const seed=qi*13+isl.key.length*5+3;
+  if(q.t==='listen'){const ans=q.ans||q.say;return {...q,ans,ins:q.sentence?['Listen to the sentence. Which animal do you hear?','Dengarkan kalimatnya. Hewan apa yang kamu dengar?']:['Listen and choose the right word.','Dengarkan, lalu pilih kata yang benar.'],ansEN:q.sentence?q.say:ans,
+    exp:q.sentence?`<span class="en">${q.say}</span> artinya "${q.mean}"`:`<span class="en">${q.say}</span> artinya <b>${W[ans].id}</b>.`,answerSay:q.say}}
+  if(q.t==='read'){const ans=q.ans||q.show;return {...q,ans,ansEN:ans,ins:q.ask||['What is this? Choose the right word.','Gambar apa ini? Pilih kata yang benar.'],exp:`<span class="en">${ans}</span> artinya <b>${q.ansMean||W[ans].id}</b>.`,answerSay:ans}}
+  if(q.t==='match'){const T=shuffle(q.pairs,seed).map(w=>({id:'w_'+w,type:w,cls:'chip',html:w}));const ans={};q.pairs.forEach(w=>ans['w_'+w]='s_'+w);
+    return {...q,dnd:true,T,ans,slots:q.pairs.map(w=>'s_'+w),ansEN:q.pairs.join(' · '),ins:['Drag each word to the right picture.','Seret setiap kata ke gambar yang cocok.'],
+      L:(S)=>q.pairs.map(w=>`<div class="mcol"><div class="pc">${pic(w,80)}</div>${S('s_'+w,'w')}</div>`).join(''),
+      exp:q.pairs.map(w=>`<span class="en">${w}</span> = ${W[w].id}`).join(' · '),answerSay:q.pairs.join(', ')}}
+  if(q.t==='spell'){const L=q.word.split(''),T=shuffle([...L,...q.extra],seed+1).map((ch,i)=>({id:'L'+i,type:ch,cls:'tile',html:ch}));const sol={};L.forEach((ch,i)=>sol['p'+i]=ch);
+    return {...q,dnd:true,T,sol,slots:L.map((_,i)=>'p'+i),ansEN:q.word,ins:['Spell the word. Drag the letters.','Eja katanya. Seret huruf menjadi nama gambar ini.'],
+      L:(S)=>`<div class="bigpic">${pic(q.word,110)}</div><div class="spellrow" style="width:100%">${L.map((_,i)=>S('p'+i,'l')).join('')}</div>`,
+      exp:`${L.join(' - ')} → <span class="en">${q.word}</span> (${W[q.word].id})`,answerSay:q.word,tray:'letters'}}
+  if(q.t==='build'){const T=shuffle(q.words,seed+2).map((w,i)=>({id:'W'+i,type:w,cls:'chip',html:w}));const sol={};q.words.forEach((w,i)=>sol['b'+i]=w);const s=q.words.join(' ');
+    return {...q,dnd:true,T,sol,slots:q.words.map((_,i)=>'b'+i),say:s,ansEN:s,ins:['Make a sentence. Drag the words in order.','Susun kata menjadi kalimat yang benar.'],sub:`Artinya: "${q.mean}"`,
+      L:(S)=>`${q.showHTML?q.showHTML():`<div class="bigpic">${G(q.show(),110)}</div>`}<div class="sent" style="width:100%">${q.words.map((_,i)=>S('b'+i,'w')).join('')}</div>`,
+      exp:`<span class="en">${s}</span> artinya "${q.mean}". Kalimat bahasa Inggris dimulai dengan huruf besar dan diakhiri titik.`,answerSay:s,tray:'words'}}
+  if(q.t==='colorize'){const obj={apple:[apple,'red','apel'],banana:[banana,'yellow','pisang'],frog:[frog,'green','katak']};const paints=['red','yellow','green','blue'];
+    const T=shuffle(paints,seed).map(c=>({id:'c_'+c,type:c,cls:'paint',html:G(paint(COL[c]),38)+c}));const ans={c_red:'o_apple',c_yellow:'o_banana',c_green:'o_frog'};
+    const lines=[['The apple is red.','Apelnya merah.'],['The banana is yellow.','Pisangnya kuning.'],['The frog is green.','Kataknya hijau.']];
+    return {...q,dnd:true,T,ans,slots:Object.keys(obj).map(k=>'o_'+k),say:lines.map(l=>l[0]).join(' '),ansEN:'red apple · yellow banana · green frog',ins:['Read and listen. Drag the paint to color the pictures.','Baca dan dengarkan. Seret cat ke gambar agar warnanya benar.'],
+      top:`<div class="lines">${lines.map(l=>`<div>${spkBtn(l[0],'','mini')}<span class="en">${l[0]}</span><small>${l[1]}</small></div>`).join('')}</div>`,
+      L:(S,P)=>Object.entries(obj).map(([k,[f]])=>{const tid=Object.keys(P).find(t=>P[t]==='o_'+k),c=tid?COL[tid.slice(2)]:COL.grey;return `<div class="zone">${G(f(c),110,'obj')}${S('o_'+k,'w')}</div>`}).join(''),
+      exp:'red = merah, yellow = kuning, green = hijau. Cat <span class="en">blue</span> (biru) tidak dipakai.',answerSay:lines.map(l=>l[0]).join(' '),tray:'paint'}}
+  if(q.t==='count'){const z=q.zone,T=[...Array(q.total)].map((_,i)=>({id:'f'+i,type:q.item,cls:'pic',html:pic(q.item,54)}));const inZ=P=>Object.keys(P).filter(k=>P[k]===z);
+    return {...q,dnd:true,T,slots:[z],cap:{[z]:99},
+      onPlace:(P)=>{const n=inZ(P).length;if(n>0&&n<=10)say(NUMW[n-1],.9)},
+      top:`<div class="listen">${spkBtn(q.say,'Listen')}<span class="en" style="font-size:20px">${q.sayHTML}</span></div>`,
+      L:(S,P)=>`<div class="counter" style="width:100%">${q.counter}: ${inZ(P).length}</div>${S(z,z,'',99)}`,
+      ready:P=>inZ(P).length>0,
+      chk:P=>{const ids=inZ(P),n=ids.length,m={};ids.forEach((id,i)=>m[id]=i<q.n);return {ok:n===q.n,m,hint:n<q.n?`More! · Baru ${n}. Tambah lagi.`:`Too many! · Ada ${n}. Terlalu banyak.`}},
+      solve:()=>{const P={};for(let i=0;i<q.n;i++)P['f'+i]=z;return P},exp:q.note}}
+  if(q.t==='collect'){const z=q.zone,T=q.items.map(([id,k])=>({id,type:k,cls:'pic',html:pic(k,54)}));
+    return {...q,dnd:true,T,slots:[z],cap:{[z]:99},
+      top:`<div class="listen">${spkBtn(q.say,'Listen')}<span class="en" style="font-size:19px">${q.sayHTML}</span></div>`,
+      L:(S)=>S(z,z,'',99),ready:P=>Object.values(P).some(s=>s===z),
+      chk:P=>{const m={},cnt={};let ok=true;T.forEach(t=>{if(P[t.id]!==z)return;cnt[t.type]=(cnt[t.type]||0)+1;m[t.id]=cnt[t.type]<=(q.want[t.type]||0)});
+        Object.entries(q.want).forEach(([k,n])=>{if((cnt[k]||0)!==n)ok=false});if(Object.values(m).includes(false))ok=false;
+        const extra=Object.values(m).includes(false),miss=Object.entries(q.want).some(([k,n])=>(cnt[k]||0)<n);
+        return {ok,m,hint:extra?'Too many! · Ada benda yang tidak disebut atau kebanyakan.':miss?'More! · Masih ada yang kurang.':''}},
+      solve:()=>{const P={},c={};T.forEach(t=>{const w=q.want[t.type]||0;c[t.type]=(c[t.type]||0);if(c[t.type]<w){P[t.id]=z;c[t.type]++}});return P},exp:q.note}}
+  if(q.t==='sort'){const T=q.items.map(([id,k])=>({id,type:k,cls:'pic lab',html:pic(k,46)+`<span>${k}</span>`}));const ans=Object.fromEntries(q.items.map(([id,k,b])=>[id,'bin_'+b]));
+    return {...q,dnd:true,T,ans,slots:q.bins.map(b=>'bin_'+b.id),cap:Object.fromEntries(q.bins.map(b=>['bin_'+b.id,99])),
+      ins:q.ins||['Sort them. Can we count it?','Pilah benda: bisa dihitung atau tidak?'],
+      ready:P=>Object.keys(P).length===T.length,
+      L:(S)=>q.bins.map(b=>`<div class="bin"><div class="binh"><b>${b.label}</b><small>${b.sub}</small></div>${S('bin_'+b.id,'binz','',99)}</div>`).join(''),
+      exp:q.note,tray:'things'}}
+}
+function build(q,isl,qi){const r=build0(q,isl,qi);if(q.note)r.exp=q.note;if(q.ins)r.ins=q.ins;if(q.ansEN)r.ansEN=q.ansEN;if(q.answerSay)r.answerSay=q.answerSay;if(q.tray)r.tray=q.tray;return r}
+function chk(q,P){if(q.chk)return q.chk(P);const m={};let ok=true;
+  if(q.ans){q.T.forEach(t=>{const w=q.ans[t.id],s=P[t.id];if(s)m[t.id]=s===w;if((w||s)&&s!==w)ok=false})}
+  else{q.slots.forEach(sl=>{const id=Object.keys(P).find(k=>P[k]===sl);if(!id){ok=false;return}const g=q.T.find(t=>t.id===id).type===q.sol[sl];m[id]=g;if(!g)ok=false})}
+  return {ok,m}}
+function solve(q){if(q.solve)return q.solve();if(q.ans)return {...q.ans};const P={},used=new Set();q.slots.forEach(sl=>{const t=q.T.find(t=>t.type===q.sol[sl]&&!used.has(t.id));used.add(t.id);P[t.id]=sl});return P}
+
+/* ---------- aplikasi ---------- */
+const app=document.getElementById('app');
+let V={view:'map'};
+function islStars(k){return SAVE[k]?.stars||0}
+function totalStars(){return ISL.reduce((a,i)=>a+islStars(i.key),0)}
+function learned(k){return ISL.some(i=>i.words.includes(k)&&SAVE[i.key]?.done)}
+
+/* ---------- gambar petualangan ---------- */
+const islArt={
+ fruits:`<path d="M-52 14 q22 -38 52 -32 q32 -4 52 32z" fill="#7CC456" stroke="#3E7D2A" stroke-width="2"/>
+   ${[[-26,-24,'#E5484D'],[22,-26,'#F5A623']].map(([x,y,c])=>`<path d="M${x} ${y+28} v-20" stroke="#7A4A22" stroke-width="5"/><circle cx="${x}" cy="${y}" r="16" fill="#3E9B5A" stroke="#245E37" stroke-width="2"/>${[[-7,-4],[6,-7],[0,5],[8,4]].map(([a,b])=>`<circle cx="${x+a}" cy="${y+b}" r="3.4" fill="${c}"/>`).join('')}`).join('')}
+   <g transform="translate(0 0) scale(.95)">${IC0.nanas}</g>`,
+ colors:`<path d="M-42 14 L-30 -22 L8 -30 L30 -8 L44 14z" fill="#A9B4BF" stroke="#5E6676" stroke-width="2"/><path d="M-22 -16 l12 -4 M14 -18 l8 8" stroke="#7E8C99" stroke-width="2"/>
+   <rect x="0" y="-26" width="13" height="40" fill="#F4FAFF"/><path d="M3 -24 v36 M9 -20 v34" stroke="#fff" stroke-width="2" stroke-dasharray="6 5" class="fall"/>
+   ${['#E5484D','#F58A1F','#F5C518','#3FA34D','#3D7BE0','#8E5BD8'].map((c,i)=>`<path d="M${-44+i*5} -14 A${44-i*5} ${44-i*5} 0 0 1 ${44-i*5} -14" stroke="${c}" stroke-width="5" fill="none" opacity=".9"/>`).join('')}
+   <circle cx="6" cy="14" r="9" fill="#fff" opacity=".7"/><circle cx="16" cy="12" r="6" fill="#fff" opacity=".6"/>`,
+ ship:`<path d="M-44 4 h88 l-14 18 h-60z" fill="#7A3E1A" stroke="#3E1E0A" stroke-width="2"/><path d="M-38 10 h76" stroke="#C9A23A" stroke-width="2.5"/><path d="M0 4 v-58" stroke="#3E1E0A" stroke-width="3"/><path d="M3 -54 q28 22 0 54z" fill="#F7F1E0" stroke="#8A6234" stroke-width="1.6"/><path d="M-3 -50 q-26 20 0 48z" fill="#F7F1E0" stroke="#8A6234" stroke-width="1.6"/><path d="M0 -58 l16 -5 l-16 -5z" fill="#1E8E7E"/><g transform="translate(-28 -4) scale(.6)">${apple()}</g><g transform="translate(28 -6) scale(.6)">${IC.water}</g>`,
+ bakery:`<rect x="-32" y="-22" width="64" height="36" fill="#F7E0C0" stroke="#8A6234" stroke-width="2"/><path d="M-38 -22 L0 -50 L38 -22z" fill="#C0533A" stroke="#7A2E1E" stroke-width="2"/><rect x="16" y="-52" width="9" height="18" fill="#8A6234"/><circle cx="21" cy="-58" r="5" fill="#fff" opacity=".75"/><circle cx="26" cy="-66" r="4" fill="#fff" opacity=".5"/><path d="M-7 14 v-16 h14 v16z" fill="#7A4A22"/><ellipse cx="-19" cy="-6" rx="9" ry="6" fill="#D9A05B" stroke="#A86B2D" stroke-width="1.4"/><g transform="translate(19 -6) scale(.42)">${IC.cookie}</g>`,
+ picnic:`<path d="M-54 14 q22 -32 54 -30 q32 -2 54 30z" fill="#8BCB5E" stroke="#3E7D2A" stroke-width="2"/><path d="M26 2 v-26" stroke="#7A4A22" stroke-width="5"/><circle cx="26" cy="-34" r="16" fill="#3E9B5A" stroke="#245E37" stroke-width="2"/><path d="M-40 6 l32 -6 l10 10 l-32 6z" fill="#E5484D" stroke="#A8282D" stroke-width="1.5"/><path d="M-32 4 l30 -6 M-36 10 l30 -6" stroke="#fff" stroke-width="1.6"/><g transform="translate(-20 -8) scale(.5)">${IC.g_milk}</g><g transform="translate(-6 -6) scale(.4)">${apple()}</g>`
+};
+const islBase=`<ellipse cy="28" rx="66" ry="15" fill="#5FA9BC" opacity=".35"/><path d="M-58 18 q8 -16 58 -18 q50 2 58 18 q-58 18 -116 0z" fill="#EBCB8B" stroke="#A67A3E" stroke-width="2"/>`;
+function chestSVG(open){return open?`<g><circle r="40" fill="#FFE27A" opacity=".5" class="glow"/><path d="M-24 -4 h48 v24 h-48z" fill="#8B5A2B" stroke="#4E2E12" stroke-width="2.5"/><path d="M-24 -4 l4 -26 h40 l4 26" fill="#A0703F" stroke="#4E2E12" stroke-width="2.5"/>${[-14,-4,6,14,-9,1,10].map((x,i)=>`<circle cx="${x}" cy="${-6-(i>3?6:0)}" r="5" fill="#FFC93C" stroke="#C98A00"/>`).join('')}<rect x="-26" y="2" width="52" height="5" fill="#C9A23A"/></g>`
+  :`<g><path d="M-24 -6 h48 v26 h-48z" fill="#8B5A2B" stroke="#4E2E12" stroke-width="2.5"/><path d="M-24 -6 q24 -22 48 0z" fill="#A0703F" stroke="#4E2E12" stroke-width="2.5"/><rect x="-26" y="0" width="52" height="5" fill="#C9A23A"/><rect x="-5" y="-2" width="10" height="12" rx="2" fill="#FFD86B" stroke="#8A6A10"/></g>`}
+function mapSVG(){const pos=[[112,290],[232,168],[358,292],[474,168],[566,300]];const next=ISL.findIndex(i=>!SAVE[i.key]?.done);const all=next<0;const bp=pos[all?4:next];
+  const T=[585,80];
+  const route=`<path d="M${pos[0][0]} ${pos[0][1]} Q172 220 ${pos[1][0]} ${pos[1][1]} Q300 250 ${pos[2][0]} ${pos[2][1]} Q410 230 ${pos[3][0]} ${pos[3][1]} Q540 220 ${pos[4][0]} ${pos[4][1]} Q640 220 ${T[0]} ${T[1]+30}" stroke="#B3362B" stroke-width="3.5" stroke-dasharray="9 8" stroke-linecap="round" fill="none"/>`;
+  const marks=[...Array(26)].map((_,i)=>{const x=40+(i*137)%560,y=110+(i*83)%250;return `<path d="M${x} ${y} q5 -5 10 0 t10 0" stroke="#3E8CA3" stroke-width="2" fill="none" opacity=".5"/>`}).join('');
+  const isl=ISL.map((I,i)=>{const [x,y]=pos[i],st=islStars(I.key),done=SAVE[I.key]?.done;return `<g class="isl" data-open="${i}" tabindex="0" role="button" aria-label="${I.en}, ${I.idn}"><g class="ib"><g transform="translate(${x} ${y})">
+    ${i===next?`<ellipse cy="20" rx="74" ry="24" fill="none" stroke="#FFF6D8" stroke-width="3" class="pulse"/>`:''}${islBase}${islArt[I.art]}
+    ${done?`<path d="M-50 10 v-34" stroke="#4E2E12" stroke-width="2.5"/><path d="M-50 -24 l16 5 l-16 5z" fill="${I.c}"/>`:''}
+    <path d="M-74 34 h148 l-9 14 l9 14 h-148 l9 -14z" fill="#F7E7C0" stroke="#8A6234" stroke-width="2"/><text class="mlab" y="55" text-anchor="middle">${I.en}</text>
+    ${st?`<g transform="translate(-26 -72)">${[0,1,2].map(j=>`<g transform="translate(${j*26} 0)">${STAR(j<st).replace('<svg','<svg width="24" height="24" x="-12" y="-12"')}</g>`).join('')}</g>`:''}
+  </g></g></g>`}).join('');
+  const ship=`<g transform="translate(${bp[0]-96} ${bp[1]+6})"><g class="boat"><path d="M-4 0 h48 l-8 13 h-32z" fill="#7A3E1A" stroke="#4E2E12" stroke-width="2"/><path d="M20 0 v-38" stroke="#4E2E12" stroke-width="3"/><path d="M22 -36 q14 12 0 28z" fill="#F7F1E0" stroke="#8A6234"/><path d="M18 -34 q-16 12 0 26z" fill="#F7F1E0" stroke="#8A6234"/><path d="M20 -38 l12 -4 l-12 -4z" fill="#E5484D"/></g></g>`;
+  const compass=`<g transform="translate(400 72)"><circle r="34" fill="#F3E2B6" stroke="#8A6234" stroke-width="2"/><circle r="26" fill="none" stroke="#8A6234" stroke-dasharray="2 4"/><path d="M0 -32 L6 0 L0 32 L-6 0Z" fill="#B3362B"/><path d="M-32 0 L0 -6 L32 0 L0 6Z" fill="#5E3A1E"/><circle r="4" fill="#F3E2B6" stroke="#5E3A1E"/><text y="-38" text-anchor="middle" font-family="Fredoka,system-ui,sans-serif" font-weight="700" font-size="14" fill="#5E3A1E">N</text></g>`;
+  const serpent=`<g transform="translate(232 372)" opacity=".9">${[0,30,60].map(d=>`<path d="M${d-12} 0 q12 -22 24 0" fill="#3FA34D" stroke="#245E37" stroke-width="2"/>`).join('')}<circle cx="-22" cy="-10" r="9" fill="#3FA34D" stroke="#245E37" stroke-width="2"/><circle cx="-25" cy="-12" r="2.2" fill="#173A50"/><path d="M60 0 q10 -8 16 -2" stroke="#245E37" stroke-width="3" fill="none"/></g>`;
+  const treasure=`<g transform="translate(${T[0]} ${T[1]})" aria-label="Harta karun"><path d="M-14 26 l28 18 M14 26 l-28 18" stroke="#B3362B" stroke-width="5" stroke-linecap="round"/>${chestSVG(all)}</g>`;
+  return `<svg viewBox="0 0 640 400" role="img" aria-label="Peta harta karun lima pulau">
+   <defs><radialGradient id="parch" cx=".5" cy=".5" r=".72"><stop offset=".55" stop-color="#F2DFAF"/><stop offset=".88" stop-color="#E2C389"/><stop offset="1" stop-color="#B98A4E"/></radialGradient></defs>
+   <rect width="640" height="400" fill="url(#parch)"/>
+   <path d="M20 96 C120 80 200 110 300 96 S520 90 625 120 L630 390 L12 392Z" fill="#8FCFDC" opacity=".55"/>
+   ${[...Array(7)].map((_,i)=>`<path d="M${i*100+20} 10 V390" stroke="#C9A86A" stroke-dasharray="3 7" opacity=".5"/>`).join('')}${[...Array(4)].map((_,i)=>`<path d="M10 ${i*100+20} H630" stroke="#C9A86A" stroke-dasharray="3 7" opacity=".5"/>`).join('')}
+   ${marks}<circle cx="520" cy="372" r="20" fill="#B98A4E" opacity=".15"/><circle cx="90" cy="150" r="14" fill="#B98A4E" opacity=".12"/>
+   <g transform="translate(22 20)"><path d="M0 0 h268 l-12 22 l12 22 h-268 l12 -22z" fill="#B3362B" stroke="#7A1F18" stroke-width="2"/><text x="134" y="31" text-anchor="middle" font-family="Fredoka,system-ui,sans-serif" font-weight="700" font-size="24" fill="#FFF6D8">Countable Cove</text></g>
+   <text x="34" y="84" font-family="Fredoka,system-ui,sans-serif" font-weight="600" font-size="15" fill="#7A4A22">Treasure Map · Peta Harta Karun</text>
+   ${compass}${serpent}${route}${treasure}${isl}${ship}</svg>`}
+
+function scene(I,i){const k=I.key;let s='';
+  if(k==='market')s=`<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFA54F"/><stop offset="1" stop-color="#FFE9B8"/></linearGradient></defs><rect width="640" height="180" fill="url(#sg)"/>
+    <circle cx="500" cy="70" r="40" fill="#FFE27A"/><circle cx="500" cy="70" r="58" fill="#FFE27A" opacity=".3"/>
+    <path d="M0 120 Q160 60 320 110 T640 100 V180 H0Z" fill="#9AD06A"/><path d="M0 150 Q200 110 400 150 T640 140 V180 H0Z" fill="#6DB045"/>
+    ${[[360,92,'#E5484D'],[430,100,'#F5A623'],[600,96,'#F5C518']].map(([x,y,c])=>`<path d="M${x} ${y+40} v-30" stroke="#7A4A22" stroke-width="7"/><circle cx="${x}" cy="${y}" r="28" fill="#3E9B5A"/><circle cx="${x-14}" cy="${y+6}" r="20" fill="#358A4E"/>${[[-10,-8],[8,-12],[0,6],[14,4],[-18,8]].map(([a,b])=>`<circle cx="${x+a}" cy="${y+b}" r="5" fill="${c}"/>`).join('')}`).join('')}
+    <g transform="translate(520 150) scale(1.7)">${IC0.semangka}</g><g transform="translate(300 150) scale(1.5)">${IC0.nanas}</g>`;
+  if(k==='milk')s=`<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5CC0EE"/><stop offset="1" stop-color="#D8F3FF"/></linearGradient></defs><rect width="640" height="180" fill="url(#sg)"/>
+    ${['#E5484D','#F58A1F','#F5C518','#3FA34D','#3D7BE0','#8E5BD8'].map((c,j)=>`<path d="M${260+j*12} 190 A${170-j*12} ${170-j*12} 0 0 1 ${600-j*12} 190" stroke="${c}" stroke-width="12" fill="none" opacity=".85"/>`).join('')}
+    <path d="M460 0 L470 180 H640 V0Z" fill="#8C9AA6"/><path d="M470 30 h56 v150 h-60z" fill="#F4FAFF"/><path d="M482 30 v150 M500 30 v150 M516 30 v150" stroke="#fff" stroke-width="4" stroke-dasharray="14 10" class="fall"/>
+    <path d="M520 0 L540 180 H640 V0Z" fill="#6F7E8B"/><circle cx="496" cy="176" r="26" fill="#fff" opacity=".7"/><circle cx="530" cy="170" r="18" fill="#fff" opacity=".6"/>
+    <path d="M0 150 Q120 120 260 150 T460 150 V180 H0Z" fill="#5FB36A"/>
+    ${[[IC.milk,380,70],[IC.g_milk,420,36],[IC.honey,600,60]].map(([c,x,y],j)=>`<g transform="translate(${x} ${y}) scale(1.5)" class="floaty" style="animation-delay:${j*.7}s">${c}</g>`).join('')}`;
+  if(k==='ship')s=`<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF9E6B"/><stop offset=".55" stop-color="#FFD9A0"/><stop offset=".56" stop-color="#2A9DB8"/><stop offset="1" stop-color="#0E5F7E"/></linearGradient></defs><rect width="640" height="180" fill="url(#sg)"/>
+    <circle cx="560" cy="96" r="34" fill="#FFE27A" opacity=".9"/>${[0,1,2,3].map(r=>`<path class="wave" style="animation-duration:${5+r}s" d="M0 ${112+r*18} ${[...Array(10)].map(()=>'q20 -6 40 0 t40 0').join(' ')}" stroke="#fff" stroke-opacity=".3" stroke-width="2.5" fill="none"/>`).join('')}
+    <g transform="translate(420 30)" class="boat"><path d="M-80 90 h170 l-24 34 h-124z" fill="#7A3E1A" stroke="#3E1E0A" stroke-width="3"/><path d="M-70 100 h150" stroke="#C9A23A" stroke-width="4"/>${[-40,0,40].map(x=>`<circle cx="${x}" cy="110" r="5" fill="#FFE07A" stroke="#3E1E0A" stroke-width="2"/>`).join('')}
+      <path d="M0 90 V-10" stroke="#3E1E0A" stroke-width="5"/><path d="M4 -4 q50 40 0 86z" fill="#F7F1E0" stroke="#8A6234" stroke-width="2"/><path d="M-4 0 q-46 36 0 80z" fill="#F7F1E0" stroke="#8A6234" stroke-width="2"/><path d="M0 -10 l26 -8 l-26 -8z" fill="#E5484D"/>
+      <g transform="translate(-60 74) scale(1.1)">${apple()}</g><g transform="translate(70 72) scale(1.1)">${IC.water}</g></g>
+    ${[[120,40],[170,60],[300,30]].map(([x,y])=>`<path d="M${x-10} ${y} q5 -6 10 0 q5 -6 10 0" stroke="#5E3A1E" stroke-width="2.5" fill="none" class="floaty"/>`).join('')}`;
+  if(k==='bakery')s=`<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7A3A22"/><stop offset="1" stop-color="#E8A86B"/></linearGradient></defs><rect width="640" height="180" fill="url(#sg)"/>
+    <path d="M380 180 V60 q0 -50 60 -50 h40 q60 0 60 50 V180z" fill="#5A2A16"/><path d="M405 180 V80 q0 -40 55 -40 q55 0 55 40 V180z" fill="#2A120A"/><path d="M420 180 q40 -70 80 0z" fill="#FF8A2A" class="flame"/><path d="M440 180 q20 -40 40 0z" fill="#FFE07A" class="flame"/>
+    ${[56,112].map(y=>`<rect x="560" y="${y}" width="80" height="6" fill="#4E2410"/><rect x="250" y="${y}" width="110" height="6" fill="#4E2410"/>`).join('')}
+    ${[[268,46],[300,46],[332,46],[268,102],[312,102]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="15" ry="10" fill="#D9A05B" stroke="#8A5228" stroke-width="2"/><path d="M${x-7} ${y-3} l4 6 M${x} ${y-4} l4 6 M${x+7} ${y-3} l3 5" stroke="#8A5228" stroke-width="1.6"/>`).join('')}
+    ${[[580,46],[610,46],[590,102],[620,102]].map(([x,y])=>`<g transform="translate(${x} ${y}) scale(.7)">${IC.cookie}</g>`).join('')}
+    <g transform="translate(330 150) scale(1.3)">${IC.g_milk}</g><g transform="translate(290 152) scale(1.2)">${IC.egg}</g>
+    ${[[460,20],[480,8],[500,22]].map(([x,y],j)=>`<circle cx="${x}" cy="${y}" r="${8+j*2}" fill="#fff" opacity=".18" class="floaty" style="animation-delay:${j*.5}s"/>`).join('')}`;
+  if(k==='picnic')s=`<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7CCBF2"/><stop offset="1" stop-color="#E6F7FF"/></linearGradient><pattern id="chk" width="16" height="16" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#fff"/><rect width="8" height="8" fill="#E5484D"/><rect x="8" y="8" width="8" height="8" fill="#E5484D"/></pattern></defs><rect width="640" height="180" fill="url(#sg)"/>
+    <circle cx="300" cy="40" r="24" fill="#FFE27A"/><g class="cloud"><ellipse cx="80" cy="34" rx="34" ry="11" fill="#fff"/><ellipse cx="100" cy="26" rx="18" ry="11" fill="#fff"/></g>
+    <path d="M0 110 Q140 60 300 100 T640 90 V180 H0Z" fill="#9AD06A"/><path d="M0 150 Q200 120 420 146 T640 140 V180 H0Z" fill="#6DB045"/>
+    <path d="M560 140 v-60" stroke="#7A4A22" stroke-width="10"/><circle cx="560" cy="64" r="40" fill="#3E9B5A"/><circle cx="530" cy="80" r="26" fill="#358A4E"/><circle cx="592" cy="80" r="24" fill="#358A4E"/>
+    <path d="M330 150 l150 -14 l40 30 l-160 14z" fill="url(#chk)" stroke="#B8283D" stroke-width="2"/>
+    <g transform="translate(380 140) scale(1.2)">${IC.g_milk}</g><g transform="translate(420 146) scale(1)">${apple()}</g><g transform="translate(450 140) scale(1)">${apple()}</g><g transform="translate(486 146) scale(1.1)">${IC.bottle}</g>`;
+  return `<div class="scene" style="--c:${I.c}"><svg viewBox="0 0 640 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${s}</svg>
+    <div class="scene-t"><small>Stage ${i+1} · ${I.topic}</small><b>${I.en}</b><span>${I.idn}</span></div></div>`}
+
+function renderMap(){
+  const tot=ISL.reduce((a,i)=>a+i.words.length,0),got=ISL.filter(i=>SAVE[i.key]?.done).reduce((a,i)=>a+i.words.length,0),pieces=ISL.filter(i=>SAVE[i.key]?.done).length;
+  app.innerHTML=`${DEFS}<header class="top">${polly('happy')}<div><h1>Countable <span>Cove</span></h1><p>Can we count it? · <i>Bisa dihitung atau tidak?</i> · Countable &amp; uncountable · Kelas 2 SD</p></div>
+    <div class="hud"><b>★ ${totalStars()} / 15</b><small>stars · bintang</small><b class="pc">${pieces} / 5</b><small>map pieces · potongan peta</small></div></header>
+   <div class="mapbox">${mapSVG()}</div>
+   ${pieces===5?`<div class="tip win">${G(chestSVG(true),56)}<span><b class="en">You found the treasure!</b><br>Kamu menemukan harta karun! Semua pulau sudah selesai. Coba kumpulkan 15 bintang.</span></div>`:
+   `<div class="tip">${SPK}<span><b class="en">Finish all 5 islands to open the treasure chest!</b><br>Selesaikan 5 pulau untuk membuka peti harta. Nyalakan suara, lalu ketuk <b>Listen</b> untuk mendengar kata bahasa Inggris.</span></div>`}
+   <section class="list" aria-label="Daftar pulau">${ISL.map((I,i)=>`<button class="icard" data-open="${i}" style="--c:${I.c};--cb:${I.cb}"><span class="pic">${G(I.icon(),50)}</span><span><small class="stg">Stage ${i+1} · ${I.topic}</small><h3>${I.en}</h3><span class="sub">${I.idn} · ${I.words.length} words · 6 quests</span><span class="stars">${[0,1,2].map(j=>STAR(j<islStars(I.key))).join('')}</span></span></button>`).join('')}</section>
+   <section class="book"><h2>Treasure Book <small>Buku Stiker · ${got} / ${tot} stickers · selesaikan pulau untuk mendapat stikernya</small></h2>
+    <div class="stk">${ISL.flatMap(I=>I.words).map(k=>`<button class="st ${learned(k)?'':'lock'}" data-say="${k}" aria-label="${k}">${pic(k,44)}<span>${learned(k)?k:'?'}</span></button>`).join('')}</div></section>`;
+}
+
+function setAccent(I){document.documentElement.style.setProperty('--ac',I.c);document.documentElement.style.setProperty('--ac2',I.cb)}
+function barHTML(I,ph){return `<div class="bar"><button class="back" data-go="map">‹ Map</button>
+  <div class="phase"><span class="${ph===0?'on':''}">1 Learn</span><span class="${ph===1?'on':''}">2 Quest</span><span class="${ph===2?'on':''}">3 Treasure</span></div></div>${scene(I,V.i)}`}
+
+function openIsland(i){const I=ISL[i];setAccent(I);V={view:'learn',i};renderLearn();scrollTo({top:0})}
+function renderLearn(){const I=ISL[V.i];
+  app.innerHTML=`${DEFS}${barHTML(I,0)}<div class="card"><div class="say">${polly('happy')}<div class="bub"><span class="en">Hello! I am Polly. Tap a picture and listen.</span><span class="sm">Halo! Aku Polly. Ketuk gambar dan dengarkan. Ucapkan katanya bersama Polly, ya.</span></div></div>
+   ${I.rule?`<div class="rule"><b class="en">${I.rule[0]}</b><span class="sm">${I.rule[1]}</span></div>`:''}<div class="learn">${I.words.map(k=>`<button class="lc" data-say="${k}" data-lc="${k}">${pic(k,84,'p')}<b>${k}</b><small>${W[k].id}</small></button>`).join('')}</div>
+   <div class="act"><button class="btn alt" id="all">${SPK} Listen to all</button><button class="btn" id="go">Start the quest ›</button></div></div>`;
+  document.getElementById('all').onclick=async e=>{const b=e.currentTarget;b.disabled=true;for(const k of I.words){if(V.view!=='learn')break;const el=app.querySelector(`[data-lc="${k}"]`);el?.classList.add('on');await say(k);el?.classList.remove('on');await new Promise(r=>setTimeout(r,250))}b.disabled=false};
+  document.getElementById('go').onclick=()=>startQuiz();
+  if(!HAS_TTS)toast('Perangkat ini belum bisa membaca suara. Kata tetap bisa dibaca di layar.');
+}
+function startQuiz(){const I=ISL[V.i];V={view:'quiz',i:V.i,qi:0,res:[],Q:I.Q.map((q,j)=>build(q,I,j))};renderQ()}
+
+function renderQ(){const I=ISL[V.i],q=V.Q[V.qi];V.tries=0;V.P={};V.sel=null;V.done=false;V.shown=!HAS_TTS;
+  const dots=I.Q.map((_,j)=>`<i class="${j<V.qi?(V.res[j]?'ok':'no'):j===V.qi?'cur':''}"></i>`).join('');
+  app.innerHTML=`${DEFS}${barHTML(I,1)}<div class="card" id="qc"><div class="qhead"><span class="qno">Quest ${V.qi+1} / ${I.Q.length}</span><span class="dots">${dots}</span><span class="qtype">${TYPE[q.t]}</span></div>
+   <div class="say">${polly(q.t==='listen'?'n':'think')}<div class="bub"><span class="en">${q.ins[0]}</span><span class="sm">${q.ins[1]}</span>${q.sub?`<span class="sm tr">${q.sub}</span>`:''}</div></div>
+   <div class="stage" id="stage"></div><div class="msg" id="msg" aria-live="polite"></div><div id="fbx"></div></div>`;
+  const st=document.getElementById('stage');
+  if(q.t==='listen'){st.innerHTML=`<div class="listen">${spkBtn(q.say,'Listen')}${spkBtn(q.say,'Slow','slow').replace(SPK,TURTLE)}</div>${HAS_TTS?'':`<div class="word-shown">${q.say}</div>`}
+     <div class="opts four" style="margin-top:12px">${q.opts.map(k=>`<button class="opt w" data-pick="${k}">${k}</button>`).join('')}</div>`;
+    setTimeout(()=>say(q.say),350)}
+  else if(q.t==='read'){st.innerHTML=`${q.showHTML?q.showHTML():`<div class="bigpic">${pic(q.show,140)}</div>`}<div class="opts ${q.opts.length===3?'three':''}" style="margin-top:12px">${q.opts.map(k=>`<button class="opt w" data-pick="${k}">${k}</button>`).join('')}</div>`}
+  else{V.q=q;drawBoard();}
+}
+function drawBoard(){const q=V.Q[V.qi],st=document.getElementById('stage'),P=V.P,m=V.m||{};
+  const tokH=t=>`<div class="tok ${t.cls} ${t.id in m?(m[t.id]?'ok':'bad'):''} ${V.sel===t.id?'sel':''}" data-id="${t.id}" tabindex="0" role="button" aria-label="${(t.type+'').replace(/"/g,'')}">${t.html}</div>`;
+  const S=(id,cls='',inner='',cap)=>`<div class="slot ${cls}" data-slot="${id}" tabindex="0" role="button" aria-label="Tempat jawaban">${inner}${q.T.filter(t=>P[t.id]===id).map(tokH).join('')}</div>`;
+  const rest=q.T.filter(t=>!P[t.id]);
+  const ready=q.ready?q.ready(P):q.slots.every(s=>Object.values(P).includes(s));
+  st.innerHTML=`${q.top?q.top+'<div style="height:12px"></div>':''}${q.t==='build'||q.t==='spell'?'':''}<div class="board ${V.sel?'selmode':''} ${V.done?'lock':''}">${q.L(S,P)}</div>
+   ${V.done?'':`<div class="tray" data-slot="tray" aria-label="Tempat ${q.tray||'kata'}">${rest.length?rest.map(tokH).join(''):`<span class="hint">All done! · Semua sudah dipasang</span>`}</div>
+   <div class="act" style="margin-top:14px"><button class="btn alt" id="rs">Reset</button><button class="btn" id="ck" ${ready?'':'disabled'}>Check ✓</button></div>`}`;
+  if(!V.done){document.getElementById('ck').onclick=check;document.getElementById('rs').onclick=()=>{V.P={};V.m={};V.sel=null;drawBoard()}}
+}
+function place(id,s){const q=V.Q[V.qi],P=V.P;const cur=P[id]||'tray';V.m={};document.getElementById('msg').textContent='';
+  if(s!==cur){if(s!=='tray'){const cap=(q.cap&&q.cap[s])||1,occ=Object.keys(P).filter(k=>P[k]===s);if(occ.length>=cap){const v=occ[0];if(cur==='tray')delete P[v];else P[v]=cur}}
+    if(s==='tray')delete P[id];else P[id]=s;sfx.pop();q.onPlace&&q.onPlace(P)}
+  V.sel=null;drawBoard()}
+
+/* seret & ketuk */
+let D=null;
+app.addEventListener('pointerdown',e=>{const t=e.target.closest('.tok');if(!t||V.view!=='quiz'||V.done||!t.closest('#stage'))return;e.preventDefault();D={id:t.dataset.id,x:e.clientX,y:e.clientY,el:t,moved:false};try{t.setPointerCapture(e.pointerId)}catch(_){}});
+window.addEventListener('pointermove',e=>{if(!D)return;const dx=e.clientX-D.x,dy=e.clientY-D.y;
+  if(!D.moved&&Math.hypot(dx,dy)>6){D.moved=true;const r=D.el.getBoundingClientRect();D.g=D.el.cloneNode(true);D.g.classList.add('ghost');D.g.classList.remove('sel','ok','bad');D.g.style.width=r.width+'px';D.g.style.height=r.height+'px';D.ox=D.x-r.left;D.oy=D.y-r.top;document.body.appendChild(D.g);D.el.classList.add('lift')}
+  if(D.moved){D.g.style.transform=`translate(${e.clientX-D.ox}px,${e.clientY-D.oy}px) scale(1.08) rotate(-3deg)`;D.g.style.display='none';const el=document.elementFromPoint(e.clientX,e.clientY);D.g.style.display='';
+    app.querySelectorAll('.hov').forEach(x=>x.classList.remove('hov'));const sl=el&&el.closest('#stage [data-slot]');if(sl)sl.classList.add('hov')}});
+window.addEventListener('pointerup',e=>{if(!D)return;const d=D;D=null;
+  if(d.moved){d.g.style.display='none';const el=document.elementFromPoint(e.clientX,e.clientY);d.g.remove();const sl=el&&el.closest('#stage [data-slot]');if(sl)place(d.id,sl.dataset.slot);else drawBoard()}
+  else tapTok(d.id)});
+window.addEventListener('pointercancel',()=>{if(D){D.g&&D.g.remove();D=null;drawBoard()}});
+function tapTok(id){if(V.sel&&V.sel!==id){const s=V.P[id]||'tray';place(V.sel,s);return}V.sel=V.sel===id?null:id;drawBoard();
+  if(V.sel){const q=V.Q[V.qi],t=q.T.find(t=>t.id===id);if(t.cls==='chip'||t.cls==='paint')say(String(t.type).replace('.',''),.85);const el=app.querySelector(`.tok[data-id="${id}"]`);el&&el.focus({preventScroll:true})}}
+app.addEventListener('click',e=>{
+  const sp=e.target.closest('[data-say]');if(sp){e.stopPropagation();sp.classList.add('playing');say(sp.dataset.say,sp.classList.contains('slow')?.5:.8).then(()=>sp.classList.remove('playing'));if(!sp.classList.contains('lc')&&!sp.classList.contains('st'))return}
+  const op=e.target.closest('[data-open]');if(op){openIsland(+op.dataset.open);return}
+  const go=e.target.closest('[data-go]');if(go){window.speechSynthesis&&speechSynthesis.cancel();V={view:'map'};renderMap();return}
+  const pk=e.target.closest('[data-pick]');if(pk&&!pk.disabled){pick(pk);return}
+  const sl=e.target.closest('#stage [data-slot]');if(sl&&V.sel&&!e.target.closest('.tok')){place(V.sel,sl.dataset.slot)}
+});
+app.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const t=e.target;
+  if(t.classList.contains('tok')){e.preventDefault();tapTok(t.dataset.id)}
+  else if(t.matches('#stage [data-slot]')&&V.sel){e.preventDefault();place(V.sel,t.dataset.slot)}
+  else if(t.matches('g.isl')){e.preventDefault();openIsland(+t.dataset.open)}});
+
+function pick(b){const q=V.Q[V.qi],k=b.dataset.pick;
+  if(k===q.ans){b.classList.add('ok');app.querySelectorAll('[data-pick]').forEach(x=>x.disabled=true);finish(true)}
+  else{b.classList.add('bad');b.disabled=true;sfx.bad();V.tries++;
+    if(V.tries>=2){app.querySelector(`[data-pick="${q.ans}"]`).classList.add('ok');app.querySelectorAll('[data-pick]').forEach(x=>x.disabled=true);finish(false)}
+    else document.getElementById('msg').textContent=q.t==='listen'?'Try again! · Dengarkan sekali lagi, lalu coba lagi.':'Try again! · Belum tepat, coba lagi.'}}
+function check(){const q=V.Q[V.qi],r=chk(q,V.P);V.m=r.m;
+  if(r.ok){V.done=true;drawBoard();finish(true);return}
+  sfx.bad();V.tries++;
+  if(V.tries>=2){V.P=solve(q);V.m={};Object.keys(V.P).forEach(id=>V.m[id]=true);V.done=true;drawBoard();finish(false);return}
+  drawBoard();document.getElementById('msg').textContent=r.hint||'Try again! · Yang merah belum tepat.';
+  setTimeout(()=>{if(V.done)return;Object.keys(r.m).forEach(id=>{if(!r.m[id])delete V.P[id]});V.m={};drawBoard()},1100)}
+function finish(ok){const q=V.Q[V.qi],first=ok&&V.tries===0;V.res[V.qi]=first;V.done=true;
+  if(ok)sfx.ok();
+  const praise=[['Great job!','Hebat!'],['Awesome!','Keren!'],['Super!','Pintar!'],['Well done!','Bagus sekali!'],['Excellent!','Luar biasa!'],['Amazing!','Mantap!']][V.qi%6];
+  document.getElementById('msg').textContent='';
+  document.getElementById('fbx').innerHTML=`<div class="fb ${ok?'good':'show'}">${polly(ok?'happy':'oops')}<div style="min-width:0"><h3>${ok?(first?praise[0]:'You did it!'):'Look at the answer'}</h3><span class="sm">${ok?(first?praise[1]:'Akhirnya benar!'):'Yuk, lihat jawabannya.'}</span>
+    <p class="ansl">Answer: <span class="en">${q.ansEN||q.answerSay}</span></p><p class="note">${q.exp}</p><div class="act" style="justify-content:flex-start">${spkBtn(q.answerSay,'Listen','slow')}<button class="btn" id="nx">${V.qi<V.Q.length-1?'Next ›':'Treasure ›'}</button></div></div></div>`;
+  document.getElementById('nx').onclick=()=>{if(V.qi<V.Q.length-1){V.qi++;renderQ();document.getElementById('qc').scrollIntoView({block:'start',behavior:'smooth'})}else summary()};
+  setTimeout(()=>say(q.answerSay),ok?700:300);
+  document.getElementById('fbx').scrollIntoView({block:'nearest',behavior:'smooth'})}
+function summary(){const I=ISL[V.i],n=V.res.filter(Boolean).length,stars=n===6?3:n>=4?2:1;
+  const prev=SAVE[I.key]||{};SAVE[I.key]={done:true,stars:Math.max(prev.stars||0,stars),best:Math.max(prev.best||0,n)};persist();
+  const all=ISL.every(x=>SAVE[x.key]?.done),pieces=ISL.filter(x=>SAVE[x.key]?.done).length;
+  const nxt=(V.i+1)%ISL.length;V.view='sum';
+  const piece=`<svg viewBox="0 0 120 90" width="120" aria-hidden="true"><path d="M8 10 L60 4 L112 12 L106 48 L114 82 L58 86 L6 80 L12 46Z" fill="#F2DFAF" stroke="#8A6234" stroke-width="3"/><path d="M20 60 q20 -30 40 -10 t40 -20" stroke="#B3362B" stroke-width="3" stroke-dasharray="6 5" fill="none"/><path d="M92 22 l10 10 M102 22 l-10 10" stroke="#B3362B" stroke-width="4" stroke-linecap="round"/><g transform="translate(34 52) scale(.7)">${islBase}</g></svg>`;
+  app.innerHTML=`${DEFS}${barHTML(I,2)}<div class="card sum"><div class="bigstars">${[0,1,2].map(j=>STAR(j<stars)).join('')}</div>
+   <h2 style="font-size:32px;color:var(--ac)">${stars===3?'Perfect!':stars===2?'Great job!':'Keep practicing!'}</h2>
+   <p style="margin:0;font-weight:700">${stars===3?'Sempurna!':stars===2?'Bagus sekali!':'Terus berlatih, ya!'} Kamu benar <b>${n} dari 6</b> pada percobaan pertama.</p>
+   <div class="reward">${all?G(chestSVG(true),110):piece}<div><b class="en">${all?'You found the treasure!':`You got a map piece! (${pieces}/5)`}</b><span class="sm">${all?'Kamu menemukan harta karun! Semua pulau selesai.':`Kamu mendapat potongan peta! Kumpulkan 5 untuk membuka peti harta.`}</span></div></div>
+   <div class="say" style="text-align:left;width:100%">${polly('happy')}<div class="bub"><span class="en">New stickers for your Treasure Book!</span><span class="sm">Stiker kata baru untuk Buku Stikermu. Ketuk untuk mendengar lagi.</span></div></div>
+   <div class="stk" style="width:100%">${I.words.map(k=>`<button class="st" data-say="${k}">${pic(k,44)}<span>${k}</span></button>`).join('')}</div>
+   <div class="act"><button class="btn alt" id="again">Play again</button><button class="btn" data-open="${nxt}">Next island ›</button><button class="btn alt" data-go="map">Map</button></div></div>`;
+  document.getElementById('again').onclick=()=>openIsland(V.i);
+  sfx.fan();confetti();if(all)setTimeout(confetti,900);scrollTo({top:0,behavior:'smooth'})}
+
+renderMap();
+window.__EI={ISL,V:()=>V,build,chk,solve,W};

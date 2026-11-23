@@ -1,0 +1,481 @@
+
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=(e,s)=>e.querySelector(s);
+const T=(x,y,s,cls='t',ex='')=>`<text x="${x}" y="${y}" class="${cls}" text-anchor="middle" dominant-baseline="central" ${ex}>${s}</text>`;
+const NW=b=>b?'class="nw"':'';
+function starPts(cx,cy,R,r,n=5){let p=[];for(let i=0;i<n*2;i++){const a=-Math.PI/2+i*Math.PI/n,rr=i%2?r:R;p.push((cx+rr*Math.cos(a)).toFixed(1)+','+(cy+rr*Math.sin(a)).toFixed(1))}return p.join(' ')}
+const svgw=(w,h,inner,max)=>`<svg class="fig" viewBox="0 0 ${w} ${h}" style="max-width:${max||w}px" aria-hidden="true">${inner}</svg>`;
+
+/* ---------- tokoh dan benda ---------- */
+function bip(cx,cy,dir=null,s=1){let g=`<g transform="translate(${cx} ${cy}) scale(${s})">`;
+  if(dir!==null)g+=`<g transform="rotate(${dir*90})"><path d="M-8 -31 L0 -42 L8 -31 Z" fill="#F2602B"/></g>`;
+  g+=`<line x1="0" y1="-20" x2="0" y2="-27" stroke="#2B3A55" stroke-width="2.5"/><circle cx="0" cy="-28" r="3.5" fill="#F2602B"/><rect x="-17" y="-20" width="34" height="26" rx="8" fill="#2EC4B6" stroke="#1B7F77" stroke-width="2"/><rect x="-12" y="-15" width="24" height="12" rx="5" fill="#0E1430"/><circle cx="-5" cy="-9" r="2.6" fill="#7CF5E8"/><circle cx="5" cy="-9" r="2.6" fill="#7CF5E8"/><rect x="-13" y="7" width="26" height="12" rx="4" fill="#24A69A"/><rect x="-11" y="19" width="7" height="5" rx="2" fill="#2B3A55"/><rect x="4" y="19" width="7" height="5" rx="2" fill="#2B3A55"/>`;return g+'</g>'}
+const captain=`<svg viewBox="0 0 60 60" width="54" height="54" aria-hidden="true"><circle cx="30" cy="30" r="28" fill="#E6ECF8" stroke="#8E97B5" stroke-width="3"/><circle cx="30" cy="32" r="18" fill="#C98A5B"/><path d="M12 30 Q14 10 30 10 Q46 10 48 30 Q40 18 30 20 Q20 18 12 30Z" fill="#2A1A10"/><circle cx="24" cy="32" r="2.5" fill="#1B1B1B"/><circle cx="36" cy="32" r="2.5" fill="#1B1B1B"/><path d="M24 40 q6 5 12 0" stroke="#1B1B1B" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M6 22 Q30 -4 54 22" stroke="#9EDCF5" stroke-width="3" fill="none" opacity=".8"/></svg>`;
+function alien(cx,cy,s,o){let g=`<g transform="translate(${cx} ${cy}) scale(${s})">`;
+  if(o.wings)g+=`<path d="M-20 -4 Q-48 -26 -44 6 Q-36 16 -20 8 Z" fill="#CFE0FF" stroke="#5B7DB8" stroke-width="2"/><path d="M20 -4 Q48 -26 44 6 Q36 16 20 8 Z" fill="#CFE0FF" stroke="#5B7DB8" stroke-width="2"/>`;
+  if(o.ant)g+=`<line x1="-8" y1="-22" x2="-15" y2="-40" stroke="#333" stroke-width="3"/><circle cx="-15" cy="-41" r="4.5" fill="#FFC93C"/><line x1="8" y1="-22" x2="15" y2="-40" stroke="#333" stroke-width="3"/><circle cx="15" cy="-41" r="4.5" fill="#FFC93C"/>`;
+  g+=`<ellipse cx="-10" cy="27" rx="7" ry="4" fill="rgba(0,0,0,.35)"/><ellipse cx="10" cy="27" rx="7" ry="4" fill="rgba(0,0,0,.35)"/><ellipse cx="0" cy="0" rx="24" ry="27" fill="${o.c}" stroke="rgba(0,0,0,.3)" stroke-width="2"/>`;
+  const E={1:[0],2:[-9,9],3:[-12,0,12]}[o.eyes||2];E.forEach(x=>g+=`<circle cx="${x}" cy="-7" r="6" fill="#fff"/><circle cx="${x}" cy="-6" r="3" fill="#1B1B1B"/>`);
+  g+=`<path d="M-8 11 q8 7 16 0" stroke="#1B1B1B" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;return g+'</g>'}
+const alienIcon=(o,w=64)=>`<svg viewBox="-50 -50 100 84" width="${w}" aria-hidden="true">${alien(0,0,1,o)}</svg>`;
+const AC={hijau:'#4CC37E',ungu:'#9B6BDF',biru:'#4C8DF0',merah:'#EF5B5B',oranye:'#F59E3B'};
+function rocket(cx,cy,c,s=1){return `<g transform="translate(${cx} ${cy}) scale(${s})"><path d="M-5 16 Q0 30 5 16 Z" fill="#FFC93C"/><path d="M0 -24 Q13 -10 10 16 L-10 16 Q-13 -10 0 -24 Z" fill="#F4F6FB" stroke="#5B6684" stroke-width="1.5"/><circle cx="0" cy="-6" r="5" fill="${c}" stroke="#1B2452" stroke-width="1.5"/><path d="M-10 6 L-18 18 L-9 16 Z M10 6 L18 18 L9 16 Z" fill="${c}"/></g>`}
+function sym(t,cx,cy,r=12){
+  if(t==='bintang')return `<polygon points="${starPts(cx,cy,r+2,r*.45)}" fill="#FFC93C" stroke="#B88400" stroke-width="1.5"/>`;
+  if(t==='bulat')return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#4C8DF0" stroke="#2856A8" stroke-width="1.5"/>`;
+  if(t==='segitiga')return `<polygon points="${cx},${cy-r-1} ${cx+r+1},${cy+r-1} ${cx-r-1},${cy+r-1}" fill="#22A06B" stroke="#156B47" stroke-width="1.5" stroke-linejoin="round"/>`;
+  return `<rect x="${cx-r+1}" y="${cy-r+1}" width="${2*r-2}" height="${2*r-2}" rx="3" fill="#EF5B5B" stroke="#A82E2E" stroke-width="1.5"/>`}
+const symIcon=(t,w=34)=>`<svg viewBox="0 0 34 34" width="${w}" aria-hidden="true">${sym(t,17,17,12)}</svg>`;
+function gicon(t,cx,cy){
+  if(t==='kristal')return `<polygon points="${cx},${cy-17} ${cx+12},${cy-3} ${cx},${cy+17} ${cx-12},${cy-3}" fill="#5CE1E6" stroke="#1A8C99" stroke-width="2"/><line x1="${cx-12}" y1="${cy-3}" x2="${cx+12}" y2="${cy-3}" stroke="#1A8C99" stroke-width="1.5"/>`;
+  if(t==='batu')return `<path d="M${cx-17} ${cy+12} Q${cx-19} ${cy-8} ${cx-4} ${cy-14} Q${cx+14} ${cy-16} ${cx+17} ${cy+2} Q${cx+18} ${cy+14} ${cx} ${cy+14} Z" fill="#8D96A6" stroke="#5E6676" stroke-width="2"/><circle cx="${cx-4}" cy="${cy-2}" r="3" fill="#6E7787"/>`;
+  if(t==='bendera')return `<line x1="${cx-8}" y1="${cy-18}" x2="${cx-8}" y2="${cy+17}" stroke="#5E6676" stroke-width="3"/><path d="M${cx-7} ${cy-17} L${cx+16} ${cy-10} L${cx-7} ${cy-2} Z" fill="#EF5B5B"/>`;
+  if(t==='alien')return alien(cx,cy+2,.5,{c:AC.hijau,ant:1,eyes:1});
+  return ''}
+
+/* ---------- panggung pertunjukan ---------- */
+const EASE='cubic-bezier(.34,1.56,.64,1)';
+const ENT={
+  drop:[{transform:'translateY(-70px)',opacity:0},{transform:'none',opacity:1}],
+  zoom:[{transform:'scale(0) rotate(-120deg)',opacity:0},{transform:'none',opacity:1}],
+  left:[{transform:'translateX(-90px)',opacity:0},{transform:'none',opacity:1}],
+  up:[{transform:'translateY(70px)',opacity:0},{transform:'none',opacity:1}],
+  pop:[{transform:'scale(.2)',opacity:0},{transform:'scale(1.25)',opacity:1,offset:.65},{transform:'none',opacity:1}],
+  spin:[{transform:'rotate(-270deg) scale(.1)',opacity:0},{transform:'none',opacity:1}],
+  grow:[{transform:'scaleX(0)'},{transform:'none'}],
+  growup:[{transform:'scaleY(0)'},{transform:'none'}],
+  growdown:[{transform:'scaleY(0)'},{transform:'none'}],
+  stamp:[{transform:'scale(2.6) rotate(-25deg)',opacity:0},{transform:'scale(.9)',opacity:1,offset:.7},{transform:'none',opacity:1}]
+};
+const MIX=['drop','zoom','left','pop','up','spin'];
+const ORIG={grow:'left center',growup:'center bottom',growdown:'center top'};
+function prep(e){if(e.ownerSVGElement){e.style.transformBox=e.dataset.o?'view-box':'fill-box';if(!e.dataset.o)e.style.transformOrigin=ORIG[e.dataset.in]||'center'}else e.style.transformOrigin=ORIG[e.dataset.in]||'center'}
+function ctr(e){const r=e.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]}
+function scl(e){const s=e.ownerSVGElement;if(!s)return 1;const m=s.getScreenCTM();return m&&m.a?m.a:1}
+function enter(e,i,old,stage){prep(e);const from=e.dataset.from;
+  if(from){const n=stage.querySelector(`[data-k="${CSS.escape(from)}"]`);const p=n?ctr(n):old[from]?[old[from].x,old[from].y]:null;
+    if(p){const c=ctr(e),s=scl(e);e.animate([{transform:`translate(${(p[0]-c[0])/s}px,${(p[1]-c[1])/s}px) scale(.6)`,opacity:.5},{transform:'translate(0,-10px) scale(1.15)',opacity:1,offset:.75},{transform:'none',opacity:1}],{duration:900,easing:'cubic-bezier(.45,0,.2,1)',delay:Math.min(i,8)*70,fill:'backwards'});return}}
+  e.animate(ENT[e.dataset.in]||ENT[MIX[i%MIX.length]],{duration:700,easing:EASE,delay:Math.min(i,14)*55,fill:'backwards'})}
+function morph(stage,html){const old={};
+  stage.querySelectorAll('[data-k]').forEach(e=>{const [x,y]=ctr(e);old[e.dataset.k]={x,y,r:+(e.dataset.r||0),s:e.dataset.s??e.innerHTML,out:e.dataset.out,html:e.outerHTML,svg:!!e.ownerSVGElement}});
+  stage.innerHTML=html;if(RM)return;let n=0;const seen=new Set();
+  stage.querySelectorAll('[data-k]').forEach(e=>{const k=e.dataset.k,o=old[k];seen.add(k);prep(e);
+    if(!o){if(e.dataset.o)e.animate([{opacity:0},{opacity:1}],{duration:600});else enter(e,n++,old,stage);return}
+    const sig=e.dataset.s??e.innerHTML;
+    if(e.dataset.o){const r=+e.dataset.r;if(r!==o.r)e.animate([{transform:`rotate(${o.r}deg)`},{transform:`rotate(${r}deg)`}],{duration:1100,easing:'cubic-bezier(.45,0,.2,1)'});return}
+    if(e.dataset.from&&sig!==o.s){enter(e,n++,old,stage);return}
+    const [x,y]=ctr(e),s=scl(e),dx=(o.x-x)/s,dy=(o.y-y)/s,dr=o.r-(+(e.dataset.r||0));
+    if(Math.abs(dx)>1||Math.abs(dy)>1||dr){const hop=Math.min(40,Math.hypot(dx,dy)/4);e.animate([{transform:`translate(${dx}px,${dy}px) rotate(${dr}deg)`},{transform:`translate(${dx/2}px,${dy/2-hop}px) rotate(${dr/2}deg)`,offset:.5},{transform:'none'}],{duration:850,easing:'cubic-bezier(.4,0,.2,1)'})}
+    else if(sig!==o.s)e.animate([{transform:'none'},{transform:'scale(1.22) rotate(-4deg)'},{transform:'none'}],{duration:520,easing:'ease-out'});
+  });
+  stage.querySelectorAll('.nw:not([data-k])').forEach(e=>{prep(e);enter(e,n++,old,stage)});
+  Object.entries(old).forEach(([k,o])=>{if(seen.has(k)||!o.out||!o.svg)return;const svg=stage.querySelector('svg.fig');if(!svg)return;const t=document.createElementNS('http://www.w3.org/2000/svg','g');t.innerHTML=o.html;const g=t.firstElementChild;svg.appendChild(g);g.style.transformBox='fill-box';g.style.transformOrigin='center';
+    g.animate([{transform:'none',opacity:1},{transform:'translateY(6px) rotate(-3deg)',offset:.2},{transform:'translateY(-30px) rotate(3deg)',offset:.4},{transform:'translateY(-340px)',opacity:0}],{duration:1300,easing:'ease-in'}).onfinish=()=>g.remove()});
+}
+function traveler(pts,body,_,seg=.8){const b=body==='rocket'?`<g transform="rotate(90)">${rocket(0,0,'#F2602B',.8)}</g>`:body;
+  if(pts.length<2)return `<g transform="translate(${pts[0][0]} ${pts[0][1]})">${b}</g>`;
+  return `<g>${b}<animateMotion dur="${((pts.length-1)*seg).toFixed(2)}s" fill="freeze" ${body==='rocket'?'rotate="auto"':''} path="M${pts.map(p=>p.join(' ')).join(' L ')}"/></g>`}
+function words(cap,html){cap.innerHTML=html;if(RM)return;const tw=document.createTreeWalker(cap,NodeFilter.SHOW_TEXT),L=[];while(tw.nextNode())L.push(tw.currentNode);let n=0;
+  L.forEach(t=>{const f=document.createDocumentFragment();t.textContent.split(/(\s+)/).forEach(p=>{if(!p.trim()){f.append(p);return}const s=document.createElement('span');s.className='w';s.style.animationDelay=(n++*45)+'ms';s.textContent=p;f.append(s)});t.replaceWith(f)})}
+
+/* suara buatan (mati sampai dinyalakan) */
+let SND=false,ACX=null;try{SND=localStorage.getItem('bip-snd')==='1'}catch(e){}
+function sfx(t){if(!SND)return;try{ACX=ACX||new (window.AudioContext||window.webkitAudioContext)();const now=ACX.currentTime;
+  const tone=(f,f2,d,type,v,at=0)=>{const o=ACX.createOscillator(),g=ACX.createGain();o.type=type;o.frequency.setValueAtTime(f,now+at);if(f2)o.frequency.exponentialRampToValueAtTime(f2,now+at+d);g.gain.setValueAtTime(v,now+at);g.gain.exponentialRampToValueAtTime(.001,now+at+d);o.connect(g).connect(ACX.destination);o.start(now+at);o.stop(now+at+d+.02)};
+  if(t==='step')tone(480,900,.14,'triangle',.07);
+  if(t==='ok')[523,659,784,1046,1318].forEach((f,i)=>tone(f,0,.3,'triangle',.11,i*.08));
+  if(t==='bad'){tone(330,220,.25,'square',.04);tone(247,160,.35,'square',.04,.2)}
+  if(t==='curtain'){tone(180,520,.6,'sine',.06);tone(360,1040,.6,'sine',.03,.05)}
+  if(t==='pick')tone(700,0,.06,'sine',.06);
+}catch(e){}}
+function setSnd(v){SND=v;try{localStorage.setItem('bip-snd',v?'1':'0')}catch(e){}const b=document.getElementById('snd');if(b){b.setAttribute('aria-pressed',v);b.querySelector('span').textContent=v?'Suara nyala':'Suara mati'}}
+
+/* hujan bintang saat benar */
+function confetti(from){if(RM||!from)return;const c=document.createElement('canvas');c.className='confetti';document.body.appendChild(c);const dpr=window.devicePixelRatio||1,W=innerWidth,H=innerHeight;c.width=W*dpr;c.height=H*dpr;const x=c.getContext('2d');x.scale(dpr,dpr);
+  const r=from.getBoundingClientRect(),ox=r.left+Math.min(60,r.width/2),oy=r.top+r.height/2,cols=['#FFC93C','#F2602B','#2EC4B6','#4C8DF0','#9B6BDF','#22A06B'];
+  const P=Array.from({length:110},()=>{const a=-Math.PI/2+(Math.random()-.5)*Math.PI*1.4,v=6+Math.random()*10;return{x:ox,y:oy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,s:5+Math.random()*7,c:cols[Math.random()*6|0],star:Math.random()<.5,r:Math.random()*6,vr:(Math.random()-.5)*.35}});
+  const t0=performance.now();(function f(t){const k=(t-t0)/2000;x.clearRect(0,0,W,H);P.forEach(p=>{p.vy+=.3;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.globalAlpha=Math.max(0,1-k*k);x.fillStyle=p.c;
+    if(p.star){x.beginPath();for(let i=0;i<10;i++){const rr=i%2?p.s*.45:p.s,a=-Math.PI/2+i*Math.PI/5;x.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}x.closePath();x.fill()}else x.fillRect(-p.s/2,-p.s/3,p.s,p.s*.66);x.restore()});
+    if(k<1)requestAnimationFrame(f);else c.remove()})(t0)}
+
+const TV=['wave','drop','zoom','swing'];
+function splitTitle(s){let n=0;return s.split(' ').map(w=>`<span class="wd">${[...w].map(ch=>`<span style="--i:${n++}">${ch}</span>`).join('')}</span>`).join(' ')}
+
+/* ---------- penayang langkah ---------- */
+let players=[];
+const NBIP=`<svg viewBox="-36 -54 72 84" width="60" aria-hidden="true"><g class="nbody">${bip(0,0)}</g><g class="q"><circle cx="25" cy="-42" r="12" fill="#fff" stroke="#5B6684" stroke-width="2"/><text x="25" y="-42" text-anchor="middle" dominant-baseline="central" style="font:900 16px var(--fb);fill:#F2602B">?</text></g><g class="spark"><polygon points="${starPts(-26,-40,9,3.8)}" fill="#FFC93C"/><polygon points="${starPts(28,-32,6,2.6)}" fill="#FFC93C"/></g></svg>`;
+function stepperHTML(id,title,sol){return `<div class="stp ${sol?'sol':''}" id="${id}"><div class="stp-top"><span class="stp-t"><svg viewBox="0 0 24 24" width="24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M9.5 7.5 L17 12 L9.5 16.5 Z" fill="#fff"/></svg>${title}</span><span class="stp-n"></span></div><div class="theater"><div class="stage"></div><div class="valance"></div><div class="curt l"></div><div class="curt r"></div></div><div class="narr"><div class="nb">${NBIP}</div><p class="cap" aria-live="polite"></p></div><div class="ctl"><button class="pv">← Mundur</button><button class="play">▶ Putar</button><button class="nx">Lanjut →</button><div class="sdots"></div></div></div>`}
+function stepper(box,frames,auto){let k=-1,tm=null,to=null;const st=$(box,'.stage'),cap=$(box,'.cap'),nb=$(box,'.nb'),th=$(box,'.theater'),dots=$(box,'.sdots'),pl=$(box,'.play'),pv=$(box,'.pv'),nx=$(box,'.nx'),n=$(box,'.stp-n');
+  const show=i=>{const first=k<0;k=i;morph(st,frames[i][0]);words(cap,frames[i][1]);const txt=frames[i][1].replace(/<[^>]+>/g,'');nb.className='nb';void nb.offsetWidth;nb.classList.add(/!/.test(txt)?'happy':/\?/.test(txt)?'think':'talk');
+    n.textContent=`Adegan ${i+1} dari ${frames.length}`;dots.innerHTML=frames.map((_,j)=>`<i class="${j===k?'on':j<k?'done':''}"></i>`).join('');pv.disabled=k===0;nx.disabled=k===frames.length-1;if(!first)sfx('step')};
+  const curtain=()=>{th.classList.remove('show');void th.offsetWidth;th.classList.add('show');sfx('curtain')};
+  const stop=()=>{clearInterval(tm);clearTimeout(to);tm=null;pl.textContent=k>=frames.length-1?'↺ Ulangi':'▶ Putar'};
+  const run=()=>{pl.textContent='❚❚ Jeda';tm=setInterval(()=>{if(k<frames.length-1)show(k+1);if(k>=frames.length-1)stop()},3500)};
+  const start=()=>{curtain();if(k>=frames.length-1||k>0){pl.textContent='❚❚ Jeda';to=setTimeout(()=>{show(0);run()},RM?0:480)}else run()};
+  pl.onclick=()=>tm||to&&pl.textContent.includes('Jeda')?stop():start();pv.onclick=()=>{stop();show(k-1);stop()};nx.onclick=()=>{stop();show(k+1);stop()};
+  show(0);if(auto&&!RM){curtain();run()}else stop();const p={stop};players.push(p);return p}
+
+/* ---------- gambar per jenis soal ---------- */
+function lightsRow(items,groups=[]){const w=40,n=items.length;let s='';
+  groups.forEach(([a,b],gi)=>s+=`<rect data-k="g${gi}" data-in="grow" x="${5+a*w+2}" y="5" width="${(b-a+1)*w-4}" height="56" rx="12" fill="none" style="stroke:var(--teal)" stroke-width="3" stroke-dasharray="6 4"/>`);
+  items.forEach((it,i)=>{const cx=5+i*w+w/2,cy=33;s+=`<circle cx="${cx}" cy="${cy}" r="17" style="fill:var(--soft);stroke:var(--line)" stroke-width="2"/>`;if(it&&it.t)s+=`<g data-k="l${i}" data-in="${['drop','spin','zoom','up'][i%4]}">${sym(it.t,cx,cy,12)}</g>`;else if(it&&it.q)s+=`<g data-k="q${i}" data-in="zoom">${T(cx,cy,'?','t','style="fill:var(--rocket);font-size:20px"')}</g>`;s+=`<g data-k="n${i}" data-s="${it&&it.hl?1:0}">${T(cx,78,i+1,'tm',it&&it.hl?'style="fill:var(--rocket);font-size:15px"':'')}</g>`});
+  return svgw(n*w+10,92,s,Math.min(n*w*1.3,640))}
+function gridScene(W,H,items,bot,trail=[],c=56){let s='';for(let y=0;y<H;y++)for(let x=0;x<W;x++)s+=`<rect x="${6+x*c}" y="${6+y*c}" width="${c}" height="${c}" rx="6" style="fill:var(--soft);stroke:var(--line)" stroke-width="2"/>`;
+  if(trail.length>1)s+=`<polyline points="${trail.map(([x,y])=>`${6+x*c+c/2},${6+y*c+c/2}`).join(' ')}" fill="none" style="stroke:var(--rocket)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>`;
+  items.forEach((it,ii)=>{const cx=6+it.x*c+c/2,cy=6+it.y*c+c/2;s+=`<g data-k="it${ii}" data-in="${['pop','drop','spin'][ii%3]}">${it.t==='roket'?rocket(cx,cy,it.col||'#F2602B',.95)+(it.lab?T(cx+18,cy-18,it.lab,'t','style="fill:var(--rocket);font-size:15px"'):''):gicon(it.t,cx,cy)}</g>`});
+  if(bot)s+=`<g data-k="bot" data-r="${(bot.d||0)*90}" data-in="drop">${bip(6+bot.x*c+c/2,6+bot.y*c+c/2+4,bot.d===undefined?null:bot.d,.78)}</g>`;
+  return svgw(W*c+12,H*c+12,s,Math.min(W*c*1.25,460))}
+const cmdChips=(cmds,done)=>`<div class="chips">${cmds.map((c,i)=>`<span class="chip ${i===done-1?'on':i<done-1?'done':''}">${c}</span>`).join('')}</div>`;
+function scaleSvg(L,R,tilt,k=L[0]+R[0]){const a=tilt*12;const st=(x,y,l,c)=>`<circle cx="${x}" cy="${y-17}" r="17" fill="${c}" stroke="rgba(0,0,0,.3)" stroke-width="2"/>${T(x,y-17,l,'t','style="fill:#fff;font-size:17px"')}`;
+  return `<svg viewBox="0 0 200 140" width="190" aria-hidden="true"><path d="M78 134 L122 134 L100 106 Z" fill="#8E97B5"/><line x1="100" y1="106" x2="100" y2="50" stroke="#8E97B5" stroke-width="5"/><g data-k="${k}" data-r="${a}"><g transform="rotate(${a} 100 50)"><line x1="26" y1="50" x2="174" y2="50" stroke="#5B6684" stroke-width="6" stroke-linecap="round"/><g transform="rotate(${-a} 34 50)">${st(34,50,L[0],L[1])}</g><g transform="rotate(${-a} 166 50)">${st(166,50,R[0],R[1])}</g></g></g><circle cx="100" cy="50" r="6" fill="#F2602B"/></svg>`}
+function pix(rows,w=110,mirror){const H=rows.length,W=rows[0].length;let s='';rows.forEach((r,y)=>r.forEach((v,x)=>{s+=`<rect data-k="c${x}_${y}" data-s="${v}" ${v===2?`data-from="c${W-1-x}_${y}"`:''} x="${x}" y="${y}" width="1" height="1" fill="${v===2?'#F2602B':v?'#2B2F6B':'#FFFFFF'}" stroke="#AEB6C8" stroke-width=".05"/>`}));
+  if(mirror)s+=`<line x1="${W/2}" y1="-.2" x2="${W/2}" y2="${H+.2}" stroke="#F2602B" stroke-width=".12" stroke-dasharray=".3 .2"/>`;
+  return `<svg class="fig" viewBox="-.25 -.25 ${W+.5} ${H+.5}" style="width:${w}px;max-width:100%" aria-hidden="true">${s}</svg>`}
+
+/* ---------- 20 misi ---------- */
+const Q=[
+/* 1 */{judul:'Lampu Sinyal Stasiun',konsep:'Pola',tingkat:'Mudah',
+ cerita:'Stasiun luar angkasa memasang deretan lampu sinyal. Lampu-lampunya membentuk pola yang <b>terus berulang</b>. Sebagian lampu belum dipasang!',
+ aturan:['Cari bagian yang berulang terus-menerus.','Teruskan pola itu sampai lampu yang ditanya.'],
+ visual(){const P=['bintang','bulat','segitiga','segitiga'];return lightsRow(Array.from({length:14},(_,i)=>i<8?{t:P[i%4]}:i===13?{q:1}:{}))},
+ demo(){const D=['bulat','bintang'],row=(k,g,hl)=>lightsRow(Array.from({length:7},(_,i)=>i<k?{t:D[i%2],nw:i>=k-2&&k>4}:i===6?{q:1}:{}).map((x,i)=>i===6&&hl?{...x,hl:1}:x),g);
+  return [[row(4,[]),'Contoh: lampunya <b>biru, kuning, biru, kuning</b>. Lampu ke-7 warnanya apa?'],[row(4,[[0,1],[2,3]]),'Bagian yang berulang adalah <b>biru, kuning</b>. Satu kelompok isinya 2 lampu.'],[row(6,[[0,1],[2,3],[4,5]]),'Teruskan kelompoknya: lampu 5 biru, lampu 6 kuning.'],[row(7,[[0,1],[2,3],[4,5]],1),'Lampu ke-7 memulai kelompok baru, jadi warnanya <b>biru</b>.']]},
+ tanya:'Bentuk apa yang ada di lampu ke-<mark>14</mark>?',
+ opsi:['bintang','segitiga','bulat','kotak'].map(t=>symIcon(t)+{bintang:'Bintang',segitiga:'Segitiga',bulat:'Lingkaran',kotak:'Kotak'}[t]),jawab:2,
+ bahas(){const P=['bintang','bulat','segitiga','segitiga'],row=(k,g)=>lightsRow(Array.from({length:14},(_,i)=>i<k?{t:P[i%4],nw:i>=8&&i>=k-4,hl:i===13&&k===14}:i===13?{q:1}:{}),g);
+  return [[row(8,[]),'Ini lampu yang sudah ada. Kita cari lampu ke-14.'],[row(8,[[0,3],[4,7]]),'Bagian yang berulang: <b>bintang, lingkaran, segitiga, segitiga</b>. Satu kelompok isinya 4 lampu.'],[row(12,[[0,3],[4,7],[8,11]]),'Kelompok ketiga mengisi lampu 9 sampai 12.'],[row(14,[[0,3],[4,7],[8,11],[12,13]]),'Lampu 13 adalah bintang, lampu 14 adalah <b>lingkaran</b>.']]},
+ info:'Komputer sangat pandai mengenali <b>pola</b>. Dengan pola, kita tidak perlu menggambar semua lampu untuk tahu bentuk lampu ke-14, bahkan lampu ke-1.000.',kunci:'pola, pengulangan'},
+
+/* 2 */{judul:'Bip Mencari Kristal',konsep:'Algoritma',tingkat:'Mudah',
+ cerita:'Bip mendarat di Planet Merah. Kapten Rara mengirim daftar perintah panah dari Bumi. Bip harus menjalankannya <b>satu per satu, dari kiri ke kanan</b>.',
+ aturan:['Setiap panah artinya Bip pindah <b>satu kotak</b> ke arah panah.','Bip boleh melewati benda, tetapi yang dihitung adalah kotak tempat Bip <b>berhenti</b>.'],
+ visual(){return gridScene(5,5,this.items,{x:0,y:4})+cmdChips(this.cmds,0)},
+ items:[{t:'kristal',x:3,y:3},{t:'batu',x:2,y:3},{t:'bendera',x:3,y:2},{t:'alien',x:1,y:2}],cmds:['↑','↑','→','→','↓','→'],
+ demo(){const it=[{t:'bendera',x:1,y:0}],C=['→','↑'],P=[[0,1],[1,1],[1,0]],cap=['Contoh: Bip mulai di kiri bawah. Ada dua perintah: <b>→</b> lalu <b>↑</b>.','Perintah 1, <b>→</b>: Bip pindah satu kotak ke kanan.','Perintah 2, <b>↑</b>: Bip pindah satu kotak ke atas. Bip berhenti di kotak <b>bendera</b>.'];
+  return P.map((p,i)=>[gridScene(2,2,it,{x:p[0],y:p[1],nw:i>0},P.slice(0,i+1))+cmdChips(C,i),cap[i]])},
+ tanya:'Setelah semua perintah selesai, Bip berhenti di kotak yang berisi <mark>apa</mark>?',
+ opsi:[['batu','Batu'],['bendera','Bendera'],['alien','Alien'],['kristal','Kristal']].map(([t,n])=>`<svg viewBox="0 0 44 44" width="40" aria-hidden="true">${gicon(t,22,22)}</svg>${n}`),jawab:3,
+ bahas(){const P=[[0,4],[0,3],[0,2],[1,2],[2,2],[2,3],[3,3]],cap=['Bip mulai di kiri bawah.','<b>↑</b> naik satu kotak.','<b>↑</b> naik lagi.','<b>→</b> ke kanan, melewati alien.','<b>→</b> ke kanan lagi.','<b>↓</b> turun ke kotak batu.','<b>→</b> ke kanan. Bip berhenti di kotak <b>kristal</b>!'];
+  return P.map((p,i)=>[gridScene(5,5,this.items,{x:p[0],y:p[1],nw:i>0},P.slice(0,i+1))+cmdChips(this.cmds,i),cap[i]])},
+ info:'Daftar perintah yang dijalankan sesuai urutan disebut <b>algoritma</b>. Robot sungguhan di planet Mars juga menerima perintah dari Bumi seperti ini.',kunci:'algoritma, urutan perintah'},
+
+/* 3 */{judul:'Tabung Bekal Astronot',konsep:'Stack',tingkat:'Sedang',
+ cerita:'Bekal astronot disimpan di tabung yang <b>hanya punya satu lubang di atas</b>. Kapten Rara memasukkan dan mengambil bekal secara bergantian.',
+ aturan:['Bekal baru selalu masuk ke <b>paling atas</b>.','Saat mengambil, yang keluar selalu bekal yang ada di <b>paling atas</b>.'],
+ F:{Roti:'#E9A23B',Susu:'#7FB3E8',Jeli:'#E0457B',Keju:'#F5D142',Apel:'#EF5B5B',Pisang:'#F5C518'},
+ tube(stack,out,nwTop,steps,done){const F=this.F;let s=`<rect x="40" y="20" width="110" height="230" rx="16" style="fill:var(--soft);stroke:var(--muted)" stroke-width="3"/><rect x="40" y="16" width="110" height="10" style="fill:var(--paper)"/>`;
+  stack.forEach((f,i)=>s+=`<g data-k="f-${f}" data-in="drop"><rect x="50" y="${206-i*48}" width="90" height="40" rx="12" fill="${F[f]}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>${T(95,226-i*48,f,'t','style="fill:#172041"')}</g>`);
+  s+=T(95,268,'tabung','tm')+`<text x="190" y="30" class="tm">Sudah diambil:</text>`;out.forEach((f,i)=>s+=`<g data-k="f-${f}"><rect x="190" y="${44+i*46}" width="110" height="38" rx="12" fill="${F[f]}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>${T(245,63+i*46,(i+1)+'. '+f,'t','style="fill:#172041"')}</g>`);
+  return svgw(320,280,s,340)+(steps?cmdChips(steps,done):'')},
+ steps:['+ Roti','+ Susu','+ Jeli','Ambil','+ Keju','Ambil','Ambil'],
+ visual(){return this.tube([],[],0,this.steps,0)},
+ demo(){const S=['+ Apel','+ Pisang','Ambil'];return [[this.tube([],[],0,S,0),'Contoh: tabung masih kosong. Ada 3 langkah.'],[this.tube(['Apel'],[],1,S,1),'<b>+ Apel</b>: Apel masuk ke dasar tabung.'],[this.tube(['Apel','Pisang'],[],1,S,2),'<b>+ Pisang</b>: Pisang masuk dan menumpuk <b>di atas</b> Apel.'],[this.tube(['Apel'],['Pisang'],false,S,3),'<b>Ambil</b>: yang keluar Pisang, karena Pisang ada di paling atas. Yang terakhir masuk, keluar duluan!']]},
+ tanya:'Bekal apa yang keluar pada pengambilan <mark>terakhir</mark> (langkah ke-7)?',
+ opsi:['Roti','Jeli','Keju','Susu'].map(f=>`<svg viewBox="0 0 30 20" width="34" aria-hidden="true"><rect x="1" y="2" width="28" height="16" rx="6" fill="${this?'':''}${{Roti:'#E9A23B',Susu:'#7FB3E8',Jeli:'#E0457B',Keju:'#F5D142'}[f]}"/></svg>${f}`),jawab:3,
+ bahas(){const S=this.steps,f=[[[],[],0,'Mulai dari tabung kosong.'],[['Roti'],[],1,'<b>+ Roti</b>.'],[['Roti','Susu'],[],1,'<b>+ Susu</b> di atas Roti.'],[['Roti','Susu','Jeli'],[],1,'<b>+ Jeli</b> di atas Susu.'],[['Roti','Susu'],['Jeli'],false,'<b>Ambil</b>: Jeli keluar (paling atas).'],[['Roti','Susu','Keju'],['Jeli'],1,'<b>+ Keju</b> masuk di atas Susu.'],[['Roti','Susu'],['Jeli','Keju'],false,'<b>Ambil</b>: Keju keluar.'],[['Roti'],['Jeli','Keju','Susu'],false,'<b>Ambil</b>: sekarang paling atas adalah <b>Susu</b>. Susu keluar terakhir.']];
+  return f.map(([a,b,c,t],i)=>[this.tube(a,b,c,S,i),t])},
+ info:'Tumpukan seperti tabung ini disebut <b>stack</b>. Tombol "undo" di komputer memakai stack: hal terakhir yang kamu lakukan dibatalkan lebih dulu.',kunci:'stack, tumpukan'},
+
+/* 4 */{judul:'Antrean Peluncuran',konsep:'Queue',tingkat:'Sedang',
+ cerita:'Roket-roket antre di landasan. Roket terdepan meluncur lebih dulu. Roket yang baru datang <b>ikut antre di paling belakang</b>.',
+ aturan:['<b>Luncur</b>: roket paling depan (paling dekat menara) terbang.','<b>Datang</b>: roket baru masuk ke ujung belakang antrean.'],
+ RC:{Merah:'#EF5B5B',Biru:'#4C8DF0',Hijau:'#22A06B',Kuning:'#E8B10C',Ungu:'#9B6BDF',Oranye:'#F59E3B'},
+ pad(q,gone,ev,done,nwBack){const RC=this.RC;let s=`<rect x="0" y="118" width="470" height="14" rx="4" fill="#8E97B5"/><rect x="420" y="20" width="12" height="100" fill="#5B6684"/><path d="M402 30 h30 M402 60 h30 M402 90 h30" stroke="#5B6684" stroke-width="3"/>`+T(426,10,'menara','tm');
+  q.forEach((r,i)=>{const x=370-i*72;s+=`<g data-k="r-${r}" data-in="left" data-out="up">${rocket(x,84,RC[r],1.25)}${T(x,146,r,'tm')}</g>`});
+  s+=T(370,162,'depan','tm','style="fill:var(--rocket)"');
+  return svgw(470,172,s,500)+`<div class="chips"><span class="chip" style="border-style:dashed">Sudah meluncur:</span>${gone.map((r,i)=>`<span class="chip ${i===gone.length-1&&!nwBack&&done?'on':''}" data-k="g-${r}" data-in="zoom">${i+1}. ${r}</span>`).join('')||'<span class="chip done">belum ada</span>'}</div>`+(ev?cmdChips(ev,done):'')},
+ ev:['Luncur','Datang Kuning','Luncur','Datang Ungu','Luncur','Luncur'],
+ visual(){return this.pad(['Merah','Biru','Hijau'],[],this.ev,0)},
+ demo(){const E=['Luncur','Datang Oranye'];return [[this.pad(['Biru','Hijau'],[],E,0),'Contoh: antrean berisi Biru (paling depan) dan Hijau.'],[this.pad(['Hijau'],['Biru'],E,1),'<b>Luncur</b>: Biru di depan, jadi Biru terbang. Hijau maju ke depan.'],[this.pad(['Hijau','Oranye'],['Biru'],E,2,1),'<b>Datang Oranye</b>: Oranye antre di <b>belakang</b> Hijau, bukan di depan.']]},
+ tanya:'Roket warna apa yang meluncur <mark>ke-4</mark>?',
+ opsi:['Biru','Hijau','Ungu','Kuning'],jawab:3,
+ bahas(){const E=this.ev,f=[[['Merah','Biru','Hijau'],[],0,'Antrean awal: Merah paling depan.'],[['Biru','Hijau'],['Merah'],1,'<b>Luncur</b>: Merah terbang (ke-1).'],[['Biru','Hijau','Kuning'],['Merah'],2,'<b>Datang Kuning</b>: Kuning antre paling belakang.',1],[['Hijau','Kuning'],['Merah','Biru'],3,'<b>Luncur</b>: Biru terbang (ke-2).'],[['Hijau','Kuning','Ungu'],['Merah','Biru'],4,'<b>Datang Ungu</b>: Ungu antre di belakang Kuning.',1],[['Kuning','Ungu'],['Merah','Biru','Hijau'],5,'<b>Luncur</b>: Hijau terbang (ke-3).'],[['Ungu'],['Merah','Biru','Hijau','Kuning'],6,'<b>Luncur</b>: <b>Kuning</b> terbang sebagai roket ke-4. Ungu masih menunggu.']];
+  return f.map(([q,g,d,t,b])=>[this.pad(q,g,E,d,b),t])},
+ info:'Antrean yang masuk dari belakang dan keluar dari depan disebut <b>queue</b>. Printer dan pesan di ponsel juga diproses memakai antrean seperti ini.',kunci:'queue, antrean'},
+
+/* 5 */{judul:'Pesan dari Alien',konsep:'Sandi',tingkat:'Sedang',
+ cerita:'Bip menerima pesan aneh dari alien: <b>CVMBO</b>. Kapten Rara tahu caranya: alien menulis setiap huruf dengan <b>huruf sesudahnya</b> dalam abjad.',
+ aturan:['Alien mengganti A jadi B, B jadi C, C jadi D, dan seterusnya.','Untuk membaca pesan, lakukan kebalikannya: ganti setiap huruf dengan <b>huruf sebelumnya</b>.'],
+ scene(enc,dec,hi,a,b,label){const abc='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');return `<div class="lbl tm" style="font-weight:900;color:var(--muted)">${label[0]}</div><div class="tiles">${enc.map((c,i)=>`<div class="tile enc ${i===hi?'hl':''}" data-k="e${i}" data-s="${i===hi}">${c}</div>`).join('')}</div><div class="arw">↓</div><div class="tiles">${enc.map((_,i)=>dec[i]?`<div class="tile dec" data-k="d${i}" data-s="${dec[i]}" data-from="abc-${dec[i]}">${dec[i]}</div>`:'<div class="tile dec"></div>').join('')}</div><div class="abc">${abc.map(c=>{const k=c===a?'a':c===b?'b':'';return `<span class="${k}" data-k="abc-${c}" data-s="${k}">${c}</span>`}).join('')}</div>`},
+ visual(){return this.scene('CVMBO'.split(''),[],-1,null,null,['Pesan alien'])},
+ demo(){const E='CPMB'.split(''),D='BOLA'.split('');return [[this.scene(D,[],-1,null,null,['Contoh: kata BOLA ditulis alien']),'Contoh: alien ingin menulis kata <b>BOLA</b>.'],...D.map((c,i)=>[this.scene(D,E.slice(0,i+1),i,c,E[i],['Contoh: kata BOLA ditulis alien']),`<b>${c}</b> diganti huruf sesudahnya, yaitu <b>${E[i]}</b>.`]),[this.scene(D,E,-1,null,null,['Contoh: kata BOLA ditulis alien']),'Jadi BOLA ditulis alien menjadi <b>CPMB</b>.']]},
+ tanya:'Apa arti pesan alien <mark>CVMBO</mark>?',
+ opsi:['DWNCP','BUMAN','CULAN','BULAN'],jawab:3,
+ bahas(){const E='CVMBO'.split(''),D='BULAN'.split('');return [[this.scene(E,[],-1,null,null,['Pesan alien']),'Untuk membaca, ganti setiap huruf dengan huruf <b>sebelumnya</b>.'],...E.map((c,i)=>[this.scene(E,D.slice(0,i+1),i,c,D[i],['Pesan alien']),`<b>${c}</b> → huruf sebelumnya adalah <b>${D[i]}</b>.`]),[this.scene(E,D,-1,null,null,['Pesan alien']),'Pesannya: <b>BULAN</b>! Alien ingin bertemu di Bulan.']]},
+ info:'Mengubah pesan supaya tidak mudah dibaca orang lain disebut <b>enkripsi</b>. Sandi geser seperti ini sudah dipakai sejak zaman Romawi kuno. Sekarang komputer memakai sandi yang jauh lebih sulit untuk menjaga pesan kita.',kunci:'sandi, enkripsi'},
+
+/* 6 */{judul:'Batu Planet Terberat',konsep:'Logika',tingkat:'Mudah',
+ cerita:'Bip membawa tiga batu planet: <b>A</b>, <b>B</b>, dan <b>C</b>. Kapten Rara ingin tahu batu mana yang paling berat. Bip menimbangnya dua kali.',
+ aturan:['Sisi timbangan yang <b>turun</b> berisi batu yang <b>lebih berat</b>.','Sisi yang naik berisi batu yang lebih ringan.'],
+ visual(){return `<div class="chips">${scaleSvg(['A','#8D96A6'],['B','#A0785A'],1)}${scaleSvg(['B','#A0785A'],['C','#6E7FA8'],1)}</div>`},
+ demo(){return [[`<div class="chips">${scaleSvg(['X','#9B6BDF'],['Y','#22A06B'],0)}</div>`,'Contoh: batu X dan batu Y ditaruh di timbangan.'],[`<div class="chips">${scaleSvg(['X','#9B6BDF'],['Y','#22A06B'],-1)}</div>`,'Sisi X <b>turun</b>. Artinya X <b>lebih berat</b> daripada Y.']]},
+ tanya:'Batu mana yang <mark>paling berat</mark>?',
+ opsi:['Batu C','Batu A','Batu B','Tidak bisa diketahui'],jawab:0,
+ bahas(){const L=x=>`<div class="chips">${x}</div>`;return [[L(scaleSvg(['A','#8D96A6'],['B','#A0785A'],1)),'Timbangan 1: sisi B turun, jadi <b>B lebih berat dari A</b>.'],[L(scaleSvg(['B','#A0785A'],['C','#6E7FA8'],1)),'Timbangan 2: sisi C turun, jadi <b>C lebih berat dari B</b>.'],[`<div class="chips"><span class="chip nw">C</span><span class="arw">lebih berat dari</span><span class="chip nw">B</span><span class="arw">lebih berat dari</span><span class="chip nw">A</span></div>`,'Gabungkan: C lebih berat dari B, dan B lebih berat dari A. Jadi <b>C paling berat</b>, walaupun C tidak pernah ditimbang bersama A.']]},
+ info:'Kesimpulan seperti "C > B dan B > A, jadi C > A" dipakai komputer saat <b>mengurutkan</b> data. Komputer tidak perlu membandingkan semua pasangan satu per satu.',kunci:'perbandingan, penalaran'},
+
+/* 7 */{judul:'Rute Tercepat ke Saturnus',konsep:'Graf',tingkat:'Sulit',
+ cerita:'Pesawat Kapten Rara berangkat dari <b>Bumi</b> menuju <b>Saturnus</b>. Garis menunjukkan jalur antar planet, dan angka menunjukkan lama perjalanan dalam hari.',
+ aturan:['Lama perjalanan = jumlah semua angka di jalur yang dilewati.','Jalur yang lewat lebih banyak planet <b>belum tentu</b> lebih lama.'],
+ N:{B:[55,150,'Bumi','#3D8BE0'],L:[175,55,'Bulan','#A7AFC2'],V:[190,245,'Venus','#E8B35A'],M:[330,150,'Mars','#E0603E'],S:[455,60,'Saturnus','#D9B26F']},
+ E:[['B','L',1],['B','V',3],['L','M',4],['L','V',1],['V','M',2],['M','S',3],['V','S',6]],
+ map(hl=[],N=this.N,E=this.E,travel){let s='';E.forEach(([a,b,w])=>{const on=hl.some(([x,y])=>(x===a&&y===b)||(x===b&&y===a));s+=`<line x1="${N[a][0]}" y1="${N[a][1]}" x2="${N[b][0]}" y2="${N[b][1]}" style="stroke:${on?'var(--rocket)':'var(--line)'}" stroke-width="${on?8:5}" stroke-linecap="round"/>`});
+  E.forEach(([a,b,w])=>{const x=(N[a][0]+N[b][0])/2,y=(N[a][1]+N[b][1])/2;s+=`<circle cx="${x}" cy="${y}" r="15" style="fill:var(--paper);stroke:var(--line)" stroke-width="2"/>`+T(x,y,w,'t','style="fill:var(--teal);font-size:16px"')});
+  Object.entries(N).forEach(([k,[x,y,n,c]])=>{s+=`<g data-k="p${k}" data-in="${['zoom','spin','drop','up','pop'][Object.keys(N).indexOf(k)%5]}"><circle cx="${x}" cy="${y}" r="26" fill="${c}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>`+(n==='Saturnus'?`<ellipse cx="${x}" cy="${y}" rx="40" ry="9" fill="none" stroke="#B58A3D" stroke-width="3"/>`:'')+T(x,y+40,n,'t')+'</g>'});
+  if(travel)s+=traveler(travel.map(k=>[N[k][0],N[k][1]]),'rocket',0,.75);return svgw(510,300,s,520)},
+ visual(){return this.map()},
+ demo(){const N={X:[60,90,'Pos 1','#3D8BE0'],Y:[220,40,'Pos 2','#A7AFC2'],Z:[380,90,'Pos 3','#E0603E']},E=[['X','Y',2],['Y','Z',2],['X','Z',5]],m=(h,t)=>this.map(h,N,E,t).replace('0 0 510 300','0 0 440 150');
+  return [[m([]),'Contoh: dari Pos 1 ke Pos 3 ada dua jalur. Mana yang lebih cepat?'],[m([['X','Z']],['X','Z']),'Jalur langsung: <b>5 hari</b>.'],[m([['X','Y'],['Y','Z']],['X','Y','Z']),'Jalur lewat Pos 2: 2 + 2 = <b>4 hari</b>. Jalur memutar ternyata <b>lebih cepat</b>!']]},
+ tanya:'Paling cepat, berapa <mark>hari</mark> perjalanan dari Bumi ke Saturnus?',
+ opsi:['7 hari','8 hari','9 hari','10 hari'],jawab:0,
+ bahas(){const R=[[['B','V','S'],'Bumi → Venus → Saturnus = 3 + 6 = <b>9</b> hari.'],[['B','V','M','S'],'Bumi → Venus → Mars → Saturnus = 3 + 2 + 3 = <b>8</b> hari.'],[['B','L','M','S'],'Bumi → Bulan → Mars → Saturnus = 1 + 4 + 3 = <b>8</b> hari.'],[['B','L','V','M','S'],'Bumi → Bulan → Venus → Mars → Saturnus = 1 + 1 + 2 + 3 = <b>7</b> hari. Ini yang <b>tercepat</b>!']];const pr=a=>a.slice(1).map((k,i)=>[a[i],k]);
+  return [[this.map(),'Kita terbangkan roket di beberapa jalur dan jumlahkan angkanya.'],...R.map(([r,t])=>[this.map(pr(r),undefined,undefined,r),t])]},
+ info:'Aplikasi peta di ponsel mencari <b>jalur terpendek</b> dengan cara seperti ini, tetapi jauh lebih cepat karena dikerjakan komputer.',kunci:'graf, jalur terpendek'},
+
+/* 8 */{judul:'Kenali Alien',konsep:'Pohon Keputusan',tingkat:'Sedang',
+ cerita:'Di Planet Ungu tinggal empat jenis alien: <b>Zib, Zab, Zob,</b> dan <b>Zub</b>. Bip memakai diagram pertanyaan untuk mengenali mereka.',
+ aturan:['Mulai dari pertanyaan paling atas.','Jawab <b>Ya</b> atau <b>Tidak</b>, lalu ikuti garisnya sampai bertemu nama alien.'],
+ tree(hl=[],al,lab,tr){const box=(x,y,t,id)=>`<g data-k="${id}" data-s="${hl.includes(id)}"><rect x="${x-62}" y="${y-18}" width="124" height="36" rx="18" style="fill:var(--paper);stroke:${hl.includes(id)?'var(--rocket)':'var(--ink)'}" stroke-width="${hl.includes(id)?4:2}"/>`+T(x,y,t)+'</g>';
+  const leaf=(x,y,t,id)=>`<g data-k="${id}" data-s="${hl.includes(id)}"><rect x="${x-34}" y="${y-17}" width="68" height="34" rx="9" style="fill:${hl.includes(id)?'var(--star)':'var(--star-soft)'};stroke:var(--muted)" stroke-width="2"/>`+T(x,y,t,'t','style="fill:#172041"')+'</g>';
+  const ed=(x1,y1,x2,y2,l,id)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${hl.includes(id)?'var(--rocket)':'var(--line)'}" stroke-width="${hl.includes(id)?7:4}"/><rect x="${(x1+x2)/2-22}" y="${(y1+y2)/2-11}" width="44" height="22" rx="11" style="fill:var(--paper);stroke:var(--line)"/>`+T((x1+x2)/2,(y1+y2)/2,l,'tm');
+  let s=ed(250,30,130,120,'Ya','e1')+ed(250,30,370,120,'Tidak','e2')+ed(130,120,65,215,'Ya','e3')+ed(130,120,195,215,'Tidak','e4')+ed(370,120,305,215,'Ya','e5')+ed(370,120,435,215,'Tidak','e6');
+  s+=box(250,30,'Punya antena?','n1')+box(130,120,'Mata lebih dari 2?','n2')+box(370,120,'Berwarna hijau?','n3')+leaf(65,215,'Zib','zib')+leaf(195,215,'Zab','zab')+leaf(305,215,'Zob','zob')+leaf(435,215,'Zub','zub');
+  if(tr){const P={n1:[250,30],n2:[130,120],n3:[370,120],zib:[65,215],zab:[195,215],zob:[305,215],zub:[435,215]};s+=traveler(tr.map(k=>P[k]),bip(0,-30,null,.55),0,1.1)}
+  return `<div class="chips" style="align-items:center">${alienIcon(al,96)}<b style="max-width:160px">${lab}</b></div>`+svgw(500,240,s,540)},
+ visual(){return this.tree([],{c:AC.hijau,eyes:3},'Alien yang ditemui Bip')},
+ demo(){const a={c:AC.ungu,ant:1,eyes:1},l='Contoh alien';return [[this.tree([],a,l),'Contoh: alien ungu ini punya antena dan satu mata. Jenis apa dia?'],[this.tree(['n1'],a,l,['n1']),'"Punya antena?" <b>Ya</b>, jadi ikuti garis Ya ke kiri.'],[this.tree(['n1','e1','n2'],a,l,['n1','n2']),'"Mata lebih dari 2?" Matanya hanya 1, jadi <b>Tidak</b>.'],[this.tree(['n1','e1','n2','e4','zab'],a,l,['n2','zab']),'Kita sampai di <b>Zab</b>. Alien ini adalah Zab!']]},
+ tanya:'Alien yang ditemui Bip termasuk jenis <mark>apa</mark>?',
+ opsi:['Zob','Zib','Zab','Zub'],jawab:0,
+ bahas(){const a={c:AC.hijau,eyes:3},l='Alien yang ditemui Bip';return [[this.tree(['n1'],a,l,['n1']),'"Punya antena?" Alien ini <b>tidak</b> punya antena. Ikuti garis Tidak ke kanan.'],[this.tree(['n1','e2','n3'],a,l,['n1','n3']),'"Berwarna hijau?" <b>Ya</b>, alien ini hijau.'],[this.tree(['n1','e2','n3','e5','zob'],a,l,['n3','zob']),'Kita sampai di <b>Zob</b>! Tiga matanya tidak perlu diperiksa, karena pertanyaan tentang mata ada di cabang lain.']]},
+ info:'Diagram ini disebut <b>pohon keputusan</b>. Dengan beberapa pertanyaan Ya/Tidak saja, komputer bisa mengenali banyak hal, misalnya jenis tanaman dari fotonya.',kunci:'pohon keputusan, klasifikasi'},
+
+/* 9 */{judul:'Lampu Kabin Pesawat',konsep:'Logika DAN/ATAU',tingkat:'Sedang',
+ cerita:'Lampu kabin pesawat padam! Bip memeriksa rangkaian listriknya. Ada tiga saklar: <b>A</b>, <b>B</b>, dan <b>C</b>.',
+ aturan:['Listrik hanya mengalir lewat saklar yang <b>tertutup</b> (nyala).','Lampu menyala jika ada jalan listrik yang <b>tidak terputus</b> dari baterai, lewat lampu, kembali ke baterai.'],
+ circ(a,b,c,label){const lit=a&&(b||c),W=lit?'#F2A600':'var(--muted)',cls=lit?'class="flow"':'';
+  const wire=d=>`<path d="${d}" fill="none" style="stroke:${W}" stroke-width="5" stroke-linejoin="round" ${cls}/>`;
+  const sw=(x,y,on,l)=>`<g data-k="sw${l}" data-s="${on}"><circle cx="${x}" cy="${y}" r="5" style="fill:var(--paper);stroke:var(--ink)" stroke-width="2.5"/><circle cx="${x+40}" cy="${y}" r="5" style="fill:var(--paper);stroke:var(--ink)" stroke-width="2.5"/><line x1="${x}" y1="${y}" x2="${on?x+40:x+30}" y2="${on?y:y-24}" stroke="${on?'#1C9A5B':'#DD4343'}" stroke-width="5" stroke-linecap="round"/>`+T(x+20,y+20,l+(on?' nyala':' mati'),'tm','style="fill:'+(on?'#1C9A5B':'#DD4343')+';font-size:13px"')+'</g>';
+  let s=wire('M40 70 V40 H80 M120 40 H160 H200 M240 40 H280 H320 V90')+wire('M160 40 V110 H200 M240 110 H280 V40')+wire('M320 130 V180 H40 V110');
+  s+=`<rect x="22" y="70" width="36" height="40" rx="4" fill="#5B6684"/><rect x="32" y="64" width="16" height="6" fill="#5B6684"/>`+T(40,90,'+ −','t','style="fill:#fff;font-size:12px"');
+  s+=sw(80,40,a,'A')+sw(200,40,b,'B')+sw(200,110,c,'C');
+  s+=`<g data-k="lamp" data-s="${lit}">`+(lit?`<circle cx="320" cy="110" r="32" fill="#FFC93C" opacity=".4" class="glow"/>`:'')+`<circle cx="320" cy="110" r="18" fill="${lit?'#FFD84D':'#D3DAEA'}" stroke="#5B6684" stroke-width="3"/><path d="M312 112 q4 -8 8 0 q4 8 8 0" stroke="#5B6684" stroke-width="2" fill="none"/></g>`;
+  if(lit)s+=`<circle r="6" fill="#FFF7B0" stroke="#F2A600" stroke-width="2"><animateMotion dur="2.4s" repeatCount="indefinite" path="${b?'M40 70 V40 H320 V180 H40 Z':'M40 70 V40 H160 V110 H280 V40 H320 V180 H40 Z'}"/></circle>`;
+  return (label?`<div class="chips"><span class="chip" data-k="lbl" data-s="${label}">${label}</span></div>`:'')+svgw(370,200,s,420)+`<div class="chips"><span class="chip ${lit?'on':''}" data-k="res" data-s="${lit}">${lit?'Lampu MENYALA':'Lampu padam'}</span></div>`},
+ visual(){return this.circ(0,0,0)},
+ demo(){return [[this.circ(1,0,0,'Contoh 1'),'Hanya saklar A yang nyala. Jalan lewat B dan C masih <b>terputus</b>, jadi lampu padam.'],[this.circ(1,1,0,'Contoh 2'),'A dan B nyala. Listrik bisa lewat A lalu B, jadi lampu <b>menyala</b>.'],[this.circ(0,1,1,'Contoh 3'),'B dan C nyala, tetapi A mati. Semua jalan harus lewat A, jadi lampu padam.']]},
+ tanya:'Kombinasi saklar mana yang membuat lampu <mark>menyala</mark>?',
+ opsi:['A nyala, B mati, C mati','A nyala, B mati, C nyala','A mati, B nyala, C nyala','A mati, B mati, C nyala'],jawab:1,
+ bahas(){return [[this.circ(1,0,0,'Pilihan A'),'Pilihan A: B dan C sama-sama mati, jalan terputus.'],[this.circ(1,0,1,'Pilihan B'),'Pilihan B: listrik lewat A, lalu lewat <b>C</b>, sampai ke lampu. <b>Menyala!</b>'],[this.circ(0,1,1,'Pilihan C'),'Pilihan C: A mati, jalan putus di awal.'],[this.circ(0,0,1,'Pilihan D'),'Pilihan D: A mati juga. Jadi aturannya: lampu menyala jika <b>A nyala DAN (B ATAU C nyala)</b>.']]},
+ info:'Di dalam komputer ada miliaran saklar kecil. Saklar yang berderet bekerja seperti <b>DAN</b>, saklar yang bercabang bekerja seperti <b>ATAU</b>. Dari situ komputer bisa menghitung dan mengambil keputusan.',kunci:'logika DAN, ATAU, rangkaian'},
+
+/* 10 */{judul:'Dua Bulan Berputar',konsep:'Pola Waktu',tingkat:'Sulit',
+ cerita:'Planet Zorg punya dua bulan. Hari ini keduanya berada di <b>garis awal</b> (bendera). Bulan <b>Kecil</b> mengelilingi planet dalam <b>3 hari</b>. Bulan <b>Besar</b> butuh <b>4 hari</b>.',
+ aturan:['Setiap hari, setiap bulan bergeser sedikit di jalurnya.','Setelah satu putaran penuh, bulan kembali ke garis awal.'],
+ orb(d,pa,pb,na='Kecil',nb='Besar'){const cx=150,cy=150,ra=360*d/pa,rb=360*d/pb;let s=`<circle cx="${cx}" cy="${cy}" r="70" fill="none" style="stroke:var(--line)" stroke-width="2" stroke-dasharray="5 5"/><circle cx="${cx}" cy="${cy}" r="118" fill="none" style="stroke:var(--line)" stroke-width="2" stroke-dasharray="5 5"/><line x1="${cx}" y1="${cy-30}" x2="${cx}" y2="${cy-140}" style="stroke:var(--rocket)" stroke-width="3"/><path d="M${cx} ${cy-148} l16 5 l-16 5 z" style="fill:var(--rocket)"/>`;
+  s+=`<circle cx="${cx}" cy="${cy}" r="30" fill="#7C5CD6"/><ellipse cx="${cx}" cy="${cy}" rx="44" ry="10" fill="none" stroke="#C7B6F5" stroke-width="3"/>`;
+  s+=`<g data-k="mA" data-o="1" data-r="${ra}" style="transform-box:view-box;transform-origin:150px 150px;transform:rotate(${ra}deg)"><circle cx="150" cy="80" r="12" fill="#A7AFC2" stroke="#5B6684" stroke-width="2"/></g><g data-k="mB" data-o="1" data-r="${rb}" style="transform-box:view-box;transform-origin:150px 150px;transform:rotate(${rb}deg)"><circle cx="150" cy="32" r="17" fill="#E8B35A" stroke="#9A6E21" stroke-width="2"/></g>`;
+  const atA=d%pa===0,atB=d%pb===0;
+  return `<div class="chips"><span class="chip on" data-k="day" data-s="${d}">Hari ke-${d}</span><span class="chip" data-k="ca" data-s="${atA}">${na} (${pa} hari): ${atA?'di garis awal':'berjalan'}</span><span class="chip" data-k="cb" data-s="${atB}">${nb} (${pb} hari): ${atB?'di garis awal':'berjalan'}</span></div>`+svgw(300,300,s,320)},
+ visual(){return this.orb(0,3,4)},
+ demo(){const C=['Contoh: bulan Kecil butuh 2 hari, bulan Besar butuh 3 hari. Keduanya mulai di garis awal.','Hari 1: keduanya berjalan.','Hari 2: bulan Kecil kembali ke garis awal. Bulan Besar belum.','Hari 3: bulan Besar kembali ke garis awal. Bulan Kecil sudah lewat.','Hari 4: bulan Kecil di garis awal lagi.','Hari 5: belum ada yang pas.','Hari 6: <b>keduanya</b> di garis awal bersamaan!'];return C.map((c,d)=>[this.orb(d,2,3),c])},
+ tanya:'Paling cepat, pada hari ke berapa kedua bulan <mark>bersamaan</mark> berada di garis awal lagi?',
+ opsi:['Hari ke-6','Hari ke-7','Hari ke-12','Hari ke-24'],jawab:2,
+ bahas(){const F=[[0,'Mulai: keduanya di garis awal.'],[3,'Hari 3: bulan Kecil kembali. Bulan Besar belum.'],[4,'Hari 4: bulan Besar kembali. Bulan Kecil belum.'],[6,'Hari 6: bulan Kecil kembali lagi (putaran ke-2).'],[8,'Hari 8: bulan Besar kembali lagi.'],[9,'Hari 9: bulan Kecil (putaran ke-3).'],[12,'Hari 12: <b>keduanya</b> di garis awal! Bulan Kecil kembali pada hari 3, 6, 9, <b>12</b>. Bulan Besar pada hari 4, 8, <b>12</b>.']];return F.map(([d,c])=>[this.orb(d,3,4),c])},
+ info:'Mencari kapan dua kejadian berulang terjadi bersamaan berguna untuk menyusun <b>jadwal</b>, misalnya kapan dua bus berangkat bersamaan atau kapan dua lampu berkedip bersamaan.',kunci:'pola, kelipatan, penjadwalan'},
+
+/* 11 */{judul:'Logo Roket Simetris',konsep:'Simetri',tingkat:'Sedang',
+ cerita:'Bip menggambar logo roket di layar berkotak. Bip baru menggambar <b>bagian kiri</b>. Bagian kanan harus menjadi <b>bayangan cermin</b> dari bagian kiri.',
+ aturan:['Garis putus-putus oranye adalah cermin.','Kotak yang dekat cermin di kiri juga dekat cermin di kanan. Kotak yang jauh tetap jauh.'],
+ L:[[0,0,1],[0,1,1],[0,1,1],[1,1,1],[1,0,1]],
+ full(L,f){return L.map(r=>r.concat(f?f(r):r.slice().reverse()))},
+ visual(){return pix(this.L.map(r=>r.concat([0,0,0])),180,1)},
+ demo(){const L=[[1,0],[1,1],[0,1]];const st=k=>L.map((r,y)=>r.concat(y<k?r.slice().reverse().map(v=>v?2:0):[0,0]));return [[pix(st(0),140,1),'Contoh: bagian kiri sudah ada. Garis oranye adalah cermin.'],[pix(st(1),140,1),'Baris 1: kotak paling kiri (jauh dari cermin) muncul di paling kanan.'],[pix(st(2),140,1),'Baris 2: dua kotak di kiri menjadi dua kotak di kanan.'],[pix(st(3),140,1),'Baris 3: kotak yang dekat cermin juga dekat cermin di kanan. Selesai!']]},
+ tanya:'Gambar mana yang menunjukkan logo yang <mark>lengkap dan simetris</mark>?',
+ opsi(){const L=this.L,c=this.full(L);const copy=L.map(r=>r.concat(r));const d3=c.map((r,i)=>i===4?[1,0,1,1,0,0]:r);const d4=c.map((r,i)=>i===1?[0,1,1,1,1,1]:r);return [copy,d3,d4,c].map(m=>pix(m,104))},jawab:3,
+ bahas(){const L=this.L;const st=k=>L.map((r,y)=>r.concat(y<k?r.slice().reverse().map(v=>v?2:0):[0,0,0]));return [[pix(st(0),180,1),'Kita cerminkan baris demi baris.'],...[1,2,3,4,5].map(k=>[pix(st(k),180,1),['Baris 1: kotak di samping cermin muncul di samping cermin.','Baris 2: dua kotak menjadi dua kotak.','Baris 3: sama seperti baris 2.','Baris 4: tiga kotak menjadi tiga kotak. Baris ini penuh.','Baris 5: kiri-lubang-kanan menjadi kanan-lubang-kiri. Hasilnya cocok dengan pilihan <b>D</b>.'][k-1]])]},
+ info:'Program menggambar di komputer punya tombol "cerminkan". Komputer menghitung posisi kotak baru dengan aturan seperti ini: jarak ke cermin tetap sama.',kunci:'simetri, pencerminan'},
+
+/* 12 */{judul:'Jalan-Jalan di Kota Bulan',konsep:'Menghitung Jalur',tingkat:'Sulit',
+ cerita:'Bip ingin pergi dari <b>pintu masuk</b> (kiri atas) ke <b>roket</b> (kanan bawah) di Kota Bulan. Jalan-jalannya berbentuk kotak-kotak.',
+ aturan:['Bip hanya boleh berjalan ke <b>kanan</b> atau ke <b>bawah</b>.','Bip tidak boleh berjalan ke kiri atau ke atas.'],
+ g(n,path=[],nums={}){const S=80,o=40,P=(i,j)=>[o+i*S,o+j*S];let s='';for(let j=0;j<=n;j++)s+=`<line x1="${o}" y1="${o+j*S}" x2="${o+n*S}" y2="${o+j*S}" style="stroke:var(--line)" stroke-width="10" stroke-linecap="round"/>`;for(let i=0;i<=n;i++)s+=`<line x1="${o+i*S}" y1="${o}" x2="${o+i*S}" y2="${o+n*S}" style="stroke:var(--line)" stroke-width="10" stroke-linecap="round"/>`;
+  if(path.length)s+=`<polyline points="${path.map(([i,j])=>P(i,j).join(',')).join(' ')}" fill="none" style="stroke:var(--rocket)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>`;
+  for(let j=0;j<=n;j++)for(let i=0;i<=n;i++){const k=i+','+j,[x,y]=P(i,j);s+=nums[k]!==undefined?`<g data-k="n${i}_${j}" data-in="${['zoom','drop','spin','pop'][(i+j)%4]}"><circle cx="${x}" cy="${y}" r="16" style="fill:var(--star)"/>${T(x,y,nums[k],'t','style="fill:#172041;font-size:16px"')}</g>`:`<circle cx="${x}" cy="${y}" r="7" style="fill:var(--muted)"/>`}
+  s+=(path.length?traveler(path.map(([i,j])=>P(i,j)),bip(0,-6,null,.6),0,.9):bip(o-2,o-30,null,.6))+rocket(o+n*S+26,o+n*S-10,'#F2602B',.8);return svgw(n*S+o*2+10,n*S+o*2,s,n*S*1.4+120)},
+ visual(){return this.g(2)},
+ demo(){return [[this.g(1),'Contoh: kota kecil dengan satu kotak. Ada berapa jalan?'],[this.g(1,[[0,0],[1,0],[1,1]]),'Jalan 1: <b>kanan</b>, lalu <b>bawah</b>.'],[this.g(1,[[0,0],[0,1],[1,1]]),'Jalan 2: <b>bawah</b>, lalu <b>kanan</b>. Jadi ada 2 jalan.']]},
+ tanya:'Ada berapa <mark>jalan berbeda</mark> dari pintu masuk ke roket?',
+ opsi:['4 jalan','5 jalan','6 jalan','8 jalan'],jawab:2,
+ bahas(){const order=[['0,0',1],['1,0',1],['2,0',1],['0,1',1],['0,2',1],['1,1',2],['2,1',3],['1,2',3],['2,2',6]];const caps={0:'Trik: tulis di setiap titik, ada berapa jalan untuk sampai ke sana. Titik awal = 1.',2:'Titik di tepi atas hanya bisa dicapai dari kiri, jadi semuanya 1.',4:'Titik di tepi kiri hanya bisa dicapai dari atas, jadi semuanya 1.',5:'Titik lain = angka dari <b>atas</b> + angka dari <b>kiri</b>. Di sini 1 + 1 = 2.',6:'1 + 2 = 3.',7:'2 + 1 = 3.',8:'Titik roket: 3 + 3 = <b>6 jalan</b>!'};const fr=[];let nums={};order.forEach(([k,v],i)=>{nums={...nums,[k]:v,_new:k};if(caps[i])fr.push([this.g(2,[],nums),caps[i]])});return fr},
+ info:'Menjumlahkan dari titik-titik sebelumnya adalah trik yang dipakai komputer untuk menghitung banyak kemungkinan dengan cepat, tanpa harus menggambar setiap jalan satu per satu.',kunci:'menghitung jalur, kombinatorika'},
+
+/* 13 */{judul:'Harta di Peta Galaksi',konsep:'Koordinat',tingkat:'Mudah',
+ cerita:'Kapten Rara menemukan peta harta. Peta itu dibagi menjadi kotak-kotak. Setiap kotak punya nama: <b>huruf kolom</b> lalu <b>angka baris</b>, misalnya B3.',
+ aturan:['Petunjuk: harta ada di <b>kolom yang sama</b> dengan planet merah.','Harta juga ada di <b>baris yang sama</b> dengan bintang kuning.'],
+ m(col=-1,row=-1,mark){const c=52,o=34;let s='';'ABCDE'.split('').forEach((l,i)=>s+=T(o+i*c+c/2,16,l,'t','style="font-size:17px"'));for(let j=0;j<5;j++)s+=T(14,o+j*c+c/2,j+1,'t','style="font-size:17px"');
+  for(let j=0;j<5;j++)for(let i=0;i<5;i++)s+=`<rect x="${o+i*c}" y="${o+j*c}" width="${c}" height="${c}" style="fill:var(--soft);stroke:var(--line)" stroke-width="2"/>`;
+  if(col>=0)s+=`<rect data-k="col" data-in="growdown" x="${o+col*c}" y="${o}" width="${c}" height="${5*c}" fill="#F2602B" opacity=".2"/>`;if(row>=0)s+=`<rect data-k="row" data-in="grow" x="${o}" y="${o+row*c}" width="${5*c}" height="${c}" fill="#0F9C92" opacity=".22"/>`;
+  const at=(i,j)=>[o+i*c+c/2,o+j*c+c/2];
+  if(!mark||mark.items!==false){let [x,y]=at(2,3);s+=`<g data-k="i1" data-in="spin"><circle cx="${x}" cy="${y}" r="16" fill="#E0603E"/><ellipse cx="${x}" cy="${y}" rx="22" ry="5" fill="none" stroke="#9A3B22" stroke-width="2"/></g>`;[x,y]=at(4,1);s+=`<g data-k="i2" data-in="zoom"><polygon points="${starPts(x,y,16,7)}" fill="#FFC93C" stroke="#B88400"/></g>`;[x,y]=at(1,1);s+=`<g data-k="i3" data-in="drop"><polygon points="${starPts(x,y,14,6)}" fill="#B9C2D6" stroke="#7C869C"/></g>`;[x,y]=at(4,3);s+=`<g data-k="i4" data-in="pop"><circle cx="${x}" cy="${y}" r="12" fill="#4C8DF0"/></g>`}
+  if(mark&&mark.ex){const [x,y]=at(mark.ex[0],mark.ex[1]);s+=`<g data-k="x" data-in="stamp"><path d="M${x-14} ${y-14} L${x+14} ${y+14} M${x+14} ${y-14} L${x-14} ${y+14}" stroke="#F2602B" stroke-width="6" stroke-linecap="round"/></g>`}
+  return svgw(5*c+o+6,5*c+o+6,s,360)},
+ visual(){return this.m()+`<div class="chips"><span class="chip"><svg viewBox="0 0 30 30" width="22"><circle cx="15" cy="15" r="11" fill="#E0603E"/></svg>planet merah</span><span class="chip"><svg viewBox="0 0 30 30" width="22"><polygon points="${starPts(15,15,13,6)}" fill="#FFC93C"/></svg>bintang kuning</span><span class="chip"><svg viewBox="0 0 30 30" width="22"><polygon points="${starPts(15,15,13,6)}" fill="#B9C2D6"/></svg>bintang abu-abu</span><span class="chip"><svg viewBox="0 0 30 30" width="22"><circle cx="15" cy="15" r="10" fill="#4C8DF0"/></svg>planet biru</span></div>`},
+ demo(){return [[this.m(-1,-1,{items:false}),'Contoh: di mana kotak <b>B3</b>?'],[this.m(1,-1,{items:false}),'Huruf <b>B</b> adalah kolom. Cari kolom B dari atas ke bawah.'],[this.m(1,2,{items:false}),'Angka <b>3</b> adalah baris. Cari baris 3 dari kiri ke kanan.'],[this.m(1,2,{items:false,ex:[1,2]}),'Tempat kolom B dan baris 3 bertemu adalah kotak <b>B3</b>.']]},
+ tanya:'Di kotak mana <mark>harta</mark> disembunyikan?',
+ opsi:['E4','B2','C2','C4'],jawab:2,
+ bahas(){return [[this.m(),'Planet merah ada di kotak C4. Bintang kuning ada di E2.'],[this.m(2,-1),'Kolom yang sama dengan planet merah: kolom <b>C</b>.'],[this.m(2,1),'Baris yang sama dengan bintang kuning: baris <b>2</b>.'],[this.m(2,1,{ex:[2,1]}),'Kolom C dan baris 2 bertemu di kotak <b>C2</b>. Itu tempat hartanya!']]},
+ info:'Layar komputer tersusun dari jutaan titik kecil (piksel). Komputer mengenali setiap titik dengan <b>koordinat</b> kolom dan baris, seperti peta harta ini.',kunci:'koordinat, piksel'},
+
+/* 14 */{judul:'Kandang Alien',konsep:'Pengelompokan',tingkat:'Sedang',
+ cerita:'Bip menyusun alien ke dalam dua lingkaran. Lingkaran kiri untuk alien yang <b>punya sayap</b>. Lingkaran kanan untuk alien yang <b>berwarna biru</b>.',
+ aturan:['Alien yang memenuhi <b>kedua</b> syarat masuk ke bagian tengah, tempat dua lingkaran bertumpuk.','Alien yang tidak memenuhi syarat apa pun berada di luar lingkaran.'],
+ venn(list=[]){let s=`<circle cx="160" cy="140" r="108" fill="#F2602B" fill-opacity=".12" stroke="#F2602B" stroke-width="3"/><circle cx="270" cy="140" r="108" fill="#4C8DF0" fill-opacity=".14" stroke="#4C8DF0" stroke-width="3"/>`+T(118,18,'Punya sayap','t','style="fill:#F2602B"')+T(312,18,'Berwarna biru','t','style="fill:#4C8DF0"');
+  list.forEach(([o,x,y,l])=>s+=`<g data-k="a${l||'x'}" data-in="up">${alien(x,y,.62,o)}${l?T(x,y+32,l,'t'):''}</g>`);return svgw(430,260,s,460)},
+ O:[{c:AC.hijau,wings:1,eyes:2},{c:AC.biru,eyes:2},{c:AC.merah,eyes:1},{c:AC.biru,wings:1,eyes:3}],
+ visual(){return this.venn()},
+ demo(){const a={c:AC.biru,ant:1,eyes:2};return [[this.venn([[a,40,230,'',0]]),'Contoh: alien biru ini tidak bersayap. Di mana tempatnya?'],[this.venn([[a,40,230,'',0]]),'Punya sayap? <b>Tidak</b>, jadi bukan di lingkaran kiri. Biru? <b>Ya</b>, jadi masuk lingkaran kanan.'],[this.venn([[a,330,140,'',1]]),'Alien ini masuk ke lingkaran kanan saja, <b>tidak</b> di bagian tengah.']]},
+ tanya:'Alien mana yang harus masuk ke <mark>bagian tengah</mark>?',
+ opsi(){return this.O.map(o=>alienIcon(o,70))},jawab:3,
+ bahas(){const O=this.O;return [[this.venn([[O[0],105,140,'A',1]]),'Alien A bersayap tetapi hijau, jadi masuk lingkaran kiri saja.'],[this.venn([[O[0],105,140,'A',0],[O[1],330,140,'B',1]]),'Alien B biru tetapi tidak bersayap, jadi masuk lingkaran kanan saja.'],[this.venn([[O[0],105,140,'A',0],[O[1],330,140,'B',0],[O[2],400,232,'C',1]]),'Alien C tidak bersayap dan tidak biru, jadi di luar lingkaran.'],[this.venn([[O[0],105,140,'A',0],[O[1],330,140,'B',0],[O[2],400,232,'C',0],[O[3],215,140,'D',1]]),'Alien D bersayap <b>dan</b> biru, jadi masuk ke <b>bagian tengah</b>.']]},
+ info:'Gambar dua lingkaran ini disebut <b>diagram Venn</b>. Saat kamu mencari "sepatu biru ukuran 30" di toko online, komputer mencari barang yang ada di bagian tengah seperti ini.',kunci:'diagram Venn, pengelompokan'},
+
+/* 15 */{judul:'Mesin Bahan Bakar',konsep:'Berpikir Mundur',tingkat:'Sedang',
+ cerita:'Bip punya mesin bahan bakar. Angka yang dimasukkan diolah oleh dua bagian mesin secara berurutan: <b>×2</b> (dikali dua), lalu <b>+3</b> (ditambah tiga).',
+ aturan:['Angka masuk dari kiri dan keluar di kanan.','Jika angka keluarannya sudah diketahui, kita bisa <b>berjalan mundur</b> dengan kebalikannya: −3, lalu ÷2.'],
+ mc(a,b,c,hi,rev){const fr=rev?['n1','n2','']:['','n0','n1'];const n=(v,i)=>`<div class="num ${v===null?'q':''}" data-k="n${i}" data-s="${v}" ${v!==null&&fr[i]?`data-from="${fr[i]}"`:''}>${v===null?'?':v}</div>`;const bx=(j,t)=>`<div class="box" data-k="b${j}" data-s="${t}">${t}</div>`;const ar=`<span class="arw">${rev?'←':'→'}</span>`;return `<div class="mach">${n(a,0)}${ar}${bx(1,rev?'÷2':'×2')}${ar}${n(b,1)}${ar}${bx(2,rev?'−3':'+3')}${ar}${n(c,2)}</div>`},
+ visual(){return this.mc(null,null,17)},
+ demo(){return [[this.mc(2,null,null),'Contoh: angka <b>2</b> dimasukkan ke mesin.'],[this.mc(2,4,null,1),'Bagian ×2: 2 × 2 = <b>4</b>.'],[this.mc(2,4,7,2),'Bagian +3: 4 + 3 = <b>7</b>. Jadi 2 masuk, 7 keluar.']]},
+ tanya:'Angka yang keluar adalah <mark>17</mark>. Berapa angka yang dimasukkan?',
+ opsi:['10','37','7','17'],jawab:2,
+ bahas(){return [[this.mc(null,null,17,2,1),'Kita mulai dari ujung: angka keluar 17. Sekarang berjalan mundur.'],[this.mc(null,14,17,1,1),'Kebalikan +3 adalah −3: 17 − 3 = <b>14</b>.'],[this.mc(7,14,17,0,1),'Kebalikan ×2 adalah ÷2: 14 ÷ 2 = <b>7</b>.'],[this.mc(7,14,17,2),'Cek: 7 × 2 = 14, lalu 14 + 3 = 17. Benar! Jawaban 37 salah karena mesinnya dijalankan maju, bukan mundur.']]},
+ info:'Berpikir mundur dari jawaban ke awal sering dipakai programmer untuk mencari kesalahan dalam program. Caranya: lihat hasil yang salah, lalu telusuri langkah-langkahnya ke belakang.',kunci:'berpikir mundur, fungsi'},
+
+/* 16 */{judul:'Perbaikan Kilat',konsep:'Penjadwalan',tingkat:'Sedang',
+ cerita:'Pesawat harus diperbaiki sebelum terbang. Ada <b>dua robot</b>, Bip dan Bop. Setiap robot hanya bisa mengerjakan satu tugas pada satu waktu.',
+ aturan:['Tugas A: pasang panel surya, <b>3 menit</b>.','Tugas B: isi bahan bakar, <b>4 menit</b>.','Tugas C: uji mesin, <b>2 menit</b>. Tugas C hanya boleh dimulai setelah A <b>dan</b> B selesai.'],
+ gantt(rows,bars,max,endAt){const u=Math.min(56,330/max),x0=70;let s='';for(let m=0;m<=max;m++)s+=`<line x1="${x0+m*u}" y1="10" x2="${x0+m*u}" y2="${18+rows.length*48}" style="stroke:var(--line)" stroke-width="1.5"/>`+T(x0+m*u,30+rows.length*48,m,'tm');
+  rows.forEach((r,i)=>s+=T(34,38+i*48,r,'t'));
+  bars.forEach(([r,a,l,c,t])=>s+=`<g data-k="bar${t}" data-in="grow"><rect x="${x0+a*u+2}" y="${20+r*48}" width="${l*u-4}" height="36" rx="9" fill="${c}"/>${T(x0+(a+l/2)*u,38+r*48,t,'t','style="fill:#fff"')}</g>`);
+  if(endAt)s+=`<line data-k="end" data-in="drop" x1="${x0+endAt*u}" y1="6" x2="${x0+endAt*u}" y2="${22+rows.length*48}" style="stroke:var(--rocket)" stroke-width="4"/>`;
+  return svgw(x0+max*u+20,46+rows.length*48,s,460)+`<div class="tm" style="font-weight:800;color:var(--muted)">menit</div>`},
+ visual(){return this.gantt(['Bip','Bop'],[],8)},
+ demo(){return [[this.gantt(['Bip'],[[0,0,2,'#9B6BDF','cuci'],[0,2,3,'#22A06B','cat']],6),'Contoh: jika <b>satu</b> robot mengerjakan tugas 2 menit dan 3 menit, totalnya 2 + 3 = 5 menit.'],[this.gantt(['Bip','Bop'],[[0,0,2,'#9B6BDF','cuci',1],[1,0,3,'#22A06B','cat',1]],6,3),'Jika <b>dua</b> robot bekerja bersamaan, keduanya mulai di menit 0. Semua selesai di menit <b>3</b>!']]},
+ tanya:'Paling cepat, pada menit ke berapa <mark>semua</mark> tugas selesai?',
+ opsi:['Menit ke-4','Menit ke-6','Menit ke-7','Menit ke-9'],jawab:1,
+ bahas(){return [[this.gantt(['Bip','Bop'],[[0,0,3,'#F2602B','A',1],[1,0,4,'#4C8DF0','B',1]],8),'Bip mengerjakan A dan Bop mengerjakan B, keduanya <b>bersamaan</b> mulai menit 0.'],[this.gantt(['Bip','Bop'],[[0,0,3,'#F2602B','A'],[1,0,4,'#4C8DF0','B']],8,4),'A selesai di menit 3, tetapi C harus menunggu B. B selesai di menit <b>4</b>.'],[this.gantt(['Bip','Bop'],[[0,0,3,'#F2602B','A'],[1,0,4,'#4C8DF0','B'],[0,4,2,'#22A06B','C',1]],8,6),'C dikerjakan dari menit 4 sampai menit <b>6</b>. Semua tugas selesai di menit ke-6.']]},
+ info:'Komputer dengan banyak inti prosesor bekerja seperti tim robot ini. Tugas yang tidak saling menunggu dikerjakan bersamaan (<b>paralel</b>) supaya semuanya cepat selesai.',kunci:'penjadwalan, paralel'},
+
+/* 17 */{judul:'Frekuensi Radio Stasiun',konsep:'Pewarnaan Graf',tingkat:'Sulit',
+ cerita:'Di Planet Biru ada lima stasiun radio: A, B, C, D, dan E. Garis menghubungkan stasiun yang <b>bertetangga</b>. Setiap stasiun memakai satu warna saluran.',
+ aturan:['Dua stasiun yang terhubung garis harus memakai <b>warna berbeda</b>, supaya suaranya tidak bercampur.','Stasiun yang tidak terhubung garis boleh memakai warna yang sama.'],
+ col(N,E,c={},nw){let s='';E.forEach(([a,b])=>s+=`<line x1="${N[a][0]}" y1="${N[a][1]}" x2="${N[b][0]}" y2="${N[b][1]}" style="stroke:var(--muted)" stroke-width="4"/>`);
+  const CC={merah:'#EF5B5B',biru:'#4C8DF0',hijau:'#22A06B'};Object.entries(N).forEach(([k,[x,y]])=>{s+=`<g data-k="nd${k}" data-s="${c[k]||''}"><circle cx="${x}" cy="${y}" r="26" style="fill:${c[k]?CC[c[k]]:'var(--node)'};stroke:var(--ink)" stroke-width="3"/>`+T(x,y,k,'t',c[k]?'style="fill:#fff;font-size:18px"':'style="font-size:18px"')+'</g>'+(nw===k&&c[k]?`<circle cx="${x}" cy="${y}" r="26" fill="none" stroke="${CC[c[k]]}" stroke-width="5" class="burst"/>`:'')});return s},
+ N:{A:[60,60],B:[60,200],C:[180,130],D:[300,60],E:[300,200]},E:[['A','B'],['B','C'],['C','A'],['C','D'],['D','E'],['E','C']],
+ visual(){return svgw(360,260,this.col(this.N,this.E),380)},
+ demo(){const N={X:[60,60],Y:[180,60],Z:[300,60]},E=[['X','Y'],['Y','Z']],w=c=>svgw(360,120,this.col(N,E,c),380);return [[w({}),'Contoh: tiga stasiun berderet. X tetangga Y, Y tetangga Z.'],[w({X:'merah'}),'X diberi warna merah.'],[w({X:'merah',Y:'biru'}),'Y tetangga X, jadi Y harus beda: biru.'],[w({X:'merah',Y:'biru',Z:'merah'}),'Z tetangga Y saja, bukan X. Jadi Z boleh merah lagi. Cukup <b>2 warna</b>.']]},
+ tanya:'Paling sedikit, berapa <mark>warna</mark> saluran yang dibutuhkan untuk kelima stasiun?',
+ opsi:['2 warna','3 warna','4 warna','5 warna'],jawab:1,
+ bahas(){const w=(c,n)=>svgw(360,260,this.col(this.N,this.E,c,n),380);return [[w({C:'merah'},'C'),'C punya tetangga paling banyak. Beri C warna merah.'],[w({C:'merah',A:'biru'},'A'),'A tetangga C, jadi A biru.'],[w({C:'merah',A:'biru',B:'hijau'},'B'),'B tetangga A <b>dan</b> C, jadi tidak boleh merah atau biru. B perlu warna ketiga: hijau.'],[w({C:'merah',A:'biru',B:'hijau',D:'biru'},'D'),'D tetangga C, tetapi bukan tetangga A. D boleh biru.'],[w({C:'merah',A:'biru',B:'hijau',D:'biru',E:'hijau'},'E'),'E tetangga C dan D, jadi E hijau. Semua beres dengan <b>3 warna</b>. Dua warna tidak cukup, karena A, B, C saling bertetangga.']]},
+ info:'Ide yang sama dipakai untuk menyusun jadwal ujian sekolah. Dua ujian yang diikuti siswa yang sama harus diberi "warna" (jam) yang berbeda.',kunci:'pewarnaan graf'},
+
+/* 18 */{judul:'Kunci Pintu Pesawat',konsep:'Deduksi',tingkat:'Sedang',
+ cerita:'Pintu pesawat terkunci dengan kode empat simbol: <b>bintang, lingkaran, segitiga,</b> dan <b>kotak</b>. Setiap simbol dipakai tepat satu kali. Kapten Rara punya tiga petunjuk.',
+ aturan:['Petunjuk 1: kotak ada di <b>paling kanan</b>.','Petunjuk 2: segitiga ada <b>tepat di sebelah kiri</b> kotak.','Petunjuk 3: lingkaran <b>tidak</b> di paling kiri.'],
+ slots(arr,nw,x){const n=arr.length;let s='';arr.forEach((t,i)=>{s+=`<rect x="${10+i*74}" y="10" width="64" height="64" rx="14" style="fill:var(--soft);stroke:var(--line)" stroke-width="3"/>`+T(42+i*74,92,i===0?'kiri':i===n-1?'kanan':'','tm');if(t)s+=`<g data-k="s${t}" data-in="drop">${sym(t,42+i*74,42,18)}</g>`;if(x&&x.includes(i))s+=`<path data-k="x${i}" data-in="stamp" d="M${30+i*74} 30 l24 24 M${54+i*74} 30 l-24 24" stroke="#DD4343" stroke-width="5" stroke-linecap="round"/>`});return svgw(n*74+16,104,s,n*90)},
+ visual(){return this.slots([null,null,null,null])},
+ demo(){return [[this.slots([null,null]),'Contoh: dua kotak, dua simbol (bintang dan lingkaran). Petunjuk: lingkaran <b>tidak</b> di kiri.'],[this.slots([null,null],null,[0]),'Lingkaran tidak boleh di kiri, jadi kita coret tempat kiri untuk lingkaran.'],[this.slots([null,'bulat'],1),'Tempat yang tersisa untuk lingkaran hanya kanan.'],[this.slots(['bintang','bulat'],0),'Bintang mengisi tempat yang masih kosong. Kodenya: bintang, lingkaran.']]},
+ tanya:'Apa <mark>kode</mark> yang benar, dari kiri ke kanan?',
+ opsi:[['bintang','bulat','segitiga','kotak'],['bulat','bintang','segitiga','kotak'],['bintang','segitiga','bulat','kotak'],['bintang','bulat','kotak','segitiga']].map(a=>a.map(t=>symIcon(t,30)).join('')),jawab:0,
+ bahas(){return [[this.slots([null,null,null,'kotak'],3),'Petunjuk 1: kotak di paling kanan.'],[this.slots([null,null,'segitiga','kotak'],2),'Petunjuk 2: segitiga tepat di kiri kotak, yaitu tempat ke-3.'],[this.slots([null,'bulat','segitiga','kotak'],1,[0]),'Petunjuk 3: lingkaran tidak di paling kiri. Tempat yang tersisa: ke-2.'],[this.slots(['bintang','bulat','segitiga','kotak'],0),'Bintang mengisi tempat terakhir. Kodenya: <b>bintang, lingkaran, segitiga, kotak</b>. Pintu terbuka!']]},
+ info:'Menyimpulkan jawaban dari beberapa petunjuk disebut <b>deduksi</b>. Komputer memakai cara ini untuk mengisi jadwal, menyelesaikan teka-teki sudoku, dan mencari kesalahan.',kunci:'deduksi, penalaran logis'},
+
+/* 19 */{judul:'Kristal yang Tumbuh',konsep:'Pola Bilangan',tingkat:'Mudah',
+ cerita:'Di Planet Es, Bip menemukan kristal ajaib yang <b>tumbuh setiap hari</b>. Bip menggambar bentuk kristal pada hari ke-1, ke-2, dan ke-3.',
+ aturan:['Perhatikan berapa kotak yang bertambah setiap hari.','Kristal tumbuh ke atas dan ke kanan, membentuk huruf L.'],
+ cr(days,nwDay){const c=18;let s='',x=10,maxH=0;days.forEach(n=>maxH=Math.max(maxH,n));days.forEach(n=>{const top=10+(maxH-n)*c;let g='';for(let k=0;k<n;k++)g+=`<rect x="${x}" y="${top+k*c}" width="${c-2}" height="${c-2}" rx="3" fill="#5CE1E6" stroke="#1A8C99" stroke-width="1.5"/>`;for(let k=1;k<n;k++)g+=`<rect x="${x+k*c}" y="${top+(n-1)*c}" width="${c-2}" height="${c-2}" rx="3" fill="#5CE1E6" stroke="#1A8C99" stroke-width="1.5"/>`;s+=`<g data-k="day${n}" data-in="growup">${g}${T(x+n*c/2,top+n*c+14,'Hari '+n,'t')}${T(x+n*c/2,top+n*c+32,(2*n-1)+' kotak','tm','style="fill:var(--teal)"')}</g>`;x+=n*c+24});return svgw(x,maxH*c+56,s,Math.min(x*1.3,600))},
+ visual(){return this.cr([1,2,3])},
+ demo(){return [[this.cr([1],1),'Hari 1: kristal hanya 1 kotak.'],[this.cr([1,2],2),'Hari 2: tumbuh 1 ke atas dan 1 ke kanan. Jumlahnya 3 kotak.'],[this.cr([1,2,3],3),'Hari 3: tumbuh lagi 1 ke atas dan 1 ke kanan. Jumlahnya 5. Setiap hari bertambah <b>2 kotak</b>.']]},
+ tanya:'Berapa kotak kristal pada <mark>hari ke-6</mark>?',
+ opsi:['10 kotak','11 kotak','12 kotak','13 kotak'],jawab:1,
+ bahas(){return [[this.cr([3,4],4),'Hari 4: 5 + 2 = <b>7</b> kotak.'],[this.cr([4,5],5),'Hari 5: 7 + 2 = <b>9</b> kotak.'],[this.cr([5,6],6),'Hari 6: 9 + 2 = <b>11</b> kotak. Cara cepat: lengan atas 6 kotak + lengan kanan 6 kotak, dikurangi 1 kotak sudut yang terhitung dua kali.']]},
+ info:'Menemukan aturan "bertambah 2 setiap hari" membuat kita bisa menebak hari ke-100 tanpa menggambar. Programmer menulis aturan seperti ini dalam bentuk <b>rumus</b> atau <b>perulangan</b>.',kunci:'pola bilangan, generalisasi'},
+
+/* 20 */{judul:'Bip Pulang ke Roket',konsep:'Algoritma Bersyarat',tingkat:'Sulit',
+ cerita:'Bip harus pulang ke salah satu roket. Kali ini Bip tidak menerima daftar panah. Bip memakai <b>satu aturan</b> yang diulang terus.',
+ aturan:['Jika kotak <b>di depan</b> Bip kosong: Bip <b>maju</b> satu kotak.','Jika di depan ada <b>batu</b> atau <b>tepi peta</b>: Bip <b>belok kanan</b> di tempat.','Bip berhenti saat tiba di kotak roket. Panah oranye menunjukkan arah hadap Bip.'],
+ items:[{t:'batu',x:3,y:0},{t:'batu',x:2,y:2},{t:'roket',x:0,y:1,lab:'A',col:'#EF5B5B'},{t:'roket',x:4,y:0,lab:'B',col:'#4C8DF0'},{t:'roket',x:2,y:3,lab:'C',col:'#22A06B'},{t:'roket',x:3,y:1,lab:'D',col:'#9B6BDF'}],
+ visual(){return gridScene(5,4,this.items,{x:0,y:0,d:1})},
+ demo(){const it=[{t:'batu',x:1,y:0}],f=(x,y,d,tr,nw)=>gridScene(2,2,it,{x,y,d,nw},tr);return [[f(0,0,1,[]),'Contoh: Bip menghadap ke kanan (lihat panah oranye). Di depannya ada batu.'],[f(0,0,2,[],1),'Ada batu di depan, jadi Bip <b>belok kanan</b>. Sekarang Bip menghadap ke bawah.'],[f(0,1,2,[[0,0],[0,1]],1),'Di depan kosong, jadi Bip <b>maju</b> satu kotak.']]},
+ tanya:'Bip mulai di kiri atas dan menghadap ke kanan. Bip tiba di roket <mark>yang mana</mark>?',
+ opsi:['Roket A','Roket B','Roket C','Roket D'],jawab:0,
+ bahas(){const S=[[0,0,1,'Mulai: menghadap kanan.'],[1,0,1,'Depan kosong, <b>maju</b>.'],[2,0,1,'Depan kosong, <b>maju</b>.'],[2,0,2,'Depan ada batu, <b>belok kanan</b> (sekarang menghadap bawah).'],[2,1,2,'Depan kosong, <b>maju</b>.'],[2,1,3,'Depan ada batu, <b>belok kanan</b> (sekarang menghadap kiri). Roket D ada di belakang Bip!'],[1,1,3,'Depan kosong, <b>maju</b>.'],[0,1,3,'Maju lagi, dan Bip tiba di <b>roket A</b>. Pulang!']];const tr=[];return S.map(([x,y,d,c],i)=>{if(!tr.length||tr[tr.length-1][0]!==x||tr[tr.length-1][1]!==y)tr.push([x,y]);return [gridScene(5,4,this.items,{x,y,d,nw:i>0},tr.slice()),c]})},
+ info:'Robot penyedot debu di rumah bekerja dengan aturan bersyarat seperti Bip: <b>jika</b> menabrak sesuatu, ia berbelok. Aturan "jika ... maka ..." adalah bagian penting dari setiap program.',kunci:'percabangan, jika-maka, perulangan'}
+];
+
+/* ---------- aplikasi ---------- */
+const PC=['#F2602B','#4C8DF0','#22A06B','#9B6BDF','#E8B10C','#E0457B','#0F9C92','#7C5CD6','#E0603E','#3D8BE0'];
+const KEY='misi-galaksi-bip-v1';
+let st={cur:0,ans:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.ans)st=s}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const app=document.getElementById('app'),map=document.getElementById('map');
+const stOf=i=>st.ans[i]===undefined?'':(st.ans[i]===Q[i].jawab?'ok':'bad');
+const score=()=>Q.filter((_,i)=>stOf(i)==='ok').length;
+const opsiOf=q=>typeof q.opsi==='function'?q.opsi():q.opsi;
+
+function renderTop(){
+  document.getElementById('score').innerHTML=`<small>Bintang</small><b>${score()}</b><small>dari ${Q.length}</small>`;
+  map.innerHTML=Q.map((q,i)=>{const s=stOf(i);return `<button class="pl ${s} ${i===st.cur?'cur':''}" style="background:${PC[i%10]}" data-i="${i}" title="Misi ${i+1}: ${q.judul}" aria-label="Misi ${i+1}${s==='ok'?', benar':s==='bad'?', belum tepat':''}">${i+1}${s?`<span class="mk" style="background:${s==='ok'?'#1C9A5B':'#DD4343'};color:#fff">${s==='ok'?'✓':'✕'}</span>`:''}</button>`}).join('');
+  map.querySelectorAll('.pl').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+}
+function go(i){st.cur=i;save();render();window.scrollTo({top:document.querySelector('main').offsetTop-8,behavior:RM?'auto':'smooth'})}
+
+function render(){
+  players.forEach(p=>p.stop());players=[];
+  renderTop();
+  if(st.cur>=Q.length)return renderSummary();
+  const i=st.cur,q=Q[i],opsi=opsiOf(q);
+  app.innerHTML=`<article class="card"><div class="flyby" aria-hidden="true"><svg viewBox="-22 -30 44 64" width="44">${rocket(0,0,'#F2602B')}</svg></div>
+    <div class="top"><span class="mno">Misi ${i+1} dari ${Q.length}</span><span class="tag">${q.konsep}</span><span class="tag ${q.tingkat}">${q.tingkat}</span></div>
+    <h2 class="ti ${TV[i%4]}" aria-label="${q.judul}">${splitTitle(q.judul)}</h2>
+    <div class="talk">${captain}<div class="bubble"><div class="who">Kapten Rara</div><p>${q.cerita}</p></div></div>
+    <div class="rules"><h3>Aturan main</h3><ul>${q.aturan.map(a=>`<li><span>${a}</span></li>`).join('')}</ul></div>
+    ${stepperHTML('demo','Lihat contoh dulu')}
+    <div><div class="lb tm" style="font-weight:900;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Gambar soal</div><div class="stage" style="border:2px solid var(--line)">${q.visual()}</div></div>
+    <div class="ask"><div class="lb">Pertanyaanmu</div><p>${q.tanya}</p></div>
+    <div class="opts" role="radiogroup" aria-label="Pilihan jawaban">${opsi.map((o,k)=>`<button class="opt" data-k="${k}" role="radio" aria-checked="false"><span class="let">${'ABCD'[k]}</span><span class="oc">${o}</span></button>`).join('')}</div>
+    <div><button id="cek" class="btn go" disabled>Kirim jawaban ke Kapten</button></div>
+    <section id="fb" class="fb" hidden></section>
+  </article>
+  <div class="nav"><button id="prev" class="btn" ${i===0?'disabled':''}>← Misi sebelumnya</button><button id="next" class="btn">${i===Q.length-1?'Lihat hasil':'Misi berikutnya →'}</button></div>`;
+  stepper($(app,'#demo'),q.demo(),false);
+  const opts=[...app.querySelectorAll('.opt')],cek=$(app,'#cek');let sel=null;
+  opts.forEach(b=>b.onclick=()=>{sel=+b.dataset.k;sfx('pick');b.animate([{transform:'scale(1)'},{transform:'scale(1.05)'},{transform:'none'}],{duration:260});opts.forEach(o=>{const on=o===b;o.classList.toggle('sel',on);o.setAttribute('aria-checked',on)});cek.disabled=false});
+  cek.onclick=()=>{if(sel===null)return;st.ans[i]=sel;save();renderTop();show(true)};
+  $(app,'#prev').onclick=()=>go(i-1);$(app,'#next').onclick=()=>go(i+1);
+  if(st.ans[i]!==undefined)show(false);
+  function show(fresh){
+    const p=st.ans[i],ok=p===q.jawab;
+    opts.forEach((o,k)=>{o.disabled=true;o.classList.remove('sel');if(k===q.jawab)o.classList.add('right');else if(k===p)o.classList.add('wrong')});
+    cek.parentElement.hidden=true;
+    const fb=$(app,'#fb');fb.hidden=false;
+    fb.innerHTML=`<div class="verdict ${ok?'ok':'bad'}">${ok?`<svg viewBox="0 0 40 40" width="46" class="dance"><polygon points="${starPts(20,21,19,8)}" fill="#FFC93C" stroke="#B88400" stroke-width="1.5"/></svg>`:bip(0,0).replace('<g','<svg viewBox="-24 -32 48 60" width="42" class="shake"><g')+'</svg>'}<div><strong>${ok?'Misi berhasil! Kamu dapat 1 bintang.':'Hampir! Yuk, tonton pembahasannya.'}</strong><span>Jawaban yang benar adalah <b>${'ABCD'[q.jawab]}</b>.</span></div></div>
+      ${stepperHTML('sol','Tonton pembahasan',1)}
+      <div class="why"><h3>Kenapa ini penting?</h3><p>${q.info}</p><p class="kk"><b>Kata kunci:</b> ${q.kunci}</p></div>`;
+    stepper($(fb,'#sol'),q.bahas(),fresh);
+    if(fresh){sfx(ok?'ok':'bad');if(ok)confetti($(fb,'.verdict'))}
+    if(fresh)fb.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+  }
+}
+
+function renderSummary(){
+  const n=Object.keys(st.ans).length,s=score();
+  const msg=n<Q.length?`Kamu sudah menyelesaikan ${n} dari ${Q.length} misi. Ketuk planet yang belum dikunjungi di peta.`:s>=17?'Hebat! Kamu siap menjadi kapten galaksi!':s>=11?'Bagus! Ulangi misi yang belum berhasil dan tonton pembahasannya.':'Perjalanan baru dimulai. Tonton contoh di setiap misi pelan-pelan, lalu coba lagi.';
+  app.innerHTML=`<section class="sum"><div class="kick" style="color:var(--rocket)">Laporan misi</div><div class="big">${s}<span style="font-size:.4em;color:var(--muted)"> / ${Q.length} bintang</span></div><p style="margin:0;font-weight:800;max-width:60ch">${msg}</p>
+    <div class="slist">${Q.map((q,i)=>{const t=stOf(i);return `<button class="si" data-i="${i}"><i style="background:${t==='ok'?'var(--ok)':t==='bad'?'var(--bad)':'var(--muted)'}">${t==='ok'?'✓':t==='bad'?'✕':'–'}</i>${i+1}. ${q.judul}</button>`}).join('')}</div>
+    <div><button class="btn go" id="again">Mulai misi dari awal</button></div></section>`;
+  app.querySelectorAll('.si').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+  $(app,'#again').onclick=()=>{st={cur:0,ans:{}};save();go(0)};
+}
+const sb=document.getElementById('snd');sb.onclick=()=>{setSnd(!SND);if(SND)sfx('ok')};setSnd(SND);
+render();

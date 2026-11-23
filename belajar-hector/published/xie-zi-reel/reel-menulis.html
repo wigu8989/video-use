@@ -1,0 +1,222 @@
+<title>写字 Reel Hector</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one-screen reel — slim top bar (bab chips + progress), one character per card, square 田字格 writing box, reel-style action rail on the right; swipe up/down to move between characters. */
+:root{
+ --bg:#EEF2EE;--surface:#FFFFFF;--surface2:#E3E9E4;--fg:#1E2A2A;--muted:#5A6866;
+ --ink:#1E2A2A;--outline:#D5DDD8;--grid:#D96B5B;--accent:#1F8A68;--accent-fg:#FFFFFF;--warn:#B4532A;--hint:#E2A42B;
+ --f-disp:'Fredoka','Baloo 2',system-ui,sans-serif;--f-body:'Nunito','Segoe UI',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12171A;--surface:#1B2226;--surface2:#232C31;--fg:#E6ECEA;--muted:#9AA8A5;--ink:#EEF3F1;--outline:#2E393E;--grid:#B8574A;--accent:#4FC39C;--accent-fg:#0F1A16;--warn:#F08E6A;--hint:#F2C14E;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12171A;--surface:#1B2226;--surface2:#232C31;--fg:#E6ECEA;--muted:#9AA8A5;--ink:#EEF3F1;--outline:#2E393E;--grid:#B8574A;--accent:#4FC39C;--accent-fg:#0F1A16;--warn:#F08E6A;--hint:#F2C14E;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app{height:100%;display:grid;grid-template-rows:auto 1fr;gap:8px;padding-block:10px 8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{display:flex;flex-direction:column;gap:8px;min-width:0}
+.row1{display:flex;align-items:center;gap:10px}
+.brand{font-family:var(--f-disp);font-weight:700;font-size:20px;letter-spacing:.01em}
+.brand span{color:var(--accent)}
+.prog{margin-left:auto;display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pbar{width:64px;height:6px;border-radius:3px;background:var(--surface2);overflow:hidden}.pbar i{display:block;height:100%;background:var(--accent)}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;touch-action:pan-x}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:6px 12px;border-radius:999px;background:var(--surface2);font-weight:800;font-size:13px;color:var(--muted);min-height:34px}
+.chip.on{background:var(--accent);color:var(--accent-fg)}
+.stage{position:relative;min-height:0;overflow:hidden}
+.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding-right:58px;padding-bottom:52px}
+.card.in-up{animation:inUp .32s cubic-bezier(.2,.8,.2,1)}.card.in-down{animation:inDown .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes inUp{from{transform:translateY(38%);opacity:0}}@keyframes inDown{from{transform:translateY(-38%);opacity:0}}
+.info{display:flex;align-items:center;gap:12px;width:100%;max-width:520px}
+.big{font-size:46px;line-height:1;font-weight:700;color:var(--accent);min-width:52px;text-align:center}
+.big.q{color:var(--muted)}
+.meta{display:flex;flex-direction:column;min-width:0}
+.py{font-family:var(--f-disp);font-weight:600;font-size:20px;line-height:1.15}
+.ar{font-weight:700;color:var(--muted);font-size:14px}
+.ex{font-size:13px;color:var(--muted);font-weight:700}
+.badge{margin-left:auto;align-self:flex-start;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.badge.ok{color:var(--accent)}
+.steps{display:flex;gap:6px}
+.step{font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;border:2px solid var(--outline);color:var(--muted)}
+.step.on{border-color:var(--accent);color:var(--accent)}.step.done{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.box{position:relative;background:var(--surface);border:3px solid var(--grid);border-radius:6px;flex:none;max-width:100%}
+.box.shake{animation:shake .35s}@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.box svg,.box canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.box canvas{touch-action:none}
+.gl{stroke:var(--grid);stroke-width:1.6;stroke-dasharray:9 8;opacity:.55;fill:none}
+.o{fill:var(--outline)}.d{fill:var(--ink);opacity:0}.h{fill:var(--hint);opacity:0}
+.d.show{opacity:1;transition:opacity .2s}.d.win{fill:var(--accent);transition:fill .3s}
+.anim{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-linejoin:round}
+.dots{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;max-width:100%}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--surface2)}.dot.done{background:var(--accent)}.dot.cur{box-shadow:0 0 0 2px var(--accent) inset;background:transparent}
+.msg{min-height:1.4em;font-weight:800;font-size:15px;text-align:center}
+.msg.bad{color:var(--warn)}.msg.good{color:var(--accent)}
+.hintline{font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px}
+.hintline b{display:inline-block;animation:bob 1.6s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-4px)}}
+.rail{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:3}
+.rb{display:flex;flex-direction:column;align-items:center;gap:2px;width:54px}
+.rb .ic{width:46px;height:46px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-size:20px;transition:transform .12s}
+.rb:active .ic{transform:scale(.9)}
+.rb small{font-size:10.5px;font-weight:800;color:var(--muted);line-height:1.1;text-align:center}
+.rb.primary .ic{background:var(--accent);color:var(--accent-fg)}
+.next{position:absolute;left:0;right:58px;bottom:4px;display:flex;justify-content:center;pointer-events:none}
+.donechip{pointer-events:auto;white-space:nowrap;font-size:14px;display:flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-fg);padding:10px 16px;border-radius:999px;font-weight:800;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.donechip .t{width:46px;height:5px;border-radius:3px;background:color-mix(in srgb,var(--accent-fg) 30%,transparent);overflow:hidden}.donechip .t i{display:block;height:100%;background:var(--accent-fg);animation:fill 1.9s linear forwards}
+@keyframes fill{from{width:0}to{width:100%}}
+.donechip button{text-decoration:underline;font-weight:800}
+.empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);font-weight:700;padding:20px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="app">
+ <header class="top">
+  <div class="row1"><div class="brand">写字 <span>Reel</span></div><div class="prog" id="prog"></div></div>
+  <nav class="chips" id="chips" aria-label="Pilih bab"></nav>
+ </header>
+ <main class="stage" id="stage"><div class="empty">Memuat huruf…</div></main>
+</div>
+
+<script>
+(()=>{
+const NS='http://www.w3.org/2000/svg',OFF=61.44,SC=0.88,LEN=1.25;
+let D={},L=[],LIST=[],idx=0,bab='all',st=null,TTS=null,interacted=false;
+const $=s=>document.querySelector(s);
+const SKEY='hector-reel-v1';let SV={done:{},pos:{},bab:'all'};
+try{SV=Object.assign(SV,JSON.parse(localStorage.getItem(SKEY)||'{}'))}catch(_){}
+const save=()=>{try{localStorage.setItem(SKEY,JSON.stringify(SV))}catch(_){}};
+const CN=['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七'];
+
+/* ---------- suara ---------- */
+if(window.claude&&claude.use)claude.use('tts').then(t=>{TTS=t||null}).catch(()=>{});
+async function speak(t){try{if(TTS){await TTS.speak(t,{language:'zh'});return}}catch(e){}
+ try{const u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=.8;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(_){}}
+
+/* ---------- geometri & penilaian (jumlah langkah tetap) ---------- */
+function rs(p,n){if(p.length<2)return Array(n).fill(p[0]||{x:0,y:0});const Lc=[0];for(let i=1;i<p.length;i++)Lc.push(Lc[i-1]+Math.hypot(p[i].x-p[i-1].x,p[i].y-p[i-1].y));const T=Lc[Lc.length-1]||1,o=[];let i=1;
+ for(let k=0;k<n;k++){const t=T*k/(n-1);while(i<Lc.length-1&&Lc[i]<t)i++;const f=(t-Lc[i-1])/((Lc[i]-Lc[i-1])||1);o.push({x:p[i-1].x+(p[i].x-p[i-1].x)*f,y:p[i-1].y+(p[i].y-p[i-1].y)*f})}return o}
+const avgd=(a,b)=>{let s=0;for(let i=0;i<a.length;i++)s+=Math.hypot(a[i].x-b[i].x,a[i].y-b[i].y);return s/a.length};
+const plen=p=>{let s=0;for(let i=1;i<p.length;i++)s+=Math.hypot(p[i].x-p[i-1].x,p[i].y-p[i-1].y);return s};
+function judge(med,pts,s,outline){if(pts.length<2)return {ok:false};const M=med[s],U=rs(pts,16),R=rs(M,16),Rr=R.slice().reverse();
+ const T=(outline?170:195)*LEN,d=avgd(U,R),rev=avgd(U,Rr),ml=plen(M),ul=plen(pts);
+ const se=Math.hypot(U[0].x-R[0].x,U[0].y-R[0].y),ee=Math.hypot(U[15].x-R[15].x,U[15].y-R[15].y);
+ const EP=Math.max(120,Math.min(230,ml*.32))*LEN;const lenOk=ml<150?ul<ml*3+200:(ul>ml*.6&&ul<ml*2.2+120);
+ let closest=true;for(let k=s+1;k<med.length;k++){if(avgd(U,rs(med[k],16))<d*.85){closest=false;break}}
+ const ok=d<T&&se<EP&&ee<EP&&lenOk&&d<=rev*1.02&&closest;
+ const se2=Math.hypot(U[0].x-Rr[0].x,U[0].y-Rr[0].y),ee2=Math.hypot(U[15].x-Rr[15].x,U[15].y-Rr[15].y);
+ return {ok,back:!ok&&rev<T&&rev<d&&se2<EP&&ee2<EP,order:!ok&&!closest}}
+
+/* ---------- daftar ---------- */
+function buildList(){LIST=L.filter(x=>bab==='all'||String(x[0])===bab)}
+function chips(){const babs=[...new Set(L.map(x=>x[0]))];$('#chips').innerHTML=[['all','Semua',L.length],...babs.map(b=>[String(b),'Bab '+b,L.filter(x=>x[0]===b).length])].map(([k,l,n])=>`<button class="chip ${bab===k?'on':''}" data-bab="${k}">${l} · ${n}</button>`).join('')}
+function prog(){const n=LIST.length,ok=LIST.filter(x=>SV.done[x[1]]).length;$('#prog').innerHTML=`<span>${idx+1}/${n}</span><span class="pbar" title="${ok} dari ${n} huruf sudah ditulis"><i style="width:${Math.round(ok/n*100)}%"></i></span><span>✓${ok}</span>`}
+
+/* ---------- kartu ---------- */
+function card(dir){clearTimers();const [b,c,py,ar,ex,n]=LIST[idx];const d=D[c];const med=d.medians.map(m=>m.map(([x,y])=>({x,y})));
+ const done=SV.done[c];
+ st={c,n,med,d,phase:0,cur:0,miss:0,tot:0,pts:null,pid:null,timers:[],py,ar,ex};
+ const g=`<g transform="translate(${OFF},${OFF}) scale(${SC}) translate(0,900) scale(1,-1)">`;
+ $('#stage').innerHTML=`<section class="card ${dir>0?'in-up':dir<0?'in-down':''}" aria-label="Huruf ${c}">
+  <div class="info"><div class="big" id="big" lang="zh">${c}</div><div class="meta"><span class="py">${py}</span><span class="ar">${ar}</span><span class="ex">${n} goresan · ${CN[n]}画 · <span lang="zh" id="ex">${ex}</span></span></div><span class="badge ${done?'ok':''}">${done?'✓ sudah · '+done.miss+' salah':'Bab '+b}</span></div>
+  <div class="steps"><span class="step" id="s0">Lihat</span><span class="step" id="s1">Tebalkan</span><span class="step" id="s2">Tulis sendiri</span></div>
+  <div class="box" id="box"><svg viewBox="0 0 1024 1024" aria-hidden="true"><path class="gl" d="M512 0V1024M0 512H1024M0 0L1024 1024M1024 0L0 1024"/>${g}${d.strokes.map(p=>`<path class="o" d="${p}"/>`).join('')}</g>${g}${d.strokes.map((p,i)=>`<path class="h" id="h${i}" d="${p}"/>`).join('')}</g>${g}${d.strokes.map((p,i)=>`<path class="d" id="d${i}" d="${p}"/>`).join('')}</g><g id="an"></g></svg><canvas id="cv" aria-label="Kotak menulis"></canvas></div>
+  <div class="dots" id="dots">${Array.from({length:n},(_,i)=>`<i class="dot" id="t${i}"></i>`).join('')}</div>
+  <p class="msg" id="msg" aria-live="polite"></p>
+  <p class="hintline"><b>⇡</b> geser ke atas untuk huruf berikutnya</p>
+  <div class="rail" role="toolbar" aria-label="Aksi">
+   <button class="rb" data-act="say"><span class="ic">🔊</span><small>Dengar</small></button>
+   <button class="rb" data-act="anim"><span class="ic">▶</span><small>Urutan</small></button>
+   <button class="rb" data-act="redo"><span class="ic">↺</span><small>Ulang<br>goresan</small></button>
+   <button class="rb" data-act="restart"><span class="ic">⟲</span><small>Dari<br>awal</small></button>
+   <button class="rb primary" data-act="next"><span class="ic">⏭</span><small>Lewati</small></button>
+  </div>
+  <div class="next" id="next"></div></section>`;
+ layout();bindCanvas();prog();SV.pos[bab]=idx;save();
+ if(interacted)later(()=>speak(c),250);
+ later(()=>animate(()=>setPhase(1)),380)}
+function later(f,ms){const t=setTimeout(f,ms);st.timers.push(t);return t}
+function clearTimers(){if(st){st.timers.forEach(clearTimeout);st.timers=[]}}
+
+function layout(){const stg=$('#stage'),cardEl=stg.querySelector('.card');if(!cardEl)return;const box=$('#box');
+ const H=stg.clientHeight-52,W=stg.clientWidth-58;let used=0;for(const el of cardEl.children){if(el===box||el.classList.contains('rail')||el.classList.contains('next'))continue;used+=el.offsetHeight+8}
+ const s=Math.max(150,Math.floor(Math.min(W,H-used-8,560)));box.style.width=box.style.height=s+'px';
+ const cv=$('#cv'),r=Math.min(window.devicePixelRatio||1,2);cv.width=Math.round(s*r);cv.height=Math.round(s*r);st.size=s;st.dpr=r;
+ const ctx=cv.getContext('2d');ctx.setTransform(r,0,0,r,0,0);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=Math.max(10,s/17);st.ctx=ctx}
+addEventListener('resize',()=>{if(st){layout();redrawDone()}});
+
+/* ---------- fase ---------- */
+function stepUI(){for(let i=0;i<3;i++){const e=$('#s'+i);if(!e)return;e.className='step'+(i===st.phase?' on':i<st.phase?' done':'')}}
+function dotsUI(){for(let i=0;i<st.n;i++){const e=$('#t'+i);if(e)e.className='dot'+(i<st.cur?' done':i===st.cur&&st.phase>0?' cur':'')}}
+function redrawDone(){for(let i=0;i<st.n;i++){const e=$('#d'+i);if(e)e.classList.toggle('show',i<st.cur)}}
+function msg(t,cls){const m=$('#msg');if(m){m.textContent=t;m.className='msg'+(cls?' '+cls:'')}}
+function setPhase(p){st.phase=p;st.cur=0;st.miss=0;if(p===2)st.tot=0;
+ document.querySelectorAll('.o').forEach(o=>o.style.opacity=p===2?0:1);
+ const big=$('#big'),ex=$('#ex');if(p===2){big.textContent='?';big.classList.add('q');ex.textContent=st.ex.replace(st.c,'＿')}else{big.textContent=st.c;big.classList.remove('q');ex.textContent=st.ex}
+ redrawDone();stepUI();dotsUI();msg(p===1?`Tebalkan goresan 1 dari ${st.n}`:`Tulis sendiri tanpa contoh · goresan 1 dari ${st.n}`)}
+function animate(after){if(!st)return;const myC=st.c;st.animating=true;const an=$('#an');an.innerHTML='';for(let i=0;i<st.n;i++)$('#d'+i).classList.remove('show');stepUI();msg('Perhatikan urutan goresannya…');
+ let i=0;const g=document.createElementNS(NS,'g');g.setAttribute('transform',`translate(${OFF},${OFF}) scale(${SC}) translate(0,900) scale(1,-1)`);an.appendChild(g);
+ const one=()=>{if(!st||st.c!==myC)return;if(i>=st.n){an.innerHTML='';st.animating=false;redrawDone();after&&after();return}
+  const m=st.med[i],pl=document.createElementNS(NS,'polyline');pl.setAttribute('points',m.map(p=>p.x+','+p.y).join(' '));pl.setAttribute('class','anim');pl.setAttribute('stroke-width','64');
+  const len=Math.max(1,plen(m));pl.style.strokeDasharray=len;pl.style.strokeDashoffset=len;g.appendChild(pl);const dur=Math.max(260,Math.min(700,len*0.9));
+  pl.getBoundingClientRect();pl.style.transition=`stroke-dashoffset ${dur}ms linear`;pl.style.strokeDashoffset=0;
+  later(()=>{if(!st||st.c!==myC)return;$('#d'+i).classList.add('show');pl.remove();i++;later(one,140)},dur+30)};
+ one()}
+
+/* ---------- menulis (canvas) ---------- */
+function toC(x,y){const s=st.size;const vx=x/s*1024,vy=y/s*1024;return {x:(vx-OFF)/SC,y:900-(vy-OFF)/SC}}
+function bindCanvas(){const cv=$('#cv');
+ const pos=e=>{const r=cv.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]};
+ cv.addEventListener('pointerdown',e=>{interacted=true;if(!st||st.phase===0||st.phase===3||st.animating)return;e.preventDefault();e.stopPropagation();
+  if(st.pid!==null)finish();st.pid=e.pointerId;try{cv.setPointerCapture(e.pointerId)}catch(_){}
+  const [x,y]=pos(e);st.raw=[[x,y]];st.pts=[toC(x,y)];const c=st.ctx;c.clearRect(0,0,st.size,st.size);c.strokeStyle=getComputedStyle(document.body).getPropertyValue('--warn')||'#c55';c.beginPath();c.moveTo(x,y)});
+ cv.addEventListener('pointermove',e=>{if(e.pointerId!==st?.pid)return;e.preventDefault();const [x,y]=pos(e),l=st.raw[st.raw.length-1];
+  if(Math.abs(x-l[0])+Math.abs(y-l[1])<2||st.raw.length>400)return;st.raw.push([x,y]);st.pts.push(toC(x,y));const c=st.ctx;c.lineTo(x,y);c.stroke();c.beginPath();c.moveTo(x,y)});
+ const up=e=>{if(e.pointerId!==st?.pid)return;try{cv.releasePointerCapture(e.pointerId)}catch(_){}finish()};
+ cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);cv.addEventListener('lostpointercapture',up)}
+function finish(){if(!st||st.pid===null)return;st.pid=null;const pts=st.pts||[];st.pts=null;const ctx=st.ctx,S=st.size;
+ later(()=>ctx.clearRect(0,0,S,S),pts.length<2?0:160);if(pts.length<2)return;
+ const s=st.cur,r=judge(st.med,pts,s,st.phase===1);
+ if(r.ok)ok(s);else{st.miss++;st.tot++;const box=$('#box');box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');
+  msg(`Goresan ${s+1} belum tepat${r.back?' (arah terbalik)':r.order?' (urutannya bukan ini)':''}. Coba lagi.`,'bad');
+  if(st.miss>=2)flash(s);
+  if(st.miss>=4){msg(`Goresan ${s+1} dibantu. Ikuti petunjuk kuning ya.`,'bad');ok(s,true)}}}
+function ok(s,helped){$('#d'+s).classList.add('show');$('#h'+s).style.opacity=0;st.cur++;st.miss=0;dotsUI();
+ if(st.cur<st.n){if(!helped)msg(`✓ Bagus! Goresan ${st.cur+1} dari ${st.n}`,'good');return}
+ if(st.phase===1){msg('Hebat! Sekarang tulis sendiri…','good');st.phase=3;later(()=>setPhase(2),900);return}
+ complete()}
+function flash(s){const h=$('#h'+s);let k=0;const f=()=>{if(!st||!h.isConnected)return;h.style.transition='opacity .18s';h.style.opacity=k%2?.15:.9;k++;if(k<6)later(f,200);else h.style.opacity=.5};f()}
+function complete(){st.phase=3;stepUI();for(let i=0;i<st.n;i++)$('#d'+i).classList.add('win');const big=$('#big');big.textContent=st.c;big.classList.remove('q');$('#ex').textContent=st.ex;
+ const prev=SV.done[st.c];SV.done[st.c]={miss:prev?Math.min(prev.miss,st.tot):st.tot,t:Date.now()};save();prog();
+ msg(st.tot===0?'Sempurna! Tanpa salah 🎉':`Selesai! ${st.tot} goresan salah.`,'good');speak(st.c);
+ const last=idx>=LIST.length-1;$('#next').innerHTML=`<div class="donechip">${last?'Semua huruf di daftar ini selesai! 🎉':`Lanjut otomatis <span class="t"><i></i></span>`}<button data-act="${last?'first':'stay'}">${last?'Ulang dari awal':'Tetap di sini'}</button></div>`;
+ if(!last)st.auto=later(()=>go(1),1900)}
+
+/* ---------- navigasi & gestur ---------- */
+function go(dir){if(!LIST.length)return;const ni=idx+dir;if(ni<0||ni>=LIST.length){const c=$('.card');if(c){c.style.transition='transform .15s';c.style.transform=`translateY(${dir>0?-18:18}px)`;setTimeout(()=>{c.style.transform=''},150)}return}idx=ni;card(dir)}
+let sw=null;
+$('#stage').addEventListener('pointerdown',e=>{if(e.target.closest('canvas')&&st&&(st.phase===1||st.phase===2)&&!st.animating)return;interacted=true;sw={x:e.clientX,y:e.clientY,t:Date.now(),id:e.pointerId}});
+addEventListener('pointerup',e=>{if(!sw||e.pointerId!==sw.id)return;const dx=e.clientX-sw.x,dy=e.clientY-sw.y,dt=Date.now()-sw.t;sw=null;
+ if(Math.abs(dy)>50&&Math.abs(dy)>Math.abs(dx)*1.2&&dt<900){suppress=Date.now();go(dy<0?1:-1)}});
+addEventListener('pointercancel',()=>{sw=null});
+let suppress=0,wheelT=0;
+addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<30||Date.now()-wheelT<600)return;wheelT=Date.now();go(e.deltaY>0?1:-1)},{passive:true});
+addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();go(1)}else if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();go(-1)}});
+document.addEventListener('click',e=>{if(Date.now()-suppress<350)return;interacted=true;const t=e.target;
+ const bb=t.closest('[data-bab]');if(bb){bab=bb.dataset.bab;SV.bab=bab;buildList();idx=Math.min(SV.pos[bab]||0,LIST.length-1);chips();card(0);return}
+ const a=t.closest('[data-act]');if(!a||!st)return;const act=a.dataset.act;
+ if(act==='say')speak(st.c);
+ else if(act==='next')go(1);
+ else if(act==='first'){idx=0;card(0)}
+ else if(act==='stay'){clearTimeout(st.auto);$('#next').innerHTML=''}
+ else if(act==='anim'){if(st.animating)return;const p=st.phase===3?1:st.phase||1,c=st.cur;clearTimeout(st.auto);$('#next').innerHTML='';
+  animate(()=>{if(p===2){setPhase(2);st.cur=c;redrawDone();dotsUI()}else{setPhase(1);st.cur=c;redrawDone();dotsUI()}msg(`Lanjutkan goresan ${st.cur+1} dari ${st.n}`)})}
+ else if(act==='redo'){if(st.phase===1||st.phase===2){st.miss=0;$('#h'+st.cur).style.opacity=0;flash(st.cur);msg(`Ulangi goresan ${st.cur+1}. Ikuti petunjuk kuning.`)}}
+ else if(act==='restart'){clearTimeout(st.auto);$('#next').innerHTML='';document.querySelectorAll('.d').forEach(p=>p.classList.remove('win'));setPhase(1)}});
+
+/* ---------- mulai ---------- */
+fetch('wdata.json').then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(j=>{D=j.D;L=j.L;bab=SV.bab&&(SV.bab==='all'||L.some(x=>String(x[0])===SV.bab))?SV.bab:'all';buildList();idx=Math.min(SV.pos[bab]||0,LIST.length-1);chips();card(0)})
+ .catch(()=>{$('#stage').innerHTML='<div class="empty">Data huruf gagal dimuat. Muat ulang halaman ini.</div>'});
+})();
+</script>

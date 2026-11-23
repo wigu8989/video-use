@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Detail murid</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Nunito:wght@500;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4B32B8}a:hover{color:#2E1E80}
+</style>
+</helmet>
+<div style="box-sizing: border-box; min-height: 1080px; background: #F4F2FA; color: #1E1638; font-family: Nunito, system-ui, sans-serif; padding: 32px 24px;">
+<div style="max-width: 1220px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+  <a href="Guru-1-Dashboard.dc.html" style="align-self: flex-start; font-weight: 800; text-decoration: none;">‹ Kembali ke dashboard kelas</a>
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px;">
+    <div style="width: 64px; height: 64px; border-radius: 50%; background: #FFC93C; display: grid; place-items: center; font-family: Fredoka, sans-serif; font-weight: 700; font-size: 28px;">D</div>
+    <div style="display: flex; flex-direction: column; flex: 1 1 260px; min-width: 0;">
+      <h1 style="margin: 0; font-family: Fredoka, sans-serif; font-size: 34px;">Dimas</h1>
+      <span style="font-size: 15px; color: #5E5878; font-weight: 700;">Kelas 2A · Sesi 1 · masuk 08:03 · data contoh</span>
+    </div>
+    <span style="background: #FFE3E3; color: #8C1D18; border-radius: 999px; padding: 6px 14px; font-weight: 800;">Perlu dibantu</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+    <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column;"><span style="font-size: 14px; font-weight: 800; color: #5E5878;">Soal dikerjakan</span><b style="font-family: Fredoka, sans-serif; font-size: 32px;">9 / 20</b></div>
+    <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column;"><span style="font-size: 14px; font-weight: 800; color: #5E5878;">Benar langsung</span><b style="font-family: Fredoka, sans-serif; font-size: 32px;">44%</b></div>
+    <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column;"><span style="font-size: 14px; font-weight: 800; color: #5E5878;">Waktu rata-rata</span><b style="font-family: Fredoka, sans-serif; font-size: 32px;">74 dtk</b><span style="font-size: 13px; color: #5E5878; font-weight: 700;">kelas: 41 dtk</span></div>
+    <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column;"><span style="font-size: 14px; font-weight: 800; color: #5E5878;">Help dipakai</span><b style="font-family: Fredoka, sans-serif; font-size: 32px;">6×</b></div>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+    <div style="flex: 999 1 560px; min-width: 0; background: #fff; border: 1px solid #E0DBF2; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+      <h2 style="margin: 0; font-family: Fredoka, sans-serif; font-size: 22px;">Jejak jawaban</h2>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; min-width: 540px; border-collapse: collapse; font-size: 15px;">
+          <thead><tr style="text-align: left; color: #5E5878; font-size: 13px;"><th style="padding: 8px 6px;">No</th><th style="padding: 8px 6px;">Soal</th><th style="padding: 8px 6px;">Mapel</th><th style="padding: 8px 6px;">Hasil</th><th style="padding: 8px 6px;">Waktu</th></tr></thead>
+          <tbody>
+            <sc-for list="{{trail}}" as="t" hint-placeholder-count="9">
+              <tr style="border-top: 1px solid #EEEAF8;">
+                <td style="padding: 9px 6px; color: #5E5878;">{{t.no}}</td>
+                <td style="padding: 9px 6px;">{{t.q}}</td>
+                <td style="padding: 9px 6px; font-size: 13px; font-weight: 800; color: #5E5878;">{{t.s}}</td>
+                <td style="padding: 9px 6px;"><span style="{{t.style}}">{{t.r}}</span></td>
+                <td style="padding: 9px 6px;">{{t.time}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px;">
+      <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+        <h2 style="margin: 0; font-family: Fredoka, sans-serif; font-size: 20px;">Pola kesalahan</h2>
+        <span style="font-size: 15px;">Salah di <b>3 dari 3</b> soal pengurangan yang perlu meminjam (40 − 15, 20 − 6, 25 − 9).</span>
+        <span style="font-size: 15px;">Penjumlahan dan PKn sudah baik.</span>
+        <p style="margin: 0; background: #EEE9FF; border-radius: 12px; padding: 10px 12px; font-size: 14px; font-weight: 700; color: #3A2A8C;">Saran: latihan pengurangan dengan blok puluhan-satuan sebelum sesi 2.</p>
+      </div>
+      <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+        <h2 style="margin: 0; font-family: Fredoka, sans-serif; font-size: 20px;">Speaking</h2>
+        <span style="font-size: 14px; color: #5E5878; font-weight: 700;">"Hello, Bobo!"</span>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span style="background: #E6F6EC; color: #1C6B3E; border-radius: 8px; padding: 4px 10px; font-weight: 800;">Hello</span><span style="background: #FFE3E3; color: #8C1D18; border-radius: 8px; padding: 4px 10px; font-weight: 800;">Bobo</span></div>
+        <span style="font-size: 13px; color: #5E5878;">1 dari 2 kata terdengar jelas</span>
+      </div>
+      <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 8px;">
+        <label for="cat" style="font-family: Fredoka, sans-serif; font-size: 20px; font-weight: 600;">Catatan guru</label>
+        <textarea id="cat" rows="4" style="font: 500 15px Nunito, sans-serif; border: 1px solid #D5CFEA; border-radius: 12px; padding: 10px; resize: vertical;">Tampak ragu menekan tombol ATTACK. Duduk dekat Citra di sesi 2.</textarea>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1080}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ok = 'display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 800; background: #E6F6EC; color: #1C6B3E;';
+    const mid = 'display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 800; background: #FFF4DA; color: #7A4A00;';
+    const bad = 'display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 800; background: #FFE3E3; color: #8C1D18;';
+    const rows = [
+      ['5 + 4 = ?', 'Math', 'Benar', ok, '22 dtk'], ['Listening: sword', 'Listening', 'Benar', ok, '35 dtk'], ['Simbol sila 1', 'PKn', 'Benar', ok, '40 dtk'],
+      ['20 − 6 = ?', 'Math', 'Salah 2×', bad, '118 dtk'], ['"Attack" artinya', 'English', 'Benar ke-2', mid, '61 dtk'], ['Koin emas jatuh', 'PKn', 'Benar', ok, '48 dtk'],
+      ['Cocokkan benda', 'English', 'Help + benar', mid, '95 dtk'], ['2 × 5 = ?', 'Math', 'Benar', ok, '57 dtk'], ['40 − 15 = ?', 'Math', 'Salah 2×', bad, '190 dtk']
+    ];
+    return { trail: rows.map(([q, s, r, style, time], i) => ({ no: i + 1, q, s, r, style, time })) };
+  }
+}
+</script>
+</body>
+</html>
