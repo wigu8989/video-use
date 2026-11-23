@@ -37,7 +37,7 @@ Halaman ini dirakit dari beberapa file di `source/hector/` dalam urutan:
 ```
 sila.js + data.js + app.js
   (sebelum baris terakhir `render();` di app.js disisipkan:
-   theme.js, gen.js, wdata.js, miniwriter.js, mand.js, plh.js)
+   theme.js, gen.js, wdata.js, miniwriter.js, mand.js, plh.js, pjok.js)
 ```
 
 Gaya ada di `style.css`. Bagian kepala halaman (title, font) diambil dari `published/rencana-belajar-hector.html`.
