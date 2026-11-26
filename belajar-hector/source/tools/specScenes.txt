@@ -1,0 +1,169 @@
+=====START  demo(){const N=[4,7];
+=====END  demo(){const N=[4,7];
+ demo(){const N=[4,7,3];return [[this.sc(N,{}),'Contoh: ada tiga kerang, nomor 4, 7, dan 3. Kita pilah satu per satu.'],[this.sc(N,{0:'A'}),'Kerang 4: apakah genap? <b>Ya!</b> Langsung masuk keranjang A.'],[this.sc(N,{0:'A'}),'Kerang 7: apakah genap? Tidak. Jadi tanya lagi: apakah 7 lebih dari 5?'],[this.sc(N,{0:'A',1:'B'}),'7 lebih dari 5, jadi kerang 7 masuk keranjang <b>B</b>.'],[this.sc(N,{0:'A',1:'B'}),'Kerang 3: ganjil. Apakah 3 lebih dari 5? Tidak.'],[this.sc(N,{0:'A',1:'B',2:'C'}),'Jadi kerang 3 masuk keranjang <b>C</b>. Setiap kerang selalu punya satu tempat yang pasti!']]},
+=====DONE
+=====START  bahas(){const N=this.N,P1=
+=====END  bahas(){const N=this.N,P1=
+ bahas(){const N=this.N,O=[[0,'C','3 ganjil dan tidak lebih dari 5'],[1,'A','8 genap'],[2,'B','7 ganjil dan lebih dari 5'],[3,'C','1 ganjil dan tidak lebih dari 5'],[4,'A','10 genap'],[5,'B','9 ganjil dan lebih dari 5'],[6,'A','6 genap'],[7,'A','2 genap']];const P={},F=[[this.sc(N,{}),'Ada 8 kerang. Kita pilah satu per satu, mulai dari kiri.']];O.forEach(([i,b,t])=>{P[i]=b;F.push([this.sc(N,{...P}),`Kerang ${t}, jadi masuk keranjang <b>${b}</b>.`])});F.push([this.sc(N,{...P}),'Hitung isinya: A ada <b>4</b> kerang (8, 10, 6, 2), B ada 2 (7, 9), C ada 2 (3, 1). Keranjang <b>A</b> paling banyak!']);return F},
+=====DONE
+=====START  demo(){const m='▬●●';
+=====END  demo(){const m='▬●●';
+ demo(){const m='▬●●',n='●●●▬';return [[this.code(m),'Contoh 1: lumba-lumba bersiul ▬ ● ●. Artinya apa?'],[this.code(m,[[0,1,'Udang']]),'Siulan pertama ▬ (panjang) hanya cocok dengan <b>Udang</b>.'],[this.code(m,[[0,1,'Udang'],[1,2,'Ikan']]),'Sisanya ● ● adalah <b>Ikan</b>. Pesannya: Udang, Ikan!'],[this.code(n),'Contoh 2: siulan ● ● ● ▬. Mulai dari kiri lagi.'],[this.code(n,[[0,2,'Ikan']]),'● lalu ● lagi: itu <b>Ikan</b>.'],[this.code(n,[[0,2,'Ikan'],[2,2,'Kerang']]),'Sisanya ● ▬ adalah <b>Kerang</b>. Pesannya: Ikan, Kerang!']]},
+=====DONE
+=====START  bahas(){const m='●▬▬●●';
+=====END  bahas(){const m='●▬▬●●';
+ bahas(){const m='●▬▬●●';return [[this.code(m),'Pesan: ● ▬ ▬ ● ●. Mulai dari kiri.'],[this.code(m,[[0,2,'Ikan? ✗']]),'Siulan pertama ●. Apakah ini Ikan (● ●)? Siulan kedua ▬, bukan ●. Jadi <b>bukan</b> Ikan.'],[this.code(m,[[0,2,'Kerang']]),'Coba Kerang (● ▬): cocok! Dua siulan pertama adalah <b>Kerang</b>.'],[this.code(m,[[0,2,'Kerang'],[2,1,'Udang']]),'Siulan berikutnya ▬ sendirian. Hanya Udang yang berupa ▬. Jadi <b>Udang</b>.'],[this.code(m,[[0,2,'Kerang'],[2,1,'Udang'],[3,2,'Ikan']]),'Tersisa ● ●, yaitu <b>Ikan</b>.'],[this.code(m,[[0,2,'Kerang'],[2,1,'Udang'],[3,2,'Ikan']]),'Semua siulan terpakai. Pesannya: <b>Kerang, Udang, Ikan</b>!']]},
+=====DONE
+=====START  demo(){return [[this.ch([3,5]
+=====END  demo(){return [[this.ch([3,5]
+ demo(){const v=[5,8,6],l=['Sen','Sel','Rab'];return [[this.ch([3,5],['Sen','Sel']),'Contoh 1: Senin ada 3 ikan, Selasa ada 5 ikan. Bertambah berapa?'],[this.ch([3,5],['Sen','Sel'],[[1,2]]),'Dari 3 menjadi 5, ikannya <b>bertambah 2</b>. Hitung selisihnya!'],[this.ch(v,l),'Contoh 2: tiga hari dengan 5, 8, lalu 6 ikan.'],[this.ch(v,l,[[1,3]]),'Senin ke Selasa: 5 menjadi 8, bertambah <b>3</b>.'],[this.ch(v,l,[[1,3],[2,-2]]),'Selasa ke Rabu: 8 menjadi 6, malah <b>berkurang 2</b> (tanda minus).'],[this.ch(v,l,[[1,3],[2,-2]],1),'Jadi kenaikan terbesar terjadi hari <b>Selasa</b>.']]},
+=====DONE
+=====START  bahas(){const V=this.V,L=this.L;
+=====END  bahas(){const V=this.V,L=this.L;
+ bahas(){const V=this.V,L=this.L,d=[[1,3],[2,-1],[3,5],[4,1]];return [[this.ch(V,L),'Ini jumlah ikan setiap hari. Kita hitung selisih dengan hari sebelumnya.'],[this.ch(V,L,d.slice(0,1)),'Senin ke Selasa: 4 menjadi 7. 7 − 4 = <b>3</b>, bertambah 3.'],[this.ch(V,L,d.slice(0,2)),'Selasa ke Rabu: 7 menjadi 6. Malah <b>berkurang</b> 1.'],[this.ch(V,L,d.slice(0,3)),'Rabu ke Kamis: 6 menjadi 11. 11 − 6 = <b>5</b>, bertambah 5!'],[this.ch(V,L,d),'Kamis ke Jumat: 11 menjadi 12, hanya bertambah 1.'],[this.ch(V,L,d,3),'Bandingkan semua selisih: 3, −1, 5, 1. Yang terbesar adalah 5, yaitu hari <b>Kamis</b>.'],[this.ch(V,L,d,3),'Hati-hati: Jumat memang paling banyak ikannya, tapi yang ditanya adalah <b>kenaikan</b>, bukan jumlah ikan.']]},
+=====DONE
+=====START  demo(){return [[this.gate([0,0,0]),
+=====END  demo(){return [[this.gate([0,0,0]),
+ demo(){return [[this.gate([0,0,0]),'Contoh: semua lampu masih mati.'],[this.gate([0,1,1],[2]),'Tekan tombol 2: lampu B dan C <b>berubah</b> menjadi menyala.'],[this.gate([0,0,0],[2,2]),'Tombol 2 ditekan sekali lagi: B dan C berubah lagi menjadi <b>mati</b>!'],[this.gate([0,0,0]),'Kita mulai dari awal lagi. Semua lampu mati.'],[this.gate([1,1,0],[1]),'Tekan tombol 1: lampu A dan B menyala, C masih mati. Apakah pintu sudah terbuka?'],[this.gate([1,1,0],[1]),'Belum! Pintu hanya terbuka jika <b>ketiga</b> lampu menyala bersamaan.']]},
+=====DONE
+=====START  bahas(){return [[this.gate([1,0,1],[1,2])
+=====END  bahas(){return [[this.gate([1,0,1],[1,2])
+ bahas(){const g=(s,p,t)=>[this.gate(s,p),t];return [g([0,0,0],[],'Kita coba setiap pilihan, mulai dari semua lampu mati.'),g([1,1,0],[1],'Pilihan A. Tombol 1: A dan B menyala.'),g([1,0,1],[1,2],'Lalu tombol 2: B berubah jadi mati, C menyala. B mati, pintu tetap tertutup.'),g([1,1,0],[1],'Pilihan B. Tombol 1: A dan B menyala.'),g([1,1,1],[1,3],'Lalu tombol 3: C menyala. Ketiga lampu menyala, pintu <b>terbuka</b>!'),g([0,1,1],[2],'Pilihan C. Tombol 2: B dan C menyala, A tetap mati.'),g([0,1,0],[2,3],'Lalu tombol 3: C kembali mati. Pintu tidak terbuka.'),g([1,0,1],[1,2],'Pilihan D. Tombol 1 lalu 2: A menyala, B mati, C menyala.'),g([1,0,0],[1,2,3],'Lalu tombol 3: C kembali mati. Hanya A yang menyala.'),g([1,1,1],[1,3],'Jadi hanya <b>tombol 1 dan 3</b> yang membuka pintu.')]},
+=====DONE
+=====START  demo(){return [[this.fsc('',0,'awal')
+=====END  demo(){return [[this.fsc('',0,'awal')
+ demo(){return [[this.fsc('',0,'awal'),'Contoh: ikan menghadap ke kanan, siripnya di atas.'],[this.fsc('rotate(90)',90,'putar ¼ ↻'),'<b>Putar ¼ putaran searah jarum jam</b>: kepala ikan sekarang menghadap ke bawah.'],[this.fsc('rotate(180)',180,'putar ¼ lagi ↻'),'Putar ¼ sekali lagi: ikan menghadap ke kiri dan <b>terbalik</b>, siripnya di bawah.'],[this.fsc('',0,'awal'),'Kembali ke awal untuk mencoba gerakan yang lain.'],[this.fsc('scale(-1,1)',0,'balik ⇆'),'<b>Balik kiri-kanan</b>: seperti bayangan di cermin. Ikan menghadap ke kiri.'],[this.fsc('scale(-1,1)',0,'balik ⇆'),'Perhatikan: setelah dibalik, siripnya <b>tetap di atas</b>. Berbeda dengan diputar setengah putaran!']]},
+=====DONE
+=====START  bahas(){return [[this.fsc('',0,'awal'),'Mulai:
+=====END  bahas(){return [[this.fsc('',0,'awal'),'Mulai:
+ bahas(){return [[this.fsc('',0,'awal'),'Mulai: ikan menghadap kanan, sirip di atas.'],[this.fsc('rotate(90)',90,'1. putar ¼ ↻'),'Gerakan 1, putar seperempat searah jarum jam: kepala ikan bergerak dari kanan ke <b>bawah</b>.'],[this.fsc('rotate(90)',90,'1. putar ¼ ↻'),'Lihat siripnya: tadinya di atas, sekarang ada di sebelah <b>kanan</b>.'],[this.fsc('scale(-1,1) rotate(90)',90,'2. balik ⇆'),'Gerakan 2, balik kiri-kanan: yang di kanan pindah ke kiri. Siripnya sekarang di <b>kiri</b>.'],[this.fsc('scale(-1,1) rotate(90)',90,'hasil akhir'),'Kepala tetap menghadap ke bawah, karena atas dan bawah tidak berubah saat dibalik kiri-kanan.'],[this.fsc('scale(-1,1) rotate(90)',90,'jawaban C'),'Hasilnya: ikan menghadap ke bawah dengan sirip di kiri. Itu gambar <b>C</b>!']]},
+=====DONE
+=====START  demo(){const D=['Eka','Fani']
+=====END  demo(){const D=['Eka','Fani']
+ demo(){const D=['Eka','Fani'],TK=[['Ungu','#8E6BD8'],['Oranye','#FF9F43']],OK={Eka:[0,1],Fani:[1]},D2=['Gita','Hadi','Ika'],TK2=[['Ungu','#8E6BD8'],['Oranye','#FF9F43'],['Hijau','#3FA34D']],OK2={Gita:[0,1],Hadi:[0],Ika:[1,2]};return [[this.mt(D,TK,OK),'Contoh 1: Eka cocok dengan ungu atau oranye. Fani hanya cocok dengan oranye.'],[this.mt(D,TK,OK,{Fani:1},'Fani'),'Mulai dari yang pilihannya <b>cuma satu</b>: Fani dapat oranye.'],[this.mt(D,TK,OK,{Fani:1,Eka:0},'Eka'),'Oranye sudah dipakai, jadi Eka dapat <b>ungu</b>.'],[this.mt(D2,TK2,OK2),'Contoh 2: tiga penyelam. Siapa yang pilihannya cuma satu?'],[this.mt(D2,TK2,OK2,{Hadi:0},'Hadi'),'Hadi hanya cocok dengan ungu. Hadi dapat <b>ungu</b>.'],[this.mt(D2,TK2,OK2,{Hadi:0,Gita:1},'Gita'),'Ungu sudah dipakai, jadi Gita dapat <b>oranye</b>.'],[this.mt(D2,TK2,OK2,{Hadi:0,Gita:1,Ika:2},'Ika'),'Ika mendapat <b>hijau</b>. Semua penyelam dapat tabung!']]},
+=====DONE
+=====START  bahas(){const f=(a,n)=>this.mt(this.D
+=====END  bahas(){const f=(a,n)=>this.mt(this.D
+ bahas(){const f=(a,n)=>this.mt(this.D,this.TK,this.OK,a,n);return [[f({}),'Hitung pilihan setiap penyelam: Ana 2 tabung, Bayu 1, Cici 3, Dodi 1.'],[f({Bayu:0},'Bayu'),'Mulai dari yang pilihannya cuma satu. Bayu hanya cocok dengan <b>merah</b>.'],[f({Bayu:0,Dodi:2},'Dodi'),'Dodi juga hanya cocok dengan satu tabung, yaitu <b>hijau</b>.'],[f({Bayu:0,Dodi:2}),'Sekarang Ana: pilihannya merah atau biru. Merah sudah dipakai Bayu.'],[f({Bayu:0,Dodi:2,Ana:1},'Ana'),'Jadi Ana dapat <b>biru</b>.'],[f({Bayu:0,Dodi:2,Ana:1}),'Tinggal Cici. Biru dipakai Ana, hijau dipakai Dodi. Yang tersisa: kuning.'],[f({Bayu:0,Dodi:2,Ana:1,Cici:3},'Cici'),'Cici cocok dengan kuning. Jadi Cici memakai tabung <b>kuning</b>!']]},
+=====DONE
+=====START  demo(){return [[this.seq(1,10,[1])
+=====END  demo(){return [[this.seq(1,10,[1])
+ demo(){return [[this.seq(1,10,[1]),'Contoh 1: mulai dengan angka 1. Ulangi selama angka belum lebih dari 10.'],[this.seq(1,10,[1,2,4,8]),'1, 2, 4, dan 8 belum lebih dari 10, jadi terus dikali 2.'],[this.seq(1,10,[1,2,4,8,16]),'8 dikali 2 jadi 16. Sekarang 16 sudah lebih dari 10, pengulangan <b>berhenti</b>. Ditulis: 16.'],[this.seq(5,20,[5]),'Contoh 2: mulai dengan 5. Ulangi selama angka belum lebih dari 20.'],[this.seq(5,20,[5,10,20]),'5 jadi 10, lalu 20. Apakah 20 lebih dari 20? <b>Belum!</b> 20 sama dengan 20.'],[this.seq(5,20,[5,10,20,40]),'Jadi 20 dikali 2 sekali lagi: 40. Sekarang lebih dari 20, berhenti. Ditulis: <b>40</b>.']]},
+=====DONE
+=====START  bahas(){return [[this.seq(3,50,[3])
+=====END  bahas(){return [[this.seq(3,50,[3])
+ bahas(){const v=[3,6,12,24,48,96],c=['Mulai: angka = 3.','3 belum lebih dari 50, jadi dikali 2: <b>6</b>.','6 belum lebih dari 50, jadi dikali 2: <b>12</b>.','12 belum lebih dari 50, jadi: <b>24</b>.','24 belum lebih dari 50, jadi: <b>48</b>.','Periksa lagi: apakah 48 lebih dari 50? <b>Belum!</b> Jadi dikali 2 lagi: <b>96</b>.'];const F=v.map((_,i)=>[this.seq(3,50,v.slice(0,i+1)),c[i]]);F.push([this.seq(3,50,v),'96 sudah lebih dari 50, pengulangan berhenti. Angka yang ditulis: <b>96</b>.']);return F},
+=====DONE
+=====START  demo(){const A=['→↓','↑*']
+=====END  demo(){const A=['→↓','↑*']
+ demo(){const A=['→↓','↑*'],B=['→↓','↑←'],S={};return [[this.am(A,S,[0,0]),'Contoh 1: botol dilepas di kiri atas. Panahnya menunjuk ke kanan.'],[this.am(A,S,[1,0],[[0,0],[1,0]]),'Botol terbawa arus ke kanan. Di kotak ini panahnya menunjuk ke bawah.'],[this.am(A,S,[1,1],[[0,0],[1,0],[1,1]]),'Botol terbawa ke bawah dan sampai di <b>pulau</b>!'],[this.am(B,S,[0,0]),'Contoh 2: peta tanpa pulau. Botol dilepas di kiri atas.'],[this.am(B,S,[1,1],[[0,0],[1,0],[1,1]]),'Ke kanan, lalu ke bawah, lalu panahnya menunjuk ke kiri…'],[this.am(B,S,[0,0],[[0,0],[1,0],[1,1],[0,1],[0,0]]),'…lalu ke atas, dan kembali ke tempat awal! Botol akan <b>berputar-putar terus</b>.']]},
+=====DONE
+=====START  bahas(){const A=this.AR,S=this.ST,P=
+=====END  bahas(){const A=this.AR,S=this.ST,P=
+ bahas(){const A=this.AR,S=this.ST,P=[[0,0],[1,0],[1,1],[2,1],[2,2],[3,2],[3,3]],d=['','ke kanan','ke bawah','ke kanan','ke bawah','ke kanan','ke bawah'];const F=[[this.am(A,S,P[0],P.slice(0,1)),'Coba titik A dulu. Botol dilepas di kiri atas.']];for(let i=1;i<P.length;i++)F.push([this.am(A,S,P[i],P.slice(0,i+1)),i<P.length-1?`Arus membawa botol ${d[i]}.`:'Lalu ke bawah, dan botol sampai di <b>pulau</b>! Titik A berhasil.']);F.push([this.am(A,S,[3,0],[[3,0]]),'Sekarang titik B, di kanan atas.'],[this.am(A,S,[3,0],[[3,0],[3,1],[3,0]]),'Ke bawah, lalu panahnya kembali ke atas. Botol bolak-balik terus, tidak pernah sampai.'],[this.am(A,S,[0,2],[[0,2],[0,3],[1,3],[1,2],[0,2]]),'Titik C: ke bawah, kanan, atas, kiri, lalu kembali ke tempat awal. Berputar terus.'],[this.am(A,S,[2,3],[[2,3],[1,3],[1,2],[0,2],[0,3],[1,3]]),'Titik D: botol masuk ke putaran yang sama dengan titik C.'],[this.am(A,S,[3,3],P),'Jadi hanya titik <b>A</b> yang membawa botol sampai ke pulau.']);return F},
+=====DONE
+=====START  demo(){const M=[...'IKANBIRU']
+=====END Pesan rahasianya: <b>IBKIARNU</b>
+ demo(){const M=[...'IKANBIRU'],L=['Contoh: pesan asli','Pesan rahasia'],E=Array(8).fill(''),gf=M.map((_,i)=>'m'+i),gk=n=>M.map((c,i)=>i<n?c:''),o=[...'IBKIARNU'],of=[0,4,1,5,2,6,3,7].map(i=>'g'+i),ok=n=>o.map((c,i)=>i<n?c:'');
+  return [[this.tp(M,E,[],E,[],L),'Contoh: pesan asli IKAN BIRU (8 huruf).'],[this.tp(M,gk(2),gf,E,[],L),'Tulis huruf satu per satu di baris atas: I, K, …'],[this.tp(M,gk(4),gf,E,[],L),'…A, N. Baris atas penuh.'],[this.tp(M,gk(8),gf,E,[],L),'Lanjutkan B, I, R, U di baris bawah.'],[this.tp(M,M,gf,ok(4),of,L),'Sekarang salin per <b>kolom</b>, dari atas ke bawah: kolom 1 = I B, kolom 2 = K I.'],[this.tp(M,M,gf,o,of,L),'Kolom 3 = A R, kolom 4 = N U. Pesan rahasianya: <b>IBKIARNU</b>.']]},
+=====DONE
+=====START  bahas(){const M=[...'PLAARUIT']
+=====END Pesannya <b>PARI LAUT</b>!
+ bahas(){const M=[...'PLAARUIT'],L=['Pesan rahasia','Pesan asli'],E=Array(8).fill('');const put=n=>{const G=Array(8).fill(''),GF=Array(8).fill('');for(let k=0;k<n;k++){const r=k%2,c=Math.floor(k/2);G[r*4+c]=M[k];GF[r*4+c]='m'+k}return [G,GF]};const o=[...'PARILAUT'],of=o.map((_,i)=>'g'+i),ok=n=>o.map((c,i)=>i<n?c:'');const fr=(n,on,t)=>{const[G,GF]=put(n);return [this.tp(M,G,GF,on?ok(on):E,of,L),t]};
+  return [fr(0,0,'Pesan rahasia: PLAARUIT. Karena tadi disalin per kolom, kita kembalikan hurufnya <b>per kolom</b>.'),fr(2,0,'Kolom 1: P di atas, L di bawah.'),fr(4,0,'Kolom 2: A dan A.'),fr(6,0,'Kolom 3: R dan U.'),fr(8,0,'Kolom 4: I dan T. Kotaknya penuh.'),fr(8,4,'Sekarang baca per <b>baris</b>. Baris atas: P, A, R, I.'),fr(8,8,'Baris bawah: L, A, U, T. Pesannya <b>PARI LAUT</b>!')]},
+=====DONE
+=====START  demo(){return [[this.hn([[2,1],[],[]],0)
+=====END  demo(){return [[this.hn([[2,1],[],[]],0)
+ demo(){return [[this.hn([[1],[],[]],0),'Contoh 1: menara 1 cincin. Mudah!'],[this.hn([[],[],[1]],1),'Pindahkan langsung ke kanan. Cukup <b>1 langkah</b>.'],[this.hn([[2,1],[],[]],0),'Contoh 2: menara 2 cincin. Ingat, cincin besar tidak boleh di atas cincin kecil.'],[this.hn([[2],[1],[]],1),'Pindahkan cincin kecil ke tiang tengah dulu, supaya cincin besar bisa bergerak.'],[this.hn([[],[1],[2]],2),'Cincin besar pindah ke tiang kanan.'],[this.hn([[],[],[2,1]],3),'Cincin kecil naik ke atas cincin besar. Selesai dalam <b>3 langkah</b>!']]},
+=====DONE
+=====START  bahas(){const S=[[[[3,2,1],[],[]],'Mulai:
+=====END  bahas(){const S=[[[[3,2,1],[],[]],'Mulai:
+ bahas(){const S=[[[[3,2,1],[],[]],'Mulai: 3 cincin di tiang kiri. Rencananya: pindahkan 2 cincin atas ke tengah, lalu cincin besar ke kanan.'],[[[3,2],[],[1]],'1. Cincin kecil ke kanan.'],[[[3],[2],[1]],'2. Cincin sedang ke tengah.'],[[[3],[2,1],[]],'3. Cincin kecil ke atas cincin sedang. Dua cincin atas sudah di tengah, seperti contoh 2 cincin tadi!'],[[[],[2,1],[3]],'4. Cincin besar sekarang bebas. Pindahkan ke kanan.'],[[[1],[2],[3]],'5. Sekarang pindahkan 2 cincin di tengah ke kanan. Cincin kecil ke kiri dulu.'],[[[1],[],[3,2]],'6. Cincin sedang ke kanan.'],[[[],[],[3,2,1]],'7. Cincin kecil ke kanan. Selesai dalam <b>7 langkah</b>!']];const F=S.map(([p,c],i)=>[this.hn(p,i),c]);F.push([this.hn([[],[],[3,2,1]],7),'Polanya: 3 langkah (2 cincin) + 1 langkah (cincin besar) + 3 langkah (2 cincin lagi) = <b>7</b>.']);return F},
+=====DONE
+=====START  demo(){const R=[['bulat',['bulat','segitiga']]
+=====END  demo(){const R=[['bulat',['bulat','segitiga']]
+ demo(){const R=[['bulat',['bulat','segitiga']],['segitiga',['segitiga']]],S=[['bulat'],['bulat','segitiga'],['bulat','segitiga','segitiga'],['bulat','segitiga','segitiga','segitiga']];return [[this.rows(R,S.slice(0,1)),'Contoh aturan lain: ● diganti ● ▲, dan ▲ tetap ▲. Mulai dengan ●.'],[this.rows(R,S.slice(0,2)),'Langkah 1: ● diganti ● ▲.'],[this.rows(R,S.slice(0,2)),'Untuk langkah 2, lihat <b>setiap</b> simbol: ● menjadi ● ▲, dan ▲ tetap ▲.'],[this.rows(R,S.slice(0,3)),'Langkah 2: ● ▲ ▲. Semua simbol diganti <b>bersamaan</b>.'],[this.rows(R,S),'Langkah 3: ● ▲ ▲ ▲. Setiap langkah, ▲ bertambah satu!']]},
+=====DONE
+=====START  bahas(){const S=this.S,R=this.R;
+=====END  bahas(){const S=this.S,R=this.R;
+ bahas(){const S=this.S,R=this.R,p=n=>[...S.slice(0,3),S[3].slice(0,n)];return [[this.rows(R,S.slice(0,1)),'Mulai: ▲.'],[this.rows(R,S.slice(0,2)),'Langkah 1: ▲ diganti ● ●.'],[this.rows(R,S.slice(0,3)),'Langkah 2: setiap ● diganti ▲ ■. Dua ● menjadi ▲ ■ ▲ ■.'],[this.rows(R,p(2)),'Langkah 3, satu per satu. ▲ pertama diganti ● ●.'],[this.rows(R,p(3)),'■ tetap ■.'],[this.rows(R,p(5)),'▲ kedua diganti ● ● lagi.'],[this.rows(R,S),'■ terakhir tetap ■. Hasilnya <b>● ● ■ ● ● ■</b>!']]},
+=====DONE
+=====START  demo(){const E=['pagi','makan'];
+=====END  demo(){const E=['pagi','makan'];
+ demo(){const E=['pagi','makan','pagi'];return [[this.sm('Tidur',E,0),'Contoh: Kuku sedang Tidur. Ada tiga kejadian: pagi, makan, pagi.'],[this.sm('Lapar',E,1),'<b>Pagi</b>: dari Tidur ada panah "pagi" ke Lapar. Kuku jadi Lapar.'],[this.sm('Senang',E,2),'<b>Makan</b>: dari Lapar ada panah "makan" ke Senang. Kuku jadi Senang.'],[this.sm('Senang',E,3),'<b>Pagi</b> lagi: dari Senang <b>tidak ada</b> panah "pagi". Apa yang terjadi?'],[this.sm('Senang',E,3),'Karena tidak ada panahnya, suasana hati Kuku <b>tidak berubah</b>. Kuku tetap Senang.']]},
+=====DONE
+=====START  bahas(){const E=this.EV,S=[['Tidur','Mulai: Tidur.']
+=====END  bahas(){const E=this.EV,S=[['Tidur','Mulai: Tidur.']
+ bahas(){const E=this.EV,S=[['Tidur','Mulai: Kuku sedang Tidur.'],['Lapar','Kejadian 1, <b>pagi</b>: dari Tidur ikuti panah "pagi". Kuku jadi Lapar.'],['Senang','Kejadian 2, <b>makan</b>: dari Lapar ikuti panah "makan". Kuku jadi Senang.'],['Lapar','Kejadian 3, <b>main</b>: dari Senang ikuti panah "main". Kuku jadi Lapar lagi.'],['Senang','Kejadian 4, <b>makan</b>: dari Lapar ke Senang.'],['Tidur','Kejadian 5, <b>malam</b>: dari Senang ada panah "malam" ke Tidur.'],['Lapar','Kejadian 6, <b>pagi</b>: dari Tidur ke Lapar.']];const F=S.map(([s,c],i)=>[this.sm(s,E,i),c]);F.push([this.sm('Lapar',E,6),'Urutannya: Tidur → Lapar → Senang → Lapar → Senang → Tidur → <b>Lapar</b>. Di akhir Kuku Lapar!']);return F},
+=====DONE
+=====START  demo(){const K={Teko:[4,5,'#13B5A6']
+=====END  demo(){const K={Teko:[4,5,'#13B5A6']
+ demo(){const K={Teko:[4,5,'#13B5A6'],Lampu:[3,4,'#FF9F43'],Sisir:[2,3,'#F2708A']};return [[this.kn(K,[],5),'Contoh: tas hanya kuat 5 kg. Ada 3 barang.'],[this.kn(K,['Teko'],5),'Ambil Teko (5 koin). Beratnya 4 kg, sisa 1 kg.'],[this.kn(K,['Teko','Sisir'],5),'Tambah Sisir? 4 + 2 = 6 kg, <b>terlalu berat</b>! Tidak boleh.'],[this.kn(K,['Teko'],5),'Jadi dengan Teko, hanya dapat 5 koin.'],[this.kn(K,['Lampu','Sisir'],5),'Coba Lampu + Sisir: 3 + 2 = 5 kg, pas! Nilainya 4 + 3 = <b>7 koin</b>.'],[this.kn(K,['Lampu','Sisir'],5),'Barang termahal (Teko) ternyata bukan pilihan terbaik. Cobalah beberapa gabungan!']]},
+=====DONE
+=====START  bahas(){const K=this.K;return [[this.kn(K,['Mahkota','Peti'],10)
+=====END  bahas(){const K=this.K;return [[this.kn(K,['Mahkota','Peti'],10)
+ bahas(){const K=this.K,f=(s,t)=>[this.kn(K,s,10),t];return [f([],'Kita coba beberapa gabungan dan hitung berat serta nilainya.'),f(['Mahkota'],'Mulai dari yang termahal: Mahkota, 6 kg, 9 koin. Sisa 4 kg.'),f(['Mahkota','Peti'],'Tambah Peti (4 kg): pas 10 kg. Nilainya 9 + 6 = 15 koin.'),f(['Mahkota','Kalung'],'Atau Mahkota + Kalung: 9 kg, 14 koin. Lebih sedikit.'),f(['Peti','Kalung','Cincin'],'Tanpa Mahkota: Peti + Kalung + Cincin = 9 kg, nilainya 6 + 5 + 4 = 15 koin.'),f(['Peti','Vas'],'Peti + Vas: 9 kg, nilainya 13 koin.'),f(['Kalung','Vas','Cincin'],'Vas + Kalung + Cincin: 5 + 3 + 2 = 10 kg. Nilainya 7 + 5 + 4 = <b>16 koin</b>!'),f(['Kalung','Vas','Cincin'],'16 koin adalah yang terbesar. Mengambil barang termahal lebih dulu ternyata <b>bukan</b> cara terbaik.')]},
+=====DONE
+=====START  demo(){const A=[[1,1,0],[0,1,1],[1,0,1]]
+=====END  demo(){const A=[[1,1,0],[0,1,1],[1,0,1]]
+ demo(){const A=[[1,1,0],[0,1,1],[1,0,1]],B=[[1,0,0],[0,1,1],[1,0,1]];return [[this.pg(A),'Contoh: gambar 3 × 3. Baris dan kolom terakhir adalah lampu pemeriksa.'],[this.pg(A,{rows:1}),'Hitung lampu menyala di setiap baris: 2, 2, 2. Semua <b>genap</b> (hijau).'],[this.pg(A,{rows:1,cols:1}),'Setiap kolom juga genap: 2, 2, 2.'],[this.pg(B,{rows:1,cols:1}),'Satu lampu berubah saat dikirim! Sekarang baris 1 dan kolom 2 menjadi <b>ganjil</b> (merah).'],[this.pg(B,{rows:1,cols:1,r:0,c:1,x:[0,1]}),'Lampu yang berubah ada di <b>pertemuan</b> baris 1 dan kolom 2.']]},
+=====DONE
+=====START  bahas(){const M=this.M;return [[this.pg(M,{rows:1})
+=====END  bahas(){const M=this.M;return [[this.pg(M,{rows:1})
+ bahas(){const M=this.M;return [[this.pg(M),'Ini gambar yang diterima. Tepat satu lampu berubah. Kita hitung setiap baris dan kolom.'],[this.pg(M,{rows:1}),'Hitung setiap baris: 4, 1, 4, 2, 2.'],[this.pg(M,{rows:1,r:1}),'Baris 2 hanya punya 1 lampu menyala, <b>ganjil</b>! Lampu yang berubah ada di baris ini.'],[this.pg(M,{rows:1,cols:1,r:1}),'Sekarang hitung setiap kolom: 2, 2, 3, 2, 4.'],[this.pg(M,{rows:1,cols:1,r:1,c:2}),'Kolom 3 punya 3 lampu menyala, <b>ganjil</b>!'],[this.pg(M,{rows:1,cols:1,r:1,c:2,x:[1,2]}),'Baris 2 dan kolom 3 bertemu di satu lampu. Itulah lampu yang berubah: <b>baris 2, kolom 3</b>.'],[this.pg(M,{rows:1,cols:1,r:1,c:2,x:[1,2]}),'Seharusnya lampu itu menyala. Jika dinyalakan lagi, baris 2 dan kolom 3 kembali genap.']]},
+=====DONE
+=====START  demo(){const R=['1,0','1,1'],g=[2,0];
+=====END  demo(){const R=['1,0','1,1'],g=[2,0];
+ demo(){const R=['1,0','1,1'],g=[2,0];return [[this.mz(3,3,R,g),'Contoh: harta di kanan atas, tapi batu menghalangi jalan lurus.'],[this.mz(3,3,R,g,0),'Mulai dari kapal selam. Kita tulis berapa langkah untuk sampai di setiap kotak.'],[this.mz(3,3,R,g,2),'Kotak tetangga kapal selam diberi angka 1, tetangganya lagi angka 2.'],[this.mz(3,3,R,g,4),'Angka terus menyebar seperti gelombang: 3, lalu 4.'],[this.mz(3,3,R,g,6),'Harta mendapat angka <b>6</b>. Jadi butuh 6 langkah!'],[this.mz(3,3,R,g,6,[[0,0],[0,1],[0,2],[1,2],[2,2],[2,1],[2,0]]),'Ini jalannya: memutar lewat bawah.']]},
+=====DONE
+=====START  bahas(){const R=this.RK,g=[4,4],P=
+=====END  bahas(){const R=this.RK,g=[4,4],P=
+ bahas(){const R=this.RK,g=[4,4],P=[[0,0],[0,1],[0,2],[0,3],[0,4],[1,4],[2,4],[2,3],[2,2],[3,2],[4,2],[4,3],[4,4]],f=(d,t,p)=>[this.mz(5,5,R,g,d,p),t];return [f(undefined,'Kapal selam di kiri atas, harta di kanan bawah. Kita sebarkan angka langkah.'),f(1,'Angka 1: kotak yang bisa dicapai dalam 1 langkah.'),f(2,'Angka 2. Jalan ke kanan atas ternyata buntu karena batu.'),f(4,'Gelombang angka turun ke bawah: 3, 4.'),f(6,'Lalu belok ke kanan di dasar: 5, 6.'),f(9,'Naik lewat celah di tengah: 7, 8, 9.'),f(12,'Lalu turun ke harta: 10, 11, <b>12</b>.'),f(12,'Ini jalannya. Tanpa batu cukup 8 langkah, tapi batu-batu memaksa kapal selam memutar sampai <b>12 langkah</b>.',P)]},
+=====DONE
+=====START  demo(){const N={X:[80,70]
+=====END  demo(){const N={X:[80,70]
+ demo(){const N={X:[80,70],Y:[300,70],Z:[190,180]},E=[['X','Y',2],['Y','Z',3],['X','Z',4]],f=(c,r,n)=>this.ms(N,E,c,r,n,380,230);return [[f([],[]),'Contoh: 3 pulau dengan 3 pilihan kabel.'],[f([],[]),'Urutkan kabel dari yang termurah: 2, 3, 4.'],[f(['XY'],[],'XY'),'Pasang kabel termurah dulu: <b>2</b>. X dan Y tersambung.'],[f(['XY','YZ'],[],'YZ'),'Lalu kabel 3. Z ikut tersambung. Ketiga pulau sudah tersambung!'],[f(['XY','YZ'],['XZ']),'Kabel 4 tidak perlu, karena X dan Z sudah tersambung lewat Y.'],[f(['XY','YZ'],['XZ']),'Totalnya 2 + 3 = <b>5</b> keping emas.']]},
+=====DONE
+=====START  bahas(){const f=(c,r,n)=>this.ms(this.N
+=====END  bahas(){const f=(c,r,n)=>this.ms(this.N
+ bahas(){const f=(c,r,n,t)=>[this.ms(this.N,this.E,c,r,n),t];return [f([],[],0,'Urutkan semua kabel dari yang termurah: 1, 2, 3, 4, 5, 6, 8.'),f(['AC'],[],'AC','Kabel 1 (A–C) dipasang.'),f(['AC','BC'],[],'BC','Kabel 2 (B–C) dipasang. Sekarang A, B, C tersambung.'),f(['AC','BC','CE'],[],'CE','Kabel 3 (C–E) dipasang. E ikut tersambung.'),f(['AC','BC','CE'],['AB'],0,'Kabel 4 (A–B) dilewati: A dan B sudah tersambung lewat C.'),f(['AC','BC','CE','BD'],['AB'],'BD','Kabel 5 (B–D) dipasang. Sekarang D juga tersambung!'),f(['AC','BC','CE','BD'],['AB','DE','CD'],0,'Kabel 6 dan 8 tidak perlu lagi, karena semua pulau sudah tersambung.'),f(['AC','BC','CE','BD'],['AB','DE','CD'],0,'Totalnya 1 + 2 + 3 + 5 = <b>11 keping emas</b>.')]},
+=====DONE
+=====START  demo(){const G=[[0,1,240]];
+=====END  demo(){const G=[[0,1,240]];
+ demo(){const G=[[0,1,240]];return [[this.sn(2,G,[5,3],70),'Contoh 1: ikan 5 di jalur atas, ikan 3 di jalur bawah.'],[this.sn(2,G,[5,3],215,[0]),'Mereka sampai di gerbang dan dibandingkan.'],[this.sn(2,G,[3,5],400,[0]),'3 lebih kecil, jadi 3 pindah ke jalur <b>atas</b>. Mereka bertukar!'],[this.sn(2,G,[2,7],70),'Contoh 2: ikan 2 di atas, ikan 7 di bawah.'],[this.sn(2,G,[2,7],215,[0]),'Dibandingkan di gerbang: yang kecil sudah di atas.'],[this.sn(2,G,[2,7],400,[0]),'Jadi mereka <b>tidak</b> bertukar dan tetap di jalurnya.']]},
+=====DONE
+=====START  bahas(){const G=this.G;return [[this.sn(4,G,[8,2,6,4],50)
+=====END  bahas(){const G=this.G;return [[this.sn(4,G,[8,2,6,4],50)
+ bahas(){const G=this.G,f=(v,x,h,t)=>[this.sn(4,G,v,x,h),t];return [f([8,2,6,4],50,[],'Ikan 8, 2, 6, 4 masuk dari kiri.'),f([8,2,6,4],100,[0,1],'Gerbang pertama: jalur 1 dan 2 (8 dan 2), juga jalur 3 dan 4 (6 dan 4).'),f([2,8,4,6],170,[0,1],'2 lebih kecil dari 8, jadi 2 naik. 4 lebih kecil dari 6, jadi 4 naik.'),f([2,8,4,6],205,[2],'Gerbang jalur 1 dan 3: 2 dan 4 dibandingkan.'),f([2,8,4,6],270,[2],'2 sudah di atas dan lebih kecil, jadi tidak bertukar.'),f([2,8,4,6],310,[3],'Gerbang jalur 2 dan 4: 8 dan 6 dibandingkan.'),f([2,6,4,8],410,[3],'6 lebih kecil, jadi 6 naik ke jalur 2 dan 8 turun ke jalur 4.'),f([2,6,4,8],410,[],'Hasil akhir dari atas: 2, 6, <b>4</b>, 8. Jalur ke-3 adalah ikan <b>4</b>. Ikannya belum urut, karena tidak ada gerbang antara jalur 2 dan 3.')]},
+=====DONE
+=====START  demo(){return [[this.pr(3,{},0,undefined,0)
+=====END  demo(){return [[this.pr(3,{},0,undefined,0)
+ demo(){return [[this.pr(3,{},0,undefined,0),'Contoh: 3 mutiara, satu lebih berat. Bisakah ditemukan dengan sekali menimbang?'],[this.pr(3,{0:'L',1:'R'},0,undefined,1),'Taruh mutiara 1 di kiri dan 2 di kanan. Mutiara 3 tidak ditimbang.'],[this.pr(3,{0:'L',1:'R'},0,2,1),'Jika <b>seimbang</b>: 1 dan 2 sama berat, jadi yang berat pasti nomor 3.'],[this.pr(3,{0:'L',1:'R'},-1,0,1),'Jika sisi <b>kiri turun</b>: yang berat nomor 1.'],[this.pr(3,{0:'L',1:'R'},1,1,1),'Jika sisi <b>kanan turun</b>: yang berat nomor 2.'],[this.pr(3,{0:'L',1:'R'},1,1,1),'Ada 3 kemungkinan hasil, dan semuanya langsung menunjuk jawabannya. <b>1 kali</b> menimbang cukup!']]},
+=====DONE
+=====START  bahas(){const g={},w={};
+=====END padahal ada 9 kemungkinan
+ bahas(){const g={},w={};for(let i=0;i<9;i++){g[i]='g'+Math.floor(i/3);w[i]=i<3?'L':i<6?'R':'g2'}const t={};for(let i=0;i<6;i++)t[i]='x'+Math.floor(i/3);t[6]='L';t[7]='R';t[8]='g2';
+  return [[this.pr(9,{},0,undefined,0),'Ada 9 mutiara. Idenya sama seperti contoh tadi: bagi menjadi tiga.'],[this.pr(9,g,0,undefined,0),'Bagi menjadi 3 kelompok, masing-masing berisi 3 mutiara.'],[this.pr(9,w,0,undefined,1),'Timbangan 1: kelompok 1 di kiri, kelompok 2 di kanan.'],[this.pr(9,w,-1,undefined,1),'Jika kiri turun, mutiara palsu ada di kelompok 1. Jika kanan turun, ada di kelompok 2.'],[this.pr(9,w,0,undefined,1),'Misalkan <b>seimbang</b>. Berarti mutiara palsu ada di kelompok 3 (7, 8, 9).'],[this.pr(9,t,0,undefined,2),'Sekarang tinggal 3 mutiara, sama seperti contoh! Timbangan 2: 7 lawan 8.'],[this.pr(9,t,0,8,2),'Jika seimbang, yang palsu nomor 9. Jika miring, yang turun itu yang palsu.'],[this.pr(9,t,0,8,2),'Apa pun hasilnya, <b>2 kali</b> menimbang selalu cukup. 1 kali tidak cukup, karena satu timbangan hanya punya 3 hasil, padahal ada 9 kemungkinan.']]},
+=====DONE
+=====START  tb(rows){
+=====END  tb(rows){
+ tb(rows){const H=['Kiko','Lolo','Mimi'];return this.says(this.S)+`<div style="overflow-x:auto;max-width:100%"><table class="lt"><tr><th>Jika pencurinya</th>${H.map(h=>`<th>${h}</th>`).join('')}<th>Yang jujur</th></tr>${H.map((h,r)=>{const R=rows[r];return `<tr><th>${h}</th>${[0,1,2].map(c=>`<td>${R&&c<R[0].length?`<span data-k="t${r}${c}" data-in="stamp" style="display:inline-block;color:${R[0][c]?'var(--ok)':'var(--bad)'}">${R[0][c]?'jujur':'bohong'}</span>`:''}</td>`).join('')}<td>${R&&R[0].length===3?`<span data-k="t${r}n" data-in="pop" style="display:inline-block;font-weight:900;color:${R[1]===1?'var(--ok)':'var(--bad)'}">${R[1]} ${R[1]===1?'✓':'✗'}</span>`:''}</td></tr>`}).join('')}</table></div>`},
+=====DONE
+=====START  demo(){const P=[['Pipi',
+=====END  demo(){const P=[['Pipi',
+ demo(){const P=[['Pipi','Aku tidak mencuri.']],Q2=[['Rara','Aku tidak mencuri.']],c=(t,s)=>`<div class="chips"><span class="chip nw" style="${s}">${t}</span></div>`;return [[this.says(P),'Contoh 1: Pipi berkata, "Aku tidak mencuri." Kita tahu Pipi <b>selalu berbohong</b>.'],[this.says(P)+c('Pernyataan Pipi bohong','background:var(--bad-soft);color:var(--bad)'),'Karena Pipi bohong, yang benar adalah <b>kebalikan</b> kata-katanya.'],[this.says(P)+c('Pipi mencuri!','background:var(--rocket);color:#fff'),'Kebalikan dari "aku tidak mencuri" adalah "aku mencuri". Jadi Pipi pencurinya!'],[this.says(Q2),'Contoh 2: Rara juga berkata, "Aku tidak mencuri." Tapi Rara <b>selalu jujur</b>.'],[this.says(Q2)+c('Pernyataan Rara benar','background:var(--ok-soft);color:var(--ok)'),'Karena Rara jujur, kata-katanya benar: Rara <b>tidak</b> mencuri.'],[this.says(Q2)+c('Jujur atau bohong? Itu kuncinya!','background:var(--teal-soft);color:var(--teal)'),'Kalimat yang sama bisa berarti berbeda, tergantung siapa yang jujur.']]},
+=====DONE
+=====START  bahas(){const A=[[[0,0,1],1]
+=====END  bahas(){const A=[[[0,0,1],1]
+ bahas(){const K=[[0,0,1],1],L=[[1,0,1],2],M=[[1,1,0],2];return [[this.tb([]),'Kita coba satu per satu: <b>anggap</b> salah satu ikan pencurinya, lalu periksa siapa yang jujur.'],[this.tb([[[0],1]]),'Anggap <b>Kiko</b> pencurinya. Kiko bilang "bukan aku", padahal dia. Kiko <b>bohong</b>.'],[this.tb([[[0,0],1]]),'Lolo bilang "Mimi pencurinya", padahal Kiko. Lolo <b>bohong</b>.'],[this.tb([K]),'Mimi bilang "aku tidak mencuri", dan memang bukan Mimi. Mimi <b>jujur</b>. Hanya 1 yang jujur. Cocok!'],[this.tb([K,L]),'Anggap <b>Lolo</b> pencurinya: Kiko jujur, Lolo bohong, Mimi jujur. Ada 2 yang jujur. Tidak cocok.'],[this.tb([K,L,M]),'Anggap <b>Mimi</b> pencurinya: Kiko jujur, Lolo jujur, Mimi bohong. Ada 2 yang jujur. Tidak cocok.'],[this.tb([K,L,M]),'Hanya satu kemungkinan yang cocok dengan aturan. Pencurinya <b>Kiko</b>!']]},
+=====DONE
+=====START  demo(){const D=(series,flow)
+=====END <b>5</b> liter per menit!
+ demo(){const D=(series,flow)=>{let s=this.defs()+this.tank(8,30,52,96);if(series){s+=this.tube(60,78,170,78,5,flow)+this.tube(176,78,290,78,2,flow,flow>0&&1)+this.flange(173,78,8+5*3.2)+this.plate(115,48,5)+this.plate(233,48,2,flow>0)}else{s+=this.tube(60,78,90,78,7,flow?5:0)+this.tube(90,78,90,40,6,flow?2:0)+this.tube(90,78,90,116,6,flow?3:0)+this.tube(90,40,260,40,2,flow?2:0)+this.tube(90,116,260,116,3,flow?3:0)+this.tube(260,40,260,78,6,flow?2:0)+this.tube(260,116,260,78,6,flow?3:0)+this.tube(260,78,292,78,7,flow?5:0)+this.plate(175,18,2,flow>0)+this.plate(175,94,3,flow>0)}
+   s+=this.gauge(338,78,flow,6,'d','air');return svgw(380,140,s,420)};
+  return [[D(1,0),'Contoh 1: pipa 5 disambung dengan pipa 2, <b>berderet</b>. Berapa liter air yang lewat setiap menit?'],[D(1,2),'Air mengalir. Pipa 5 sebenarnya bisa dilewati 5 liter, tapi airnya harus lewat pipa 2 juga.'],[D(1,2),'Jadi air tertahan di pipa kecil. Jarum meteran hanya naik sampai <b>2</b>. Pipa terkecil disebut <b>hambatan</b>.'],[D(0,0),'Contoh 2: pipa 2 dan pipa 3 <b>berdampingan</b>. Air bisa lewat keduanya sekaligus.'],[D(0,5),'Air terbagi ke dua pipa, lalu bergabung lagi.'],[D(0,5),'Airnya dijumlahkan: 2 + 3 = <b>5</b> liter per menit!']]},
+=====DONE
+=====START  bahas(){return [[this.pp({lv:.15})
+=====END  bahas(){return [[this.pp({lv:.15})
+ bahas(){return [[this.pp({lv:.15}),'Tangki penuh air laut. Air bisa lewat cabang atas atau cabang bawah.'],[this.pp({f:{a:3,b:3},jam:['b'],m:{t:3},lv:.15}),'Cabang atas: pipa 5 lalu pipa 3, berderet. Air tertahan di pipa <b>3</b>, jadi cabang atas mengalirkan 3 liter per menit.'],[this.pp({f:{a:3,b:3,c:4,d:4},jam:['c'],m:{t:3,b:4},lv:.15}),'Cabang bawah: pipa 4 lalu pipa 6. Kali ini pipa <b>4</b> yang menahan, jadi 4 liter per menit.'],[this.pp({f:{a:3,b:3,c:4,d:4},m:{t:3,b:4},lv:.15}),'Kedua cabang berdampingan, jadi airnya dijumlahkan: 3 + 4 = <b>7</b> liter per menit menuju pipa terakhir.'],[this.pp({f:{a:3,b:3,c:4,d:4,e:6},jam:['e'],crowd:1,m:{t:3,b:4,k:6},lv:.15}),'Tetapi pipa terakhir hanya bisa dilewati <b>6</b> liter per menit. Pipa ini menjadi hambatan, dan 1 liter tertahan.'],[this.pp({f:{a:3,b:3,c:4,d:4,e:6},crowd:1,m:{t:3,b:4,k:6},lv:.85,fill:1}),'Kolam terisi dengan aliran paling banyak <b>6 liter per menit</b>.'],[this.pp({f:{a:3,b:3,c:4,d:4,e:6},crowd:1,m:{t:3,b:4,k:6},lv:.85}),'Jawabannya 6. Jawaban 7 salah karena lupa pipa terakhir, dan 24 salah karena menjumlahkan semua angka pipa.']]},
+=====DONE

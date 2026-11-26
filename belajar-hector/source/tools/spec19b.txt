@@ -1,0 +1,15 @@
+=====START  N:{pl:[110,298,'Plankton']
+=====END  N:{pl:[110,298,'Plankton']
+ N:{pl:[150,318,'Plankton'],rl:[400,318,'Rumput laut'],ud:[80,232,'Udang'],ub:[220,232,'Ubur-ubur'],si:[450,232,'Siput'],ik:[80,140,'Ikan kecil'],pe:[330,140,'Penyu'],ib:[80,46,'Ikan besar'],hi:[330,46,'Hiu']},
+=====DONE
+=====START  fw(N,E,S={},W=520,H=345){
+=====END  fw(N,E,S={},W=520,H=345){
+ fw(N,E,S={},W=520,H=350){let s=arrowDefs('q19a');const C={n:['#E6F6F8','#7FB8CC',''],gone:['#C9D1D8','#7E8C99','HABIS'],lapar:['#FFD9D2','#D94141','LAPAR'],aman:['#D8F3E2','#17905A','AMAN']},hw=50,hh=21,cut=(ux,uy)=>Math.min(hw/Math.max(Math.abs(ux),1e-6),hh/Math.max(Math.abs(uy),1e-6));
+  E.forEach(([a,b])=>{const[x1,y1]=N[a],[x2,y2]=N[b],dx=x2-x1,dy=y2-y1,d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d,k=cut(ux,uy),bad=S[a]==='gone'||S[a]==='lapar';s+=`<line x1="${(x1+ux*k).toFixed(1)}" y1="${(y1+uy*k).toFixed(1)}" x2="${(x2-ux*(k+5)).toFixed(1)}" y2="${(y2-uy*(k+5)).toFixed(1)}" stroke="${bad?'#D94141':'#5E7180'}" stroke-width="3" ${bad?'stroke-dasharray="6 5"':''} marker-end="url(#q19a)" opacity="${bad?.8:1}"/>`});
+  Object.entries(N).forEach(([k,[x,y,n]])=>{const st=S[k]||'n',[f,b,lab]=C[st];s+=`<g data-k="n${k}" data-s="${st}">${st==='lapar'?`<rect x="${x-hw-6}" y="${y-hh-6}" width="${hw*2+12}" height="${hh*2+12}" rx="18" fill="#FF6F59" opacity=".3" class="glow"/>`:''}<rect x="${x-hw}" y="${y-hh}" width="${hw*2}" height="${hh*2}" rx="13" fill="${f}" stroke="${b}" stroke-width="${st==='n'?2:3.5}" filter="url(#xSh)"/><g opacity="${st==='gone'?.35:1}" transform="translate(${x-30} ${y}) scale(.8)">${this.ico(k,0,0)}</g>${st==='gone'?`<path d="M${x-42} ${y-12} l24 24 M${x-18} ${y-12} l-24 24" stroke="#D94141" stroke-width="3.5" stroke-linecap="round"/>`:''}<text x="${x-12}" y="${y}" class="t" dominant-baseline="central" style="font-size:12.5px;fill:#172041">${n}</text></g>`+(lab?`<g data-k="b${k}" data-s="${st}" data-in="stamp"><rect x="${x+hw-40}" y="${y-hh-11}" width="46" height="18" rx="9" fill="${b}"/>${T(x+hw-17,y-hh-2,lab,'t','style="fill:#fff;font-size:10px"')}</g>`:'')});
+  return svgw(W,H,s,540)},
+=====DONE
+=====START  demo(){const N={rl:[90,212,'Rumput laut']
+=====END  demo(){const N={rl:[90,212,'Rumput laut']
+ demo(){const N={rl:[90,206,'Rumput laut'],ca:[320,206,'Cacing'],si:[90,86,'Siput'],ke:[320,86,'Kepiting']},E=[['rl','si'],['si','ke'],['ca','ke']],f=(S,t)=>[this.fw(N,E,S,420,250),t];return [f({},'Contoh: siput makan rumput laut. Kepiting makan siput <b>dan</b> cacing.'),f({},'Ikuti panahnya: dari makanan menuju hewan yang memakannya.'),f({rl:'gone'},'Misalkan rumput laut habis.'),f({rl:'gone',si:'lapar'},'Makanan siput hanya rumput laut, jadi siput <b>kelaparan</b> dan pergi.'),f({rl:'gone',si:'lapar'},'Kepiting kehilangan siput. Apakah kepiting ikut kelaparan?'),f({rl:'gone',si:'lapar',ke:'aman'},'Tidak! Kepiting masih bisa makan cacing, jadi kepiting tetap <b>aman</b>. Cacing juga aman.')]},
+=====DONE

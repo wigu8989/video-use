@@ -1,0 +1,553 @@
+<title>Paspor Logika Dunia</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800;900&family=Space+Mono:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&text=%EA%B0%80%EB%82%98%EA%B3%A0%EB%85%B8%EB%88%84%E3%84%B1%E3%84%B4%E3%85%8F%E3%85%97%E3%85%9C&display=swap">
+<style>
+/* Layout: pita paspor biru tua di atas (judul + 20 cap negara), lalu satu "halaman visa" per soal di bawahnya */
+:root{
+  --bg:#ECEFF6; --paper:#FFFFFF; --tint:#F3F5FB; --ink:#1A2238; --muted:#5A6482; --line:#D3D9E8;
+  --band:#1B2F52; --band2:#22396A; --gold:#E3A728; --gold-ink:#1B2F52; --cream:#F7E9C8;
+  --accent:#2B59C3; --accent-soft:#E1E9FB;
+  --ok:#1D8A57; --ok-soft:#DDF2E7; --bad:#D04343; --bad-soft:#FBE4E4; --node:#FFFFFF;
+  --fd:"Fredoka","Nunito",system-ui,sans-serif; --fb:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif; --fm:"Space Mono",ui-monospace,Menlo,monospace;
+  --kr:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1222; --paper:#161D31; --tint:#1C2540; --ink:#E6EAF5; --muted:#9EA8C6; --line:#2D3756;
+  --band:#0A1530; --band2:#13224A; --gold:#F0B93E; --gold-ink:#0A1530; --cream:#3A3320;
+  --accent:#7FA4F5; --accent-soft:#1E2B52;
+  --ok:#47C584; --ok-soft:#173826; --bad:#F27474; --bad-soft:#43202A; --node:#212B47; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0D1222; --paper:#161D31; --tint:#1C2540; --ink:#E6EAF5; --muted:#9EA8C6; --line:#2D3756;
+  --band:#0A1530; --band2:#13224A; --gold:#F0B93E; --gold-ink:#0A1530; --cream:#3A3320;
+  --accent:#7FA4F5; --accent-soft:#1E2B52;
+  --ok:#47C584; --ok-soft:#173826; --bad:#F27474; --bad-soft:#43202A; --node:#212B47; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:18px;line-height:1.6;font-weight:500}
+.gut{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* pita paspor */
+.band{background:var(--band);color:#fff;position:relative;overflow:hidden}
+.band::before{content:"";position:absolute;inset:0;opacity:.13;pointer-events:none;
+  background:repeating-radial-gradient(circle at 85% 40%,transparent 0 9px,var(--gold) 9px 10px),repeating-radial-gradient(circle at 10% 120%,transparent 0 13px,#fff 13px 14px)}
+.band .gut{position:relative;padding-block:22px 16px;display:flex;flex-direction:column;gap:16px}
+.brand{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.globe{width:58px;height:58px;flex:none}
+.globe .spin{animation:turn 14s linear infinite;transform-origin:29px 29px}
+.brand .ttl{flex:1;min-width:0}
+.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
+h1{font-family:var(--fd);font-weight:700;font-size:clamp(28px,5.5vw,42px);line-height:1.05;margin:2px 0 0;color:#fff;text-wrap:balance}
+.brand p{margin:4px 0 0;color:#C8D2EA;font-size:15px;max-width:52ch}
+.score{font-family:var(--fd);font-weight:600;background:var(--gold);color:var(--gold-ink);border-radius:14px;padding:6px 14px;text-align:center;line-height:1.1}
+.score b{display:block;font-size:26px}
+.score small{font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.stamps{display:grid;grid-template-columns:repeat(10,1fr);gap:8px}
+@media (max-width:640px){.stamps{grid-template-columns:repeat(5,1fr)}}
+.sbtn{background:none;border:0;padding:0;cursor:pointer;aspect-ratio:1;max-width:64px;width:100%;justify-self:center;border-radius:50%;transition:transform .15s}
+.sbtn:hover{transform:scale(1.08)}
+.sbtn.cur{outline:3px solid var(--gold);outline-offset:3px}
+.sbtn svg{width:100%;height:100%;display:block}
+.mrz{font-family:var(--fm);font-size:clamp(10px,2.4vw,14px);letter-spacing:.12em;color:#8FA0C8;white-space:nowrap;overflow:hidden;text-overflow:clip;border-top:1px dashed #3B5185;padding-top:10px}
+
+main.gut{padding-block:22px 56px;display:flex;flex-direction:column;gap:16px}
+
+/* halaman visa */
+.visa{background:var(--paper);border-radius:22px;overflow:hidden;border:1px solid var(--line);animation:enter .4s ease;box-shadow:0 10px 30px -18px rgba(20,30,70,.35)}
+.vhead{background:var(--c);color:#fff;padding:18px clamp(18px,4vw,32px);display:flex;align-items:center;gap:16px;position:relative;overflow:hidden}
+.vhead::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.09) 0 2px,transparent 2px 12px);pointer-events:none}
+.vhead .vt{flex:1;min-width:0;position:relative;z-index:1}
+.vhead .pg{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.vhead h2{font-family:var(--fd);font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.05;margin:2px 0}
+.vhead .cul{font-weight:800;font-size:16px;opacity:.95}
+.vstamp{width:clamp(78px,16vw,104px);flex:none;position:relative;z-index:1;background:rgba(255,255,255,.92);border-radius:50%;padding:4px}
+.vstamp svg{display:block;width:100%;height:auto}
+.vstamp.thud svg{animation:thud .55s cubic-bezier(.2,1.4,.4,1)}
+.vbody{padding:clamp(18px,4vw,32px);display:flex;flex-direction:column;gap:18px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tag{font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.tag.l{background:var(--tint);color:var(--muted)}
+.tag.Sulit{background:var(--bad-soft);color:var(--bad)}
+.tag.Sedang{background:var(--cream);color:var(--ink)}
+h3{font-family:var(--fd);font-weight:600;font-size:clamp(24px,4vw,30px);line-height:1.15;margin:0;text-wrap:balance}
+h4{font-family:var(--fd);font-weight:600;font-size:21px;margin:0 0 6px}
+.story p{margin:0 0 10px;max-width:66ch}.story p:last-child{margin:0}
+.story ul,.story ol{margin:4px 0 10px;padding-left:24px}
+.story li{margin-bottom:2px}
+.figbox{margin:0;background:var(--tint);border-radius:18px;padding:18px;overflow-x:auto;display:flex;flex-direction:column;align-items:center;gap:14px;
+  background-image:radial-gradient(var(--line) 1px,transparent 1.4px);background-size:18px 18px}
+.fig{width:100%;height:auto;display:block}
+.ask{background:var(--paper);border:2px solid var(--c);border-radius:16px;padding:12px 16px;position:relative}
+.ask-l{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ask p{margin:2px 0 0;font-weight:800;font-size:19px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:580px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border-radius:16px;border:2px solid var(--line);background:var(--paper);color:var(--ink);font:700 18px var(--fb);cursor:pointer;min-height:66px;transition:border-color .15s,background .15s,transform .15s}
+.opt:hover:not(:disabled){border-color:var(--accent);transform:translateY(-1px)}
+.opt:focus-visible,.btn:focus-visible,.sbtn:focus-visible,.mini:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opt .let{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--tint);font:600 18px var(--fd)}
+.opt .oc{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .let{background:var(--accent);color:#fff}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}.opt.right .let{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}.opt.wrong .let{background:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.btn{font:800 17px var(--fb);border-radius:14px;padding:12px 22px;border:2px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--band);border-color:var(--band);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.nav{display:flex;justify-content:space-between;gap:10px}
+.fb{display:flex;flex-direction:column;gap:16px;animation:enter .4s ease}
+.verdict{border-radius:16px;padding:14px 18px;animation:pop .45s cubic-bezier(.3,1.6,.5,1)}
+.verdict.ok{background:var(--ok-soft);color:var(--ok)}.verdict.bad{background:var(--bad-soft);color:var(--bad)}
+.verdict strong{font-family:var(--fd);font-weight:600;font-size:23px;display:block;line-height:1.2}
+.verdict span{color:var(--ink)}
+.bahas p{margin:0 0 8px;max-width:66ch}.bahas ol,.bahas ul{margin:4px 0 8px;padding-left:24px}
+.budaya{border-radius:16px;padding:16px 18px;background:var(--cream);display:flex;gap:14px;align-items:flex-start}
+.budaya .ic{flex:none;width:44px;height:44px;border-radius:50%;background:var(--c);display:grid;place-items:center}
+.budaya p{margin:0;max-width:64ch}
+.budaya h4{color:var(--ink)}
+.budaya > div{min-width:0}
+
+/* SVG bersama */
+.t{fill:var(--ink);font-family:var(--fb);font-weight:800;font-size:14px}
+.tm{fill:var(--muted);font-family:var(--fb);font-weight:700;font-size:12px}
+.ln{stroke:var(--ink);stroke-width:2.5;fill:none}
+.nd{fill:var(--node);stroke:var(--ink);stroke-width:2.5}
+.edge{stroke:var(--muted);stroke-width:4;fill:none;transition:stroke .3s}
+.empty{fill:var(--paper);stroke:var(--muted);stroke-width:2;stroke-dasharray:5 4}
+.pop{transform-box:fill-box;transform-origin:center;animation:pop .45s cubic-bezier(.3,1.6,.5,1) backwards}
+.lbl{font-family:var(--fm);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+.clues{display:grid;gap:8px;width:100%;max-width:620px;margin:0;padding:0;list-style:none}
+.clues li{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:8px 14px;font-weight:700;display:flex;gap:10px;align-items:center}
+.clues li b.k{font-family:var(--fd);font-weight:600;color:var(--c);font-size:20px;flex:none}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:6px 12px;font-weight:800}
+.eq{font-family:var(--fd);font-weight:600;font-size:26px;color:var(--muted)}
+.hg{font-family:var(--kr);font-weight:700;font-size:34px;line-height:1}
+.hcard{display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:8px 14px}
+.hcard small{font-family:var(--fm);color:var(--muted);font-size:13px}
+.board{background:#0B2A4A;color:#fff;border-radius:14px;padding:12px 14px;width:100%;max-width:560px;font-family:var(--fm);font-size:14px;box-shadow:inset 0 0 0 3px #173F69}
+.board h5{margin:0 0 6px;font-family:var(--fb);font-weight:900;font-size:14px;letter-spacing:.06em;color:#9EC3EA;text-transform:uppercase}
+.board table{border-collapse:collapse;width:100%;margin-bottom:10px}
+.board td{padding:5px 6px;border-top:1px solid #1F4B78;font-variant-numeric:tabular-nums}
+.board td.tm2{color:#FFD200}
+.board tr{transition:background .3s}
+.board tr.hl{background:#1E6B3A}
+.board tr.no{opacity:.4}
+.cmds{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.cmd{border-radius:12px;background:var(--paper);border:2px solid var(--line);padding:6px 12px;font-weight:800;transition:background .2s}
+.cmd.on{background:var(--c);border-color:var(--c);color:#fff}
+.log{display:flex;flex-direction:column;gap:6px;width:100%;max-width:520px}
+.log div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-weight:700;animation:pop .35s backwards}
+.spin-cw{animation:turn var(--d,4s) linear infinite;transform-box:fill-box;transform-origin:center}
+.spin-ccw{animation:turn var(--d,4s) linear infinite reverse;transform-box:fill-box;transform-origin:center}
+.drop{animation:drop .5s cubic-bezier(.3,1.4,.5,1) backwards}
+
+/* hasil */
+.sum{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:clamp(18px,4vw,32px);display:flex;flex-direction:column;gap:16px}
+.big{font-family:var(--fd);font-weight:700;font-size:clamp(52px,11vw,80px);line-height:1;color:var(--accent)}
+.book{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
+.mini{background:var(--tint);border:0;border-radius:14px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:var(--ink);font:800 13px var(--fb);text-align:center}
+.mini svg{width:72px;height:72px}
+
+@keyframes turn{to{transform:rotate(360deg)}}
+@keyframes enter{from{opacity:.4;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.55);opacity:.1}100%{transform:scale(1);opacity:1}}
+@keyframes thud{0%{transform:scale(2.2) rotate(-25deg);opacity:0}60%{transform:scale(.9) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+@keyframes drop{0%{transform:translateY(-60px);opacity:0}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+
+<header class="band">
+  <div class="gut">
+    <div class="brand">
+      <svg class="globe" viewBox="0 0 58 58" aria-hidden="true"><circle cx="29" cy="29" r="26" fill="none" stroke="#E3A728" stroke-width="3"/><g class="spin"><ellipse cx="29" cy="29" rx="12" ry="26" fill="none" stroke="#E3A728" stroke-width="2"/><line x1="29" y1="3" x2="29" y2="55" stroke="#E3A728" stroke-width="2"/></g><line x1="3" y1="29" x2="55" y2="29" stroke="#E3A728" stroke-width="2"/><path d="M7 17h44M7 41h44" stroke="#E3A728" stroke-width="1.6"/></svg>
+      <div class="ttl">
+        <div class="eyebrow">Paspor · Latihan Berpikir Logis</div>
+        <h1>Paspor Logika Dunia</h1>
+        <p>Keliling 20 negara, pecahkan satu teka-teki di setiap negara, dan kumpulkan cap paspornya.</p>
+      </div>
+      <div class="score" id="score"><small>Cap</small><b>0</b><small>dari 20</small></div>
+    </div>
+    <nav class="stamps" id="stamps" aria-label="Pilih negara"></nav>
+    <div class="mrz" aria-hidden="true">P&lt;IDNLOGIKA&lt;&lt;DUNIA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;20&lt;NEGARA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+  </div>
+</header>
+<main class="gut" id="app"></main>
+
+<script>
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const later=(fn,ms)=>setTimeout(fn,RM?0:ms);
+const T=(x,y,s,cls='t',ex='')=>`<text x="${x}" y="${y}" class="${cls}" text-anchor="middle" dominant-baseline="central" ${ex}>${s}</text>`;
+const $=(el,s)=>el.querySelector(s);
+
+/* ---------- gambar bantu umum ---------- */
+function kid(x,y,shirt,hair){return `<g><rect x="${x-17}" y="${y-8}" width="34" height="40" rx="12" fill="${shirt}"/><circle cx="${x}" cy="${y-24}" r="16" fill="#E8B88A"/><path d="M${x-16} ${y-26} a16 16 0 0 1 32 0 q-16 -8 -32 0z" fill="${hair}"/><circle cx="${x-5}" cy="${y-23}" r="2" fill="#2A1A10"/><circle cx="${x+5}" cy="${y-23}" r="2" fill="#2A1A10"/><path d="M${x-5} ${y-16} q5 4 10 0" stroke="#2A1A10" stroke-width="1.8" fill="none"/></g>`}
+function starPts(cx,cy,R,r,n=5){let p=[];for(let i=0;i<n*2;i++){const a=-Math.PI/2+i*Math.PI/n,rr=i%2?r:R;p.push((cx+rr*Math.cos(a)).toFixed(1)+','+(cy+rr*Math.sin(a)).toFixed(1))}return p.join(' ')}
+
+/* 1 batik */
+function motif(k,x,y,s){const cx=x+s/2,cy=y+s/2,B='#6B3B1F',I='#1F3A5F',R='#9C2F1E';let g=`<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="6" fill="#F3E4C4" stroke="#C9A877" stroke-width="1.5"/>`;
+  if(k==='kawung')[[-1,-1,45],[1,-1,-45],[-1,1,-45],[1,1,45]].forEach(([a,b,r])=>g+=`<ellipse cx="${cx+a*10}" cy="${cy+b*10}" rx="12" ry="7" fill="${B}" transform="rotate(${r} ${cx+a*10} ${cy+b*10})"/><circle cx="${cx+a*10}" cy="${cy+b*10}" r="2" fill="#F3E4C4"/>`),g+=`<circle cx="${cx}" cy="${cy}" r="3" fill="${R}"/>`;
+  if(k==='parang')[[8,s*.45,s*.45,8],[8,s-8,s-8,8],[s*.55,s-8,s-8,s*.55]].forEach(([a,b,c,d])=>g+=`<line x1="${x+a}" y1="${y+b}" x2="${x+c}" y2="${y+d}" stroke="${B}" stroke-width="9" stroke-linecap="round"/><line x1="${x+a}" y1="${y+b}" x2="${x+c}" y2="${y+d}" stroke="#F3E4C4" stroke-width="2" stroke-dasharray="3 5" stroke-linecap="round"/>`);
+  if(k==='truntum'){for(let i=0;i<8;i++){const a=i*Math.PI/4;g+=`<circle cx="${(cx+15*Math.cos(a)).toFixed(1)}" cy="${(cy+15*Math.sin(a)).toFixed(1)}" r="4" fill="${I}"/>`}g+=`<circle cx="${cx}" cy="${cy}" r="6" fill="${I}"/><circle cx="${cx}" cy="${cy}" r="2.5" fill="#F3E4C4"/>`}
+  if(k==='ceplok')g+=`<path d="M${cx} ${cy-22} L${cx+22} ${cy} L${cx} ${cy+22} L${cx-22} ${cy} Z" fill="none" stroke="${R}" stroke-width="4"/><rect x="${cx-4}" y="${cy-14}" width="8" height="28" rx="3" fill="${R}"/><rect x="${cx-14}" y="${cy-4}" width="28" height="8" rx="3" fill="${R}"/>`;
+  return g}
+const motifIcon=k=>`<svg viewBox="0 0 64 64" width="46" aria-hidden="true">${motif(k,2,2,60)}</svg>`;
+
+/* 2 sushi */
+const SUSHI=[['Salmon','#F4845F'],['Tuna','#C81D3A'],['Tamago','#F6C445'],['Kappa maki','maki:#3FA34D'],['Ebi','#F7A1B5'],['Unagi','#7A4B2A'],['Ikura','maki:#F06A0C'],['Tako','#B5179E']];
+function sushi(i,cx=0,cy=0){const [,c]=SUSHI[i];let g=`<circle cx="${cx}" cy="${cy}" r="20" fill="#FFFFFF" stroke="#B8C1CF" stroke-width="3"/>`;
+  if(c.startsWith('maki:')){const f=c.slice(5);g+=`<circle cx="${cx}" cy="${cy}" r="12" fill="#1F2B22"/><circle cx="${cx}" cy="${cy}" r="9" fill="#FBFBF5"/>`+(i===6?[[-3,-2],[3,-2],[0,3],[-4,3],[4,3]].map(([a,b])=>`<circle cx="${cx+a}" cy="${cy+b}" r="2.4" fill="${f}"/>`).join(''):`<circle cx="${cx}" cy="${cy}" r="4.5" fill="${f}"/>`)}
+  else g+=`<rect x="${cx-12}" y="${cy-3}" width="24" height="11" rx="5" fill="#FBFBF5" stroke="#D9D9D0"/><rect x="${cx-13}" y="${cy-10}" width="26" height="10" rx="5" fill="${c}"/>`+(i===4?`<path d="M${cx-7} ${cy-10}v9M${cx} ${cy-10}v9M${cx+7} ${cy-10}v9" stroke="#fff" stroke-width="1.6"/>`:'');
+  return g}
+const sushiIcon=i=>`<svg viewBox="-22 -22 44 44" width="42" aria-hidden="true">${sushi(i)}</svg>`;
+
+/* 4 hieroglif */
+function hiero(h,t,o,sc=1){let x=6,g='';const Y=40,ink='#3B2A1A';
+  for(let i=0;i<h;i++){g+=`<path d="M${x+14} ${Y} v-6 a3 3 0 1 1 3 3 a7 7 0 1 1 -7 -7 a11 11 0 1 1 11 11" fill="none" stroke="${ink}" stroke-width="3" stroke-linecap="round" transform="translate(-4 -12)"/>`;x+=30}
+  for(let i=0;i<t;i++){g+=`<path d="M${x} ${Y} V20 a8 8 0 0 1 16 0 V${Y}" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;x+=22}
+  for(let i=0;i<o;i++){g+=`<line x1="${x+3}" y1="14" x2="${x+3}" y2="${Y}" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;x+=11}
+  return `<svg viewBox="0 0 ${x+6} 50" width="${(x+6)*sc}" height="${50*sc}" aria-hidden="true"><rect x="0" y="0" width="${x+6}" height="50" rx="6" fill="#EAD9A8"/>${g}</svg>`}
+
+/* 5 kente */
+const KC={Emas:'#E2A21B',Hijau:'#2E7D32',Merah:'#C62828',Hitam:'#1E1E1E'};
+function kcell(x,y,s,c){return `<g class="pop"><rect x="${x}" y="${y}" width="${s}" height="${s}" rx="4" fill="${KC[c]}"/>${[0.25,0.5,0.75].map(f=>`<line x1="${x+4}" y1="${y+s*f}" x2="${x+s-4}" y2="${y+s*f}" stroke="rgba(255,255,255,.28)" stroke-width="3"/>`).join('')}</g>`}
+
+/* 7 matryoshka */
+function doll(cx,base,sc,col){const h=90*sc,w=58*sc;return `<g><path d="M${cx-w/2} ${base} Q${cx-w/2-4*sc} ${base-h*.55} ${cx-w*.32} ${base-h*.72} A${w*.36} ${w*.36} 0 1 1 ${cx+w*.32} ${base-h*.72} Q${cx+w/2+4*sc} ${base-h*.55} ${cx+w/2} ${base} Z" fill="${col}" stroke="rgba(0,0,0,.25)" stroke-width="2"/><circle cx="${cx}" cy="${base-h*.8}" r="${w*.24}" fill="#F7DCC2"/><circle cx="${cx-w*.08}" cy="${base-h*.81}" r="${1.6*sc}" fill="#222"/><circle cx="${cx+w*.08}" cy="${base-h*.81}" r="${1.6*sc}" fill="#222"/><circle cx="${cx-w*.13}" cy="${base-h*.76}" r="${2.4*sc}" fill="#F08A8A"/><circle cx="${cx+w*.13}" cy="${base-h*.76}" r="${2.4*sc}" fill="#F08A8A"/><ellipse cx="${cx}" cy="${base-h*.33}" rx="${w*.3}" ry="${h*.18}" fill="#FFF6E5"/><circle cx="${cx}" cy="${base-h*.33}" r="${w*.12}" fill="${col}"/><circle cx="${cx}" cy="${base-h*.33}" r="${w*.05}" fill="#F5C518"/></g>`}
+const DC={Kuning:'#E9B400',Merah:'#D7263D',Ungu:'#7B2CBF',Biru:'#2563EB',Hijau:'#2E9E5B'};
+
+/* 8 roda gigi */
+function gearPath(cx,cy,r,n){let d='';const ro=r,ri=r-7;for(let i=0;i<n*2;i++){const a1=i*Math.PI/n,a2=(i+1)*Math.PI/n,rr=i%2?ri:ro;d+=(i?'L':'M')+(cx+rr*Math.cos(a1)).toFixed(1)+' '+(cy+rr*Math.sin(a1)).toFixed(1)+'L'+(cx+rr*Math.cos(a2)).toFixed(1)+' '+(cy+rr*Math.sin(a2)).toFixed(1)}return d+'Z'}
+
+/* 10 tartan */
+const TC=['#EFE3C8','#B83A32','#4E1512'];
+function tgrid(m,s=18){const n=m.length;let g=`<svg viewBox="0 0 ${n*s} ${n*s}" width="${n*s*4.2}" style="max-width:100%" aria-hidden="true">`;m.forEach((r,y)=>r.forEach((v,x)=>g+=`<rect x="${x*s}" y="${y*s}" width="${s}" height="${s}" fill="${TC[v]}"/>`));return g+`<rect x="0" y="0" width="${n*s}" height="${n*s}" fill="none" stroke="#7A5A3A" stroke-width="1.5"/></svg>`}
+const H=[1,0,1,1,0],V=[0,1,1,0,1];
+const mk=f=>H.map((_,r)=>V.map((_,c)=>f(r,c)));
+
+/* 12 zellige */
+function tile(k,mir,w=84){const tr=mir?'translate(100,0) scale(-1,1)':`rotate(${k*90} 50 50)`;
+  return `<svg viewBox="0 0 100 100" width="${w}" aria-hidden="true"><rect x="2" y="2" width="96" height="96" rx="6" fill="#F6F1E6" stroke="#1B6E8F" stroke-width="4"/><g transform="${tr}"><path d="M8 8 L58 8 L8 58 Z" fill="#1B6E8F"/><circle cx="74" cy="26" r="12" fill="#2E8B57"/></g><polygon points="${starPts(50,50,16,8,8)}" fill="#E0A526"/></svg>`}
+
+/* 13 karnaval */
+function fl(t,s=40){let g;
+  if(t==='Matahari')g=`<circle cx="20" cy="20" r="9" fill="#F5B700"/>`+Array.from({length:8},(_,i)=>{const a=i*Math.PI/4;return `<line x1="${20+12*Math.cos(a)}" y1="${20+12*Math.sin(a)}" x2="${20+17*Math.cos(a)}" y2="${20+17*Math.sin(a)}" stroke="#F5B700" stroke-width="3" stroke-linecap="round"/>`}).join('');
+  if(t==='Ikan')g=`<ellipse cx="17" cy="20" rx="13" ry="8" fill="#1E88E5"/><path d="M28 20 L38 12 L38 28 Z" fill="#1E88E5"/><circle cx="11" cy="18" r="2" fill="#fff"/>`;
+  if(t==='Bintang')g=`<polygon points="${starPts(20,21,17,7)}" fill="#8E44AD"/>`;
+  if(t==='Burung')g=`<ellipse cx="22" cy="24" rx="12" ry="9" fill="#2E9E5B"/><circle cx="12" cy="15" r="7" fill="#2E9E5B"/><path d="M5 15 L0 18 L6 19 Z" fill="#F57C00"/><path d="M20 22 Q30 8 36 14 Q30 24 20 26 Z" fill="#1B6E3E"/><circle cx="11" cy="13" r="1.8" fill="#fff"/>`;
+  if(t==='Bunga')g=Array.from({length:5},(_,i)=>{const a=-Math.PI/2+i*2*Math.PI/5;return `<circle cx="${(20+9*Math.cos(a)).toFixed(1)}" cy="${(20+9*Math.sin(a)).toFixed(1)}" r="7" fill="#E84A8A"/>`}).join('')+`<circle cx="20" cy="20" r="5" fill="#F5C518"/>`;
+  return `<svg viewBox="0 0 40 40" width="${s}" height="${s}" aria-hidden="true"><title>${t}</title>${g}</svg>`}
+const seq=a=>`<span style="display:inline-flex;gap:2px;align-items:center">${a.map(t=>fl(t,30)).join('')}</span>`;
+
+/* 16 bazar */
+const sack=(x,y)=>`<path d="M${x-13} ${y} q-4 -18 5 -26 h16 q9 8 5 26 z" fill="#8B5A2B" stroke="#5E3A1E" stroke-width="1.5"/><path d="M${x-7} ${y-26} l7 -5 l7 5" stroke="#5E3A1E" stroke-width="2" fill="none"/>`;
+const teh=(x,y)=>`<rect x="${x-10}" y="${y-24}" width="20" height="24" rx="2" fill="#2F7D4A"/><rect x="${x-7}" y="${y-17}" width="14" height="8" fill="#F5F0DC"/>`;
+const lok=(x,y)=>`<rect x="${x-8}" y="${y-15}" width="16" height="15" rx="3" fill="#F28DB2" stroke="#C25A82"/><circle cx="${x-3}" cy="${y-10}" r="1.3" fill="#fff"/><circle cx="${x+3}" cy="${y-6}" r="1.3" fill="#fff"/>`;
+function pan(items,cx,y){const W={s:30,t:24,l:19,q:30},tot=items.reduce((a,k)=>a+W[k],0);let x=cx-tot/2,g='';items.forEach(k=>{const m=x+W[k]/2;g+=k==='s'?sack(m,y):k==='t'?teh(m,y):k==='l'?lok(m,y):`<text x="${m}" y="${y-12}" class="t" text-anchor="middle" dominant-baseline="central" style="font-size:26px;fill:var(--accent)">?</text>`;x+=W[k]});return g}
+function balance(L,R){return `<svg viewBox="0 0 300 150" width="280" style="max-width:100%" aria-hidden="true"><path d="M130 146 L170 146 L150 120 Z" fill="#B07A3A"/><line x1="150" y1="120" x2="150" y2="34" stroke="#B07A3A" stroke-width="6"/><line x1="40" y1="34" x2="260" y2="34" stroke="#B07A3A" stroke-width="6" stroke-linecap="round"/><circle cx="150" cy="30" r="7" fill="#E3A728"/><path d="M40 34 L14 100 M40 34 L66 100 M260 34 L234 100 M260 34 L286 100" stroke="#9AA5B8" stroke-width="1.5"/><path d="M8 100 Q40 118 72 100 Z M228 100 Q260 118 292 100 Z" fill="#C9973E"/>${pan(L,40,100)}${pan(R,260,100)}</svg>`}
+
+/* 17 inuksuk */
+const STONES={A:[100,215,42,62],B:[182,215,42,62],C:[88,186,148,30],D:[118,122,88,64],E:[50,100,80,24],F:[194,100,80,24],G:[140,56,44,44]};
+const STONEC={A:'#8E9AA5',B:'#7F8B96',C:'#A3AEB8',D:'#8A96A1',E:'#9AA6B1',F:'#909CA7',G:'#B1BBC4'};
+
+/* 20 kano */
+const canoe=`<g><rect x="-30" y="-6" width="5" height="12" rx="2" fill="#6B3E1F" transform="translate(0,-14)"/><rect x="-30" y="-6" width="5" height="12" rx="2" fill="#6B3E1F" transform="translate(0,14)"/><line x1="-27" y1="-14" x2="0" y2="-14" stroke="#6B3E1F" stroke-width="3"/><line x1="-27" y1="14" x2="0" y2="14" stroke="#6B3E1F" stroke-width="3"/><ellipse cx="-27" cy="0" rx="4" ry="30" fill="#A0703F"/><path d="M0 -46 Q12 -10 9 34 L-9 34 Q-12 -10 0 -46 Z" fill="#C8894A" stroke="#6B3E1F" stroke-width="2"/><path d="M2 -30 L2 14 L26 6 Z" fill="#F4E3C1" stroke="#6B3E1F" stroke-width="1.5"/></g>`;
+
+/* ---------- 20 soal ---------- */
+const Q=[
+/* 1 */{negara:'Indonesia',kode:'IDN',wil:'Asia Tenggara',budaya:'Batik',warna:'#8A4B22',judul:'Ubin Batik Bu Sari',kemampuan:'Pola',tingkat:'Mudah',
+ cerita:`<p>Bu Sari menyusun 16 kain batik kecil menjadi taplak meja. Ia memakai empat motif: <b>kawung</b>, <b>parang</b>, <b>truntum</b>, dan <b>ceplok</b>.</p><p>Bu Sari menyusunnya dengan aturan tertentu. Satu kotak masih kosong.</p>`,
+ visual(){const G=[['kawung','parang','truntum','ceplok'],['parang','truntum','ceplok','kawung'],['truntum','ceplok','kawung','parang'],['ceplok','kawung','parang',null]];let s=`<svg class="fig" viewBox="0 0 284 284" style="max-width:340px" role="img" aria-label="Susunan motif batik 4 kali 4">`;
+  G.forEach((r,y)=>r.forEach((k,x)=>{s+=k?motif(k,4+x*70,4+y*70,64):`<g id="q1x"><rect x="${4+x*70}" y="${4+y*70}" width="64" height="64" rx="6" class="empty"/>${T(36+x*70,36+y*70,'?','t','style="font-size:30px;fill:var(--c)"')}</g>`}));return s+'</svg><div class="row">'+['kawung','parang','truntum','ceplok'].map(k=>`<span class="chip">${motifIcon(k).replace('width="46"','width="30"')}${k[0].toUpperCase()+k.slice(1)}</span>`).join('')+'</div>'},
+ tanya:'Motif apa yang harus dipasang di kotak kosong?',
+ opsi:['truntum','kawung','parang','ceplok'].map(k=>motifIcon(k)+k[0].toUpperCase()+k.slice(1)),jawab:0,
+ bahas:`<p>Lihat baris pertama: kawung, parang, truntum, ceplok. Setiap baris berikutnya adalah baris di atasnya yang <b>digeser satu langkah ke kiri</b>, dan motif paling kiri pindah ke ujung kanan.</p><p>Baris keempat: ceplok, kawung, parang, lalu <b>truntum</b>. Cara lain: setiap baris dan setiap kolom berisi keempat motif tepat satu kali, dan yang belum ada di baris terakhir hanyalah truntum.</p>`,
+ fakta:'Batik Indonesia ditetapkan UNESCO sebagai Warisan Budaya Takbenda pada 2 Oktober 2009. Tanggal itu sekarang diperingati sebagai Hari Batik Nasional.',
+ reveal(el){const x=$(el,'#q1x');if(x)later(()=>{x.outerHTML=`<g class="pop">${motif('truntum',214,214,64)}</g>`},300)}},
+
+/* 2 */{negara:'Jepang',kode:'JPN',wil:'Asia Timur',budaya:'Kaiten-zushi',warna:'#C2333F',judul:'Sabuk Sushi Kenji',kemampuan:'Rotasi',tingkat:'Sedang',
+ cerita:`<p>Kenji makan di restoran sushi berjalan. Piring-piring sushi berputar di atas sabuk berbentuk lingkaran.</p><p>Setiap menit, sabuk bergeser sehingga setiap piring pindah <b>satu tempat searah jarum jam</b> (↻).</p>`,
+ visual(){const cx=170,cy=140,R=100;let s=`<svg class="fig" viewBox="0 0 340 360" style="max-width:380px" role="img" aria-label="Sabuk sushi berbentuk lingkaran">`;
+  s+=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" style="stroke:var(--line)" stroke-width="58"/><circle cx="${cx}" cy="${cy}" r="${R}" fill="none" style="stroke:var(--paper)" stroke-width="2" stroke-dasharray="4 8"/>`;
+  s+=T(cx,cy-10,'↻','t','style="font-size:48px;fill:var(--c)"')+T(cx,cy+28,'arah sabuk','tm');
+  SUSHI.forEach((_,i)=>{const a=(90+45*i)*Math.PI/180,x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);s+=`<g class="q2p" data-i="${i}" style="transform:translate(${x.toFixed(1)}px,${y.toFixed(1)}px);transition:transform .7s ease">${sushi(i)}</g>`});
+  s+=kid(cx,308,'#2563EB','#1B1B1B')+`<text x="${cx+30}" y="300" class="t">Kenji</text>`;
+  return s+'</svg><div class="lbl" id="q2m">Menit 0</div>'},
+ tanya:'Setelah 3 menit, piring sushi apa yang berada tepat di depan Kenji?',
+ opsi:[3,4,5,6].map(i=>sushiIcon(i)+SUSHI[i][0]),jawab:2,
+ bahas:`<p>Piring yang sampai di depan Kenji setelah 3 menit adalah piring yang sekarang berada <b>3 tempat sebelum</b> Kenji jika dihitung searah jarum jam. Hitung mundur dari Kenji melawan arah jarum jam: 1 tempat = Tako, 2 tempat = Ikura, 3 tempat = <b>Unagi</b>.</p><p>Jika kamu menjawab Kappa maki, kamu menghitung ke arah yang salah.</p>`,
+ fakta:'Restoran sushi berjalan (kaiten-zushi) pertama dibuka di Osaka, Jepang, pada tahun 1958. Idenya terinspirasi dari ban berjalan di pabrik.',
+ reveal(el){const cx=170,cy=140,R=100;for(let m=1;m<=3;m++)later(()=>{el.querySelectorAll('.q2p').forEach(g=>{const i=+g.dataset.i,a=(90+45*(i+m))*Math.PI/180;g.style.transform=`translate(${(cx+R*Math.cos(a)).toFixed(1)}px,${(cy+R*Math.sin(a)).toFixed(1)}px)`});const l=$(el,'#q2m');if(l)l.textContent='Menit '+m},m*900)}},
+
+/* 3 */{negara:'Meksiko',kode:'MEX',wil:'Amerika Utara',budaya:'Papel picado',warna:'#D6336C',judul:'Hiasan Kertas Lucía',kemampuan:'Simetri',tingkat:'Sedang',
+ cerita:`<p>Lucía membuat <i>papel picado</i>, hiasan kertas berlubang untuk pesta. Ia <b>melipat kertas menjadi dua</b> (garis lipatan ada di kiri), lalu menggunting dua bentuk:</p><ul><li>sebuah segitiga yang menempel pada garis lipatan,</li><li>sebuah lingkaran kecil di dekat pojok kanan atas.</li></ul>`,
+ visual(){return `<div class="row"><svg viewBox="-10 -14 130 180" width="150" aria-hidden="true"><path d="M-6 -14 H126" stroke="#8A6A3A" stroke-width="2"/><path d="M0 -10 H100 V130 L90 140 L80 130 L70 140 L60 130 L50 140 L40 130 L30 140 L20 130 L10 140 L0 130 Z" fill="#E83F6F"/><path d="M0 50 L30 70 L0 90 Z" style="fill:var(--tint)"/><circle cx="75" cy="25" r="9" style="fill:var(--tint)"/><line x1="0" y1="-10" x2="0" y2="140" stroke="#fff" stroke-width="2.5" stroke-dasharray="6 5"/><text x="-4" y="155" class="tm">lipatan</text></svg><span class="eq">→ dibuka →</span><span class="eq" style="font-size:40px;color:var(--c)">?</span></div>`},
+ tanya:'Seperti apa kertas itu setelah lipatannya dibuka?',
+ opsi:[[1,0,0],[0,0,0],[0,1,0],[0,0,1]].map(([one,flip,tri])=>{let h=`<svg viewBox="0 -4 200 150" width="120" aria-hidden="true"><path d="M0 0 H200 V130 ${Array.from({length:10},(_,i)=>`L${190-i*20} 140 L${180-i*20} 130`).join(' ')} Z" fill="#E83F6F"/>`;
+  h+=tri?`<path d="M100 50 L130 70 L100 90 Z" style="fill:var(--paper)"/>`:`<path d="M70 70 L100 50 L130 70 L100 90 Z" style="fill:var(--paper)"/>`;
+  h+=`<circle cx="175" cy="25" r="9" style="fill:var(--paper)"/>`;if(!one)h+=`<circle cx="25" cy="${flip?105:25}" r="9" style="fill:var(--paper)"/>`;return h+'</svg>'}),jawab:1,
+ bahas:`<p>Saat lipatan dibuka, setiap guntingan muncul dua kali, <b>seperti bayangan di cermin</b> dengan garis lipatan sebagai cerminnya.</p><ul><li>Segitiga yang menempel di lipatan bertemu dengan bayangannya dan menjadi <b>belah ketupat</b> di tengah.</li><li>Lingkaran di pojok kanan atas punya bayangan di <b>pojok kiri atas</b>. Tingginya sama, karena cermin hanya membalik kiri dan kanan.</li></ul>`,
+ fakta:'Papel picado artinya "kertas yang dilubangi". Hiasan warna-warni ini digantung berjajar di jalan dan rumah saat perayaan di Meksiko, misalnya Día de los Muertos.'},
+
+/* 4 */{negara:'Mesir',kode:'EGY',wil:'Afrika Utara',budaya:'Angka hieroglif',warna:'#B7791F',judul:'Catatan Juru Tulis',kemampuan:'Sistem Bilangan',tingkat:'Mudah',
+ cerita:`<p>Bangsa Mesir kuno menulis angka dengan gambar. Setiap gambar punya nilai, lalu semua nilai dijumlahkan.</p>`,
+ visual(){return `<div class="row"><span class="chip">${hiero(0,0,1,.8)} = 1</span><span class="chip">${hiero(0,1,0,.8)} = 10</span><span class="chip">${hiero(1,0,0,.8)} = 100</span></div><div class="row"><span class="lbl">Contoh</span>${hiero(2,1,3)}<b>= 100 + 100 + 10 + 1 + 1 + 1 = 213</b></div>`},
+ tanya:'Seorang juru tulis mencatat 132 karung gandum. Tulisan mana yang benar?',
+ opsi:[[3,1,2],[1,2,3],[2,3,1],[1,3,2]].map(([a,b,c])=>hiero(a,b,c,.85)),jawab:3,
+ bahas:`<p>132 = 100 + 30 + 2. Jadi perlu <b>1 gulungan tali</b> (100), <b>3 lengkungan</b> (10 + 10 + 10), dan <b>2 garis</b> (1 + 1).</p><p>Pilihan lain bernilai 312, 123, dan 231. Gambarnya sama, tetapi jumlahnya berbeda.</p>`,
+ fakta:'Orang Mesir kuno memakai gambar garis untuk 1, tulang tumit untuk 10, gulungan tali untuk 100, dan bunga teratai untuk 1.000. Urutan gambarnya boleh ditukar, karena nilainya tetap dijumlahkan.'},
+
+/* 5 */{negara:'Ghana',kode:'GHA',wil:'Afrika Barat',budaya:'Kain kente',warna:'#2E7D32',judul:'Tenunan Kente Kwame',kemampuan:'Logika Petunjuk',tingkat:'Sedang',
+ cerita:`<p>Kwame menenun kain kente berukuran 4 × 4 kotak dengan empat warna: <b>emas, hijau, merah,</b> dan <b>hitam</b>.</p><p>Aturannya: setiap <b>baris</b> dan setiap <b>kolom</b> harus berisi keempat warna, masing-masing tepat satu kali.</p>`,
+ visual(){const G=[['Emas',null,'Merah',null],[null,null,'Emas','Hijau'],['Hijau',null,'*','Merah'],[null,'Merah',null,null]];let s=`<svg class="fig" viewBox="0 0 248 248" style="max-width:300px" role="img" aria-label="Kain kente 4 kali 4">`;
+  G.forEach((r,y)=>r.forEach((c,x)=>{const X=4+x*60,Y=4+y*60;if(c&&c!=='*')s+=kcell(X,Y,56,c);else s+=`<g id="q5c${y}${x}"><rect x="${X}" y="${Y}" width="56" height="56" rx="4" class="empty"/>${c==='*'?`<polygon points="${starPts(X+28,Y+28,18,8)}" style="fill:var(--c)"/>`:''}</g>`}));return s+'</svg>'},
+ tanya:'Warna apa yang harus ada di kotak bertanda bintang?',
+ opsi:['Hitam','Emas','Hijau','Merah'].map(c=>`<svg viewBox="0 0 30 30" width="30" aria-hidden="true"><rect x="2" y="2" width="26" height="26" rx="5" fill="${KC[c]}"/></svg>${c}`),jawab:0,
+ bahas:`<p>Baris ketiga sudah punya <b>hijau</b> dan <b>merah</b>, jadi kotak bintang hanya bisa <b>emas</b> atau <b>hitam</b>.</p><p>Kolom ketiga sudah punya <b>merah</b> (baris 1) dan <b>emas</b> (baris 2), jadi kotak bintang tidak boleh emas. Jawabannya <b>hitam</b>.</p>`,
+ fakta:'Kente adalah kain tenun dari Ghana. Kain ini ditenun dalam strip yang sempit, lalu strip-strip itu dijahit berdampingan menjadi kain lebar. Setiap warna punya makna, misalnya emas melambangkan kekayaan.',
+ reveal(el){const S=[['Emas','Hijau','Merah','Hitam'],['Merah','Hitam','Emas','Hijau'],['Hijau','Emas','Hitam','Merah'],['Hitam','Merah','Hijau','Emas']];let k=0;S.forEach((r,y)=>r.forEach((c,x)=>{const e=$(el,`#q5c${y}${x}`);if(e){const d=y===2&&x===2?0:(++k)*90+500;later(()=>{e.outerHTML=kcell(4+x*60,4+y*60,56,c)},d)}}))}},
+
+/* 6 */{negara:'India',kode:'IND',wil:'Asia Selatan',budaya:'Rangoli',warna:'#D9480F',judul:'Rangoli Priya',kemampuan:'Pola Bilangan',tingkat:'Mudah',
+ cerita:`<p>Untuk menyambut Diwali, Priya menggambar <b>rangoli</b> dari bubuk berwarna di depan rumahnya. Rangoli itu tersusun dari beberapa <b>lapis</b> kelopak yang melingkar. Setiap lapis punya warna sendiri.</p><ul><li><b>Lapis 1</b> (paling dalam) punya <b>4</b> kelopak.</li><li>Setiap lapis berikutnya punya kelopak <b>dua kali lebih banyak</b> dari lapis sebelumnya. Contoh: lapis 2 punya 4 × 2 = <b>8</b> kelopak.</li></ul><p>Priya baru menggambar 3 lapis. Garis putus-putus biru adalah tempat <b>lapis ke-4</b> yang belum digambar.</p>`,
+ visual(){const L=[[4,30,9,17,'#C2185B'],[8,62,8,15,'#F57C00'],[16,96,6,12,'#F5B700'],[32,130,4.6,10,'#1E88E5']];let s=`<svg class="fig" viewBox="-6 -6 312 312" style="max-width:330px" role="img" aria-label="Rangoli tiga lapis dengan tempat lapis keempat"><circle cx="150" cy="150" r="152" style="fill:var(--paper)"/><circle id="q6ring" cx="150" cy="150" r="130" fill="none" stroke="#1E88E5" stroke-width="3" stroke-dasharray="5 7"/>`;
+  L.forEach(([n,r,rx,ry,c],li)=>{s+=`<g id="q6l${li}" ${li===3?'style="display:none"':''}>`;for(let i=0;i<n;i++){const a=i*360/n,x=(150+r*Math.cos(a*Math.PI/180)).toFixed(1),y=(150+r*Math.sin(a*Math.PI/180)).toFixed(1),e=`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${c}" transform="rotate(${a+90} ${x} ${y})"/>`;s+=li===3?`<g class="pop" style="animation-delay:${(i*.035).toFixed(2)}s">${e}</g>`:e}s+='</g>'});
+  s+=`<circle cx="150" cy="150" r="10" fill="#7B2CBF"/></svg>`;
+  const dot=c=>`<span style="width:14px;height:14px;border-radius:50%;background:${c};display:inline-block"></span>`;
+  s+=`<div class="row"><span class="chip">${dot('#C2185B')}Lapis 1: 4 kelopak</span><span class="chip">${dot('#F57C00')}Lapis 2: 8 kelopak</span><span class="chip">${dot('#F5B700')}Lapis 3: 16 kelopak</span><span class="chip" id="q6c4" style="border:2px dashed #1E88E5">${dot('#1E88E5')}Lapis 4: ? kelopak</span></div><div class="row"><span class="chip" id="q6sum" style="border-color:var(--c);font-size:19px">Jumlah semua kelopak: ?</span></div>`;return s},
+ tanya:'Jika lapis ke-4 sudah selesai digambar, berapa jumlah <b>semua</b> kelopak pada rangoli itu (lapis 1 + lapis 2 + lapis 3 + lapis 4)?',
+ opsi:['32','48','60','64'],jawab:2,
+ bahas:`<p>Lapisan keempat punya 16 × 2 = <b>32</b> kelopak. Jumlah semuanya: 4 + 8 + 16 + 32 = <b>60</b>.</p><p>Hati-hati: 32 hanyalah jumlah kelopak lapisan keempat, bukan seluruh rangoli.</p>`,
+ fakta:'Rangoli dibuat dari bubuk berwarna, beras, atau kelopak bunga di depan pintu rumah, terutama saat perayaan Diwali. Polanya sering simetris, seperti bunga atau bintang.',
+ reveal(el){const l=$(el,'#q6l3'),g=$(el,'#q6ring'),c=$(el,'#q6c4'),t=$(el,'#q6sum');if(l)l.style.display='';if(g)g.style.display='none';if(c)c.lastChild.textContent='Lapis 4: 32 kelopak';if(t)later(()=>{t.textContent='Jumlah semua kelopak: 4 + 8 + 16 + 32 = 60'},1300)}},
+
+/* 7 */{negara:'Rusia',kode:'RUS',wil:'Eropa Timur',budaya:'Matryoshka',warna:'#B42335',judul:'Boneka Bersarang Nina',kemampuan:'Pengurutan',tingkat:'Sedang',
+ cerita:`<p>Nina punya 5 boneka matryoshka. Boneka yang lebih kecil disimpan <b>di dalam</b> boneka yang lebih besar. Adiknya mengeluarkan semua boneka dan mencampurnya. Dari jauh, ukurannya tampak mirip.</p><p>Nina ingat beberapa petunjuk:</p>`,
+ visual(){const N=['Biru','Kuning','Hijau','Merah','Ungu'];let s=`<ul class="clues"><li><b class="k">1</b>Boneka kuning adalah yang paling besar.</li><li><b class="k">2</b>Boneka merah lebih besar daripada boneka ungu.</li><li><b class="k">3</b>Boneka hijau adalah yang paling kecil.</li><li><b class="k">4</b>Boneka biru lebih kecil daripada boneka ungu.</li></ul>`;
+  s+=`<svg class="fig" viewBox="0 0 420 120" style="max-width:480px" aria-hidden="true">${N.map((n,i)=>doll(45+i*82,100,.95,DC[n])+T(45+i*82,112,n,'tm')).join('')}</svg><div id="q7s" class="row"></div>`;return s},
+ tanya:'Boneka mana yang berada tepat di dalam boneka merah?',
+ opsi:['Biru','Ungu','Hijau','Kuning'],jawab:1,
+ bahas:`<p>Dari petunjuk 1 dan 3: kuning paling besar, hijau paling kecil. Tinggal merah, ungu, dan biru di tengah.</p><p>Petunjuk 2: merah lebih besar dari ungu. Petunjuk 4: ungu lebih besar dari biru. Jadi urutannya dari besar ke kecil: <b>kuning, merah, ungu, biru, hijau</b>.</p><p>Boneka yang tepat di dalam merah adalah <b>ungu</b>.</p>`,
+ fakta:'Matryoshka pertama dibuat di Rusia sekitar tahun 1890. Boneka kayu ini terbelah di tengah dan berisi boneka lain yang lebih kecil, kadang sampai puluhan buah.',
+ reveal(el){const b=$(el,'#q7s');if(!b)return;const O=[['Kuning',1],['Merah',.84],['Ungu',.7],['Biru',.57],['Hijau',.45]];b.innerHTML=`<svg class="fig" viewBox="0 0 420 120" style="max-width:480px" aria-label="Urutan boneka dari besar ke kecil">${O.map(([n,s],i)=>`<g class="pop" style="animation-delay:${RM?0:i*.25}s">${doll(45+i*82,100,s,DC[n])}${T(45+i*82,112,n,'tm')}</g>`).join('')}</svg>`}},
+
+/* 8 */{negara:'Belanda',kode:'NLD',wil:'Eropa Barat',budaya:'Kincir angin',warna:'#E8590C',judul:'Roda Gigi Kincir',kemampuan:'Sebab-Akibat',tingkat:'Sedang',
+ cerita:`<p>Di dalam kincir angin ada roda-roda gigi. Angin memutar baling-baling, dan baling-baling memutar roda <b>A</b> searah jarum jam (↻).</p><p>Dua roda gigi yang bersentuhan selalu berputar ke <b>arah yang berlawanan</b>. Roda E memutar batu penggiling gandum.</p>`,
+ visual(){const G=[['A',80,125,40,12,'#B5763F'],['B',144,125,30,9,'#C98A4B'],['C',80,189,30,9,'#A86B35'],['D',203,125,35,10,'#C98A4B'],['E',203,66,30,9,'#8E5A2B']];let s=`<svg class="fig" viewBox="0 0 260 240" style="max-width:320px" role="img" aria-label="Lima roda gigi">`;
+  G.forEach(([l,x,y,r,n,c])=>{s+=`<g id="q8${l}" style="--d:${(r/10).toFixed(1)}s"><path d="${gearPath(x,y,r,n)}" fill="${c}" stroke="#5E3A1E" stroke-width="2"/><circle cx="${x}" cy="${y}" r="${r*.35}" fill="#F3E4C4" stroke="#5E3A1E" stroke-width="2"/><line x1="${x}" y1="${y-r+9}" x2="${x}" y2="${y-r*.35}" stroke="#5E3A1E" stroke-width="3"/></g>`+T(x,y,l,'t','style="fill:#3A2416;font-size:16px"')});
+  s+=`<path d="M40 70 A50 50 0 0 1 118 72" fill="none" stroke="var(--c)" stroke-width="4" marker-end="url(#q8a)"/><defs><marker id="q8a" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="var(--c)"/></marker></defs>`;
+  return s+'</svg>'},
+ tanya:'Ke arah mana roda E berputar?',
+ opsi:['Berlawanan arah jarum jam ↺','Searah jarum jam ↻','Tidak berputar','Kadang searah, kadang berlawanan'],jawab:0,
+ bahas:`<ul><li>A berputar ↻.</li><li>B dan C menyentuh A, jadi keduanya berputar ↺.</li><li>D menyentuh B, jadi D berputar ↻.</li><li>E menyentuh D, jadi E berputar <b>↺</b>, berlawanan arah jarum jam.</li></ul><p>Roda C tidak memengaruhi E, karena C tidak terhubung ke D atau E.</p>`,
+ fakta:'Belanda punya lebih dari seribu kincir angin bersejarah. Sembilan belas kincir di Kinderdijk masuk daftar Warisan Dunia UNESCO sejak 1997.',
+ reveal(el){[['A','cw'],['B','ccw'],['C','ccw'],['D','cw'],['E','ccw']].forEach(([l,d],i)=>later(()=>{const g=$(el,'#q8'+l);g&&g.firstElementChild&&g.setAttribute('class','spin-'+d)},i*300))}},
+
+/* 9 */{negara:'Peru',kode:'PER',wil:'Amerika Selatan',budaya:'Quipu',warna:'#8F5BB5',judul:'Tali Bersimpul Inka',kemampuan:'Nilai Tempat',tingkat:'Sedang',
+ cerita:`<p>Bangsa Inka mencatat angka dengan <b>quipu</b>, yaitu tali bersimpul. Pada setiap tali:</p><ul><li>simpul di bagian <b>atas</b> menunjukkan ratusan,</li><li>simpul di bagian <b>tengah</b> menunjukkan puluhan,</li><li>simpul di bagian <b>bawah</b> menunjukkan satuan.</li></ul><p>Empat tali di bawah mencatat jumlah llama di empat desa.</p>`,
+ visual(){const D=[['A',[1,4,0],'#C2185B'],['B',[0,9,8],'#1E88E5'],['C',[1,0,9],'#2E9E5B'],['D',[1,3,9],'#F57C00']];let s=`<svg class="fig" viewBox="0 0 380 360" style="max-width:420px" role="img" aria-label="Empat tali quipu">`;
+  [['ratusan',58,92],['puluhan',108,200],['satuan',214,300]].forEach(([n,a,b],i)=>s+=`<rect x="6" y="${a}" width="368" height="${b-a}" rx="8" style="fill:${i%2?'var(--tint)':'var(--paper)'}"/><text x="14" y="${(a+b)/2}" class="tm" dominant-baseline="central">${n}</text>`);
+  s+=`<path d="M90 28 Q235 18 370 30" stroke="#8B5A2B" stroke-width="7" fill="none" stroke-linecap="round"/>`;
+  D.forEach(([l,[h,t,o],c],i)=>{const x=130+i*70;s+=`<path d="M${x} 28 L${x} 310" stroke="${c}" stroke-width="4"/>`;const kn=(n,y0)=>{let g='';for(let k=0;k<n;k++)g+=`<ellipse cx="${x}" cy="${y0+k*10}" rx="8" ry="5" fill="${c}" stroke="rgba(0,0,0,.35)"/>`;return g};s+=kn(h,72)+kn(t,114)+kn(o,220);s+=T(x,326,l,'t','style="font-size:18px"')+`<text id="q9v${i}" x="${x}" y="348" class="t" text-anchor="middle" dominant-baseline="central" style="fill:var(--c)"></text>`});
+  return s+'</svg>'},
+ tanya:'Tali mana yang mencatat jumlah llama paling banyak?',
+ opsi:['Tali A','Tali B','Tali C','Tali D'],jawab:0,
+ bahas:`<ul><li>A: 1 ratusan, 4 puluhan, 0 satuan = <b>140</b></li><li>B: 0 ratusan, 9 puluhan, 8 satuan = 98</li><li>C: 1 ratusan, 0 puluhan, 9 satuan = 109</li><li>D: 1 ratusan, 3 puluhan, 9 satuan = 139</li></ul><p>Tali B punya simpul paling banyak (17), tetapi nilainya paling kecil. Yang menentukan adalah <b>letak</b> simpulnya, bukan banyaknya.</p>`,
+ fakta:'Quipu dipakai Kekaisaran Inka di pegunungan Andes untuk mencatat jumlah penduduk, hasil panen, dan ternak. Mereka tidak punya tulisan, tetapi sudah memakai nilai tempat seperti kita.',
+ reveal(el){[140,98,109,139].forEach((v,i)=>later(()=>{const t=$(el,'#q9v'+i);if(t)t.textContent=v},i*300))}},
+
+/* 10 */{negara:'Skotlandia',kode:'SCO',wil:'Eropa Barat',budaya:'Tartan',warna:'#1F6F5C',judul:'Kain Kotak Ewan',kemampuan:'Penalaran Visual',tingkat:'Sulit',
+ cerita:`<p>Ewan menenun kain tartan. Ia memakai benang <b>mendatar</b> dan benang <b>tegak</b> yang saling bersilangan.</p><ul><li>Jika dua garis merah bertemu, kotaknya menjadi <b>merah tua</b>.</li><li>Jika hanya ada satu garis merah, kotaknya <b>merah</b>.</li><li>Jika tidak ada garis merah, kotaknya tetap <b>krem</b>.</li></ul>`,
+ visual(){const hz=H.map(v=>V.map(()=>v)),vt=H.map(()=>V.map(v=>v));return `<div class="row"><div style="text-align:center">${tgrid(hz,18).replace(/width="378"/,'width="120"')}<div class="lbl">mendatar</div></div><span class="eq">+</span><div style="text-align:center">${tgrid(vt,18).replace(/width="378"/,'width="120"')}<div class="lbl">tegak</div></div><span class="eq">=</span><span class="eq" style="font-size:44px;color:var(--c)">?</span></div>`},
+ tanya:'Seperti apa kain tartan yang jadi?',
+ opsi:[mk((r,c)=>V[r]+H[c]),mk((r,c)=>(H[r]||V[c])?2:0),mk((r,c)=>H[4-r]+V[c]),mk((r,c)=>H[r]+V[c])].map(m=>tgrid(m,18).replace(/width="378"/,'width="96"')),jawab:3,
+ bahas:`<p>Periksa satu per satu. Baris 1 punya garis mendatar, kolom 1 tidak punya garis tegak, jadi kotak kiri atas berwarna <b>merah</b> (satu garis). Kotak baris 1 kolom 2 dilewati dua garis, jadi <b>merah tua</b>.</p><p>Baris 2 tidak punya garis mendatar, jadi di baris itu hanya kolom bergaris (2, 3, dan 5) yang merah. Pilihan <b>D</b> cocok di semua kotak.</p><p>Pilihan A tertukar antara baris dan kolom. Pilihan B lupa warna merah biasa. Pilihan C memakai urutan baris yang terbalik.</p>`,
+ fakta:'Tartan adalah kain bermotif kotak-kotak khas Skotlandia. Polanya muncul dari benang berwarna yang ditenun mendatar dan tegak. Dulu, setiap keluarga besar (klan) punya pola tartan sendiri.'},
+
+/* 11 */{negara:'Korea Selatan',kode:'KOR',wil:'Asia Timur',budaya:'Hangeul',warna:'#2251A8',judul:'Huruf Rakitan Minji',kemampuan:'Dekomposisi',tingkat:'Mudah',
+ cerita:`<p>Minji mengajari Bebi aksara Korea, <b>Hangeul</b>. Setiap suku kata dibuat dengan <b>merakit</b> huruf konsonan dan huruf vokal menjadi satu kotak.</p>`,
+ visual(){const r=(a,b,c,lat)=>`<div class="hcard"><span class="hg">${a}</span><span class="eq">+</span><span class="hg">${b}</span><span class="eq">=</span><span class="hg">${c}</span><small>${lat}</small></div>`;
+  return `<div class="row">${r('ㄱ','ㅏ','가','ga')}${r('ㄴ','ㅏ','나','na')}${r('ㄱ','ㅗ','고','go')}</div><div class="row" id="q11q"><div class="hcard" style="border:2px solid var(--c)"><span class="hg">ㄴ</span><span class="eq">+</span><span class="hg">ㅗ</span><span class="eq">=</span><span class="eq" style="color:var(--c);font-size:34px">?</span></div></div>`},
+ tanya:'Suku kata mana yang dibuat dari ㄴ + ㅗ?',
+ opsi:['누','노','나','고'].map(h=>`<span class="hg">${h}</span>`),jawab:1,
+ bahas:`<p>Dari 가 dan 고 kita tahu: huruf ㅏ ditaruh di <b>kanan</b> konsonan, sedangkan ㅗ ditaruh di <b>bawah</b> konsonan.</p><p>Dari 가 dan 나 kita tahu: ㄱ dan ㄴ adalah bentuk yang berbeda di bagian atas atau kiri.</p><p>Jadi ㄴ dengan ㅗ di bawahnya adalah <b>노</b> (dibaca "no"). Pilihan 누 memakai vokal lain (ㅜ, "u") yang garis pendeknya mengarah ke bawah.</p>`,
+ fakta:'Hangeul diciptakan Raja Sejong pada tahun 1443 agar rakyat biasa mudah belajar membaca. Korea Selatan merayakan Hari Hangeul setiap 9 Oktober.',
+ reveal(el){const q=$(el,'#q11q .eq:last-child');if(q)later(()=>{q.outerHTML='<span class="hg pop" style="color:var(--c)">노</span>'},300)}},
+
+/* 12 */{negara:'Maroko',kode:'MAR',wil:'Afrika Utara',budaya:'Zellige',warna:'#1B6E8F',judul:'Ubin Mozaik Fes',kemampuan:'Rotasi dan Cermin',tingkat:'Sedang',
+ cerita:`<p>Pak Youssef memasang ubin mozaik <i>zellige</i> di dinding. Semua ubin dibuat sama persis. Ia boleh <b>memutar</b> ubin sebelum memasangnya, tetapi <b>tidak boleh membaliknya</b>.</p>`,
+ visual(){return `<div class="row"><div style="text-align:center">${tile(0,false,130)}<div class="lbl">ubin asli</div></div></div>`},
+ tanya:'Ubin mana yang TIDAK mungkin didapat hanya dengan memutar ubin asli?',
+ opsi:[tile(1,false),tile(2,false),tile(0,true),tile(3,false)],jawab:2,
+ bahas:`<p>Pada ubin asli, jika kita berjalan searah jarum jam mengelilingi pinggir ubin, urutannya: <b>segitiga biru, lalu lingkaran hijau</b>. Saat ubin diputar, urutan ini tetap sama.</p><p>Pada ubin C, urutannya terbalik: lingkaran dulu, baru segitiga. Ini terjadi jika ubin <b>dibalik seperti bayangan cermin</b>, dan itu tidak boleh. A, B, dan D adalah ubin asli yang diputar 90°, 180°, dan 270°.</p>`,
+ fakta:'Zellige adalah seni mozaik dari Maroko. Potongan ubin keramik dipahat satu per satu dengan tangan, lalu disusun menjadi pola bintang dan bentuk geometris. Kota Fes terkenal dengan para perajinnya.'},
+
+/* 13 */{negara:'Brasil',kode:'BRA',wil:'Amerika Selatan',budaya:'Karnaval Rio',warna:'#0E8A3E',judul:'Barisan Karnaval',kemampuan:'Logika Petunjuk',tingkat:'Sulit',
+ cerita:`<p>Lima kendaraan hias berparade di karnaval: <b>Matahari, Ikan, Bintang, Burung,</b> dan <b>Bunga</b>. Mereka berjalan berbaris satu per satu.</p>`,
+ visual(){return `<ul class="clues"><li><b class="k">1</b>${fl('Matahari',28)} Matahari berada paling depan.</li><li><b class="k">2</b>${fl('Bunga',28)} Bunga berada tepat di belakang ${fl('Burung',28)} Burung.</li><li><b class="k">3</b>${fl('Bintang',28)} Bintang berada di depan Burung, tetapi tidak harus tepat di depannya.</li><li><b class="k">4</b>${fl('Bintang',28)} Bintang tidak tepat di belakang Matahari.</li></ul>
+  <svg class="fig" viewBox="0 0 470 110" style="max-width:520px" role="img" aria-label="Lima tempat barisan parade"><rect x="0" y="60" width="470" height="34" rx="8" fill="#9AA5B8"/><path d="M0 77 H470" stroke="#fff" stroke-width="3" stroke-dasharray="14 10"/>${[0,1,2,3,4].map(i=>`<rect x="${12+i*92}" y="8" width="76" height="64" rx="12" class="empty"/><g id="q13s${i}"></g>${T(50+i*92,102,i===0?'1 (depan)':i+1,'tm','style="fill:#fff"')}`).join('')}</svg>`},
+ tanya:'Bagaimana urutan barisan dari depan ke belakang?',
+ opsi:[['Matahari','Bintang','Ikan','Burung','Bunga'],['Matahari','Ikan','Burung','Bunga','Bintang'],['Matahari','Bintang','Burung','Bunga','Ikan'],['Matahari','Ikan','Bintang','Burung','Bunga']].map(seq),jawab:3,
+ bahas:`<p>Matahari di tempat 1. Petunjuk 4: Bintang tidak di tempat 2. Petunjuk 3: Bintang harus di depan Burung, dan Burung harus diikuti Bunga (petunjuk 2).</p><p>Jika Bintang di tempat 3, maka Burung di 4 dan Bunga di 5, sehingga Ikan di tempat 2. Bintang tidak bisa di tempat 4 atau 5, karena tidak akan ada cukup tempat untuk Burung dan Bunga di belakangnya.</p><p>Urutannya: <b>Matahari, Ikan, Bintang, Burung, Bunga</b>.</p>`,
+ fakta:'Karnaval Rio de Janeiro diadakan setiap tahun sebelum masa Prapaskah. Sekolah-sekolah samba berparade dengan kendaraan hias raksasa dan ribuan penari di Sambadrome.',
+ reveal(el){['Matahari','Ikan','Bintang','Burung','Bunga'].forEach((t,i)=>later(()=>{const g=$(el,'#q13s'+i);if(g)g.outerHTML=`<g class="drop"><rect x="${12+i*92}" y="8" width="76" height="64" rx="12" fill="#FFF7D6" stroke="#0E8A3E" stroke-width="2.5"/>${fl(t,50).replace('<svg',`<svg x="${25+i*92}" y="15"`)}</g>`},i*350))}},
+
+/* 14 */{negara:'Australia',kode:'AUS',wil:'Oseania',budaya:'Lukisan titik Aborigin',warna:'#A0461F',judul:'Jejak Sumber Air',kemampuan:'Graf',tingkat:'Sulit',
+ cerita:`<p>Lukisan titik ini menggambarkan lima sumber air (A sampai E) yang dihubungkan jalan setapak bertitik.</p><p>Seorang pengembara ingin melewati <b>setiap jalan setapak tepat satu kali</b>. Ia boleh melewati sumber air yang sama lebih dari sekali, tetapi tidak boleh melewati jalan yang sama dua kali.</p>`,
+ visual(){const N={A:[70,80],B:[230,55],C:[160,190],D:[330,175],E:[265,295]};const E=['AB','AC','BC','BD','CD','DE','CE'];let s=`<svg class="fig" viewBox="0 0 400 350" style="max-width:440px" role="img" aria-label="Lima sumber air dan jalan setapak"><rect width="400" height="350" rx="18" fill="#4A2312"/>`;
+  for(let i=0;i<70;i++){const x=(i*97)%390+5,y=(i*53)%340+5;s+=`<circle cx="${x}" cy="${y}" r="2" fill="#E9C46A" opacity=".35"/>`}
+  E.forEach(e=>{const[a,b]=[N[e[0]],N[e[1]]];s+=`<line id="q14${e}" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#F2C14E" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 13" style="transition:stroke .3s"/>`});
+  Object.entries(N).forEach(([k,[x,y]])=>{s+=`<circle cx="${x}" cy="${y}" r="27" fill="#4A2312"/>${[24,17,10].map((r,i)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${['#FFFFFF','#E76F51','#F2C14E'][i]}" stroke-width="3.5" stroke-dasharray="0 6.5" stroke-linecap="round"/>`).join('')}<circle cx="${x}" cy="${y}" r="4" fill="#fff"/><text x="${x+28}" y="${y-24}" class="t" style="fill:#FFF3D6;font-size:18px">${k}</text>`});
+  s+=`<circle id="q14w" r="9" fill="#FFFFFF" stroke="#E76F51" stroke-width="3" cx="230" cy="55" style="display:none"/>`;return s+'</svg>'},
+ tanya:'Dari sumber air mana pengembara harus mulai berjalan?',
+ opsi:['B','A','C','E'],jawab:0,
+ bahas:`<p>Hitung banyaknya jalan di setiap sumber air: A = 2, <b>B = 3</b>, C = 4, <b>D = 3</b>, E = 2.</p><p>Setiap kali pengembara melewati sebuah sumber air, ia memakai satu jalan untuk masuk dan satu jalan untuk keluar. Hanya tempat mulai dan tempat selesai yang boleh punya jumlah jalan <b>ganjil</b>.</p><p>B dan D punya 3 jalan, jadi pengembara harus mulai di salah satunya. Di antara pilihan, jawabannya <b>B</b>. Contoh rute: B → A → C → B → D → C → E → D.</p>`,
+ fakta:'Lukisan titik adalah gaya seni suku Aborigin Australia yang dikenal luas sejak tahun 1970-an. Lingkaran bertumpuk sering melambangkan tempat penting, misalnya sumber air atau tempat berkumpul.',
+ reveal(el){const N={A:[70,80],B:[230,55],C:[160,190],D:[330,175],E:[265,295]};const P='BACBDCED',w=$(el,'#q14w');if(!w)return;w.style.display='';w.style.transition='cx .5s, cy .5s';
+  for(let i=1;i<P.length;i++)later(()=>{const a=P[i-1],b=P[i],id=[a,b].sort().join('');const e=$(el,'#q14'+id);if(e)e.style.stroke='#FFFFFF';w.setAttribute('cx',N[b][0]);w.setAttribute('cy',N[b][1])},i*600)}},
+
+/* 15 */{negara:'Tiongkok',kode:'CHN',wil:'Asia Timur',budaya:'Shio',warna:'#C92A2A',judul:'Roda Shio',kemampuan:'Siklus',tingkat:'Sedang',
+ cerita:`<p>Dalam penanggalan Tionghoa, setiap tahun Imlek punya satu <b>shio</b> hewan. Ada 12 shio yang selalu berulang dengan urutan seperti pada roda di bawah.</p><p>Tahun Imlek <b>2024</b> adalah tahun <b>Naga</b>.</p>`,
+ visual(){const A=['Tikus','Kerbau','Macan','Kelinci','Naga','Ular','Kuda','Kambing','Monyet','Ayam','Anjing','Babi'];let s=`<svg class="fig" viewBox="0 0 320 320" style="max-width:360px" role="img" aria-label="Roda 12 shio"><circle cx="160" cy="160" r="150" fill="#C92A2A"/><circle cx="160" cy="160" r="142" fill="none" stroke="#F2C14E" stroke-width="2" stroke-dasharray="3 5"/><circle cx="160" cy="160" r="72" fill="#8E1B1B"/>`;
+  A.forEach((n,i)=>{const a=(-90+30*i)*Math.PI/180,x=160+112*Math.cos(a),y=160+112*Math.sin(a);s+=`<circle id="q15a${i}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="27" fill="${i===4?'#F2C14E':'#FFF3E0'}" style="transition:fill .3s"/>`+T(x.toFixed(1),y.toFixed(1),n,'t','style="fill:#5A1010;font-size:11px"')});
+  s+=`<path d="M232 38 A140 140 0 0 1 282 88" fill="none" stroke="#F2C14E" stroke-width="4"/><path d="M282 88 l-2 -12 l-9 8 z" fill="#F2C14E"/>`;
+  s+=`<text id="q15y" x="160" y="148" text-anchor="middle" dominant-baseline="central" style="fill:#FFF3E0;font:600 30px var(--fd)">2024</text><text id="q15n" x="160" y="180" text-anchor="middle" dominant-baseline="central" style="fill:#F2C14E;font:800 16px var(--fb)">Naga</text>`;return s+'</svg>'},
+ tanya:'Tahun Imlek 2031 adalah tahun shio apa?',
+ opsi:['Anjing','Tikus','Babi','Kuda'],jawab:2,
+ bahas:`<p>Dari 2024 ke 2031 ada 7 tahun. Mulai dari Naga, maju 7 langkah searah panah: Ular (2025), Kuda (2026), Kambing (2027), Monyet (2028), Ayam (2029), Anjing (2030), <b>Babi (2031)</b>.</p><p>Shio Tikus baru datang lagi pada 2032, ketika putaran 12 tahun dimulai lagi.</p>`,
+ fakta:'Shio berganti saat Tahun Baru Imlek, yang jatuh antara akhir Januari dan pertengahan Februari, bukan pada 1 Januari. Jadi anak yang lahir Januari 2024 masih bershio Kelinci.',
+ reveal(el){const A=['Tikus','Kerbau','Macan','Kelinci','Naga','Ular','Kuda','Kambing','Monyet','Ayam','Anjing','Babi'];for(let k=1;k<=7;k++)later(()=>{const p=$(el,'#q15a'+(3+k)),c=$(el,'#q15a'+(4+k));if(p)p.setAttribute('fill','#FFF3E0');if(c)c.setAttribute('fill','#F2C14E');const y=$(el,'#q15y'),n=$(el,'#q15n');if(y)y.textContent=2024+k;if(n)n.textContent=A[4+k]},k*450)}},
+
+/* 16 */{negara:'Turki',kode:'TUR',wil:'Eropa dan Asia',budaya:'Grand Bazaar',warna:'#C2410C',judul:'Timbangan Pedagang',kemampuan:'Kesetaraan',tingkat:'Mudah',
+ cerita:`<p>Di Grand Bazaar Istanbul, Pak Emre menukar barang memakai timbangan. Dua timbangan pertama sudah seimbang.</p>`,
+ visual(){return `<div class="row"><div style="text-align:center">${balance(['s'],['t','t'])}<div class="lbl">1 karung kopi = 2 kotak teh</div></div><div style="text-align:center">${balance(['t'],['l','l','l'])}<div class="lbl">1 kotak teh = 3 kotak lokum</div></div></div><div style="text-align:center">${balance(['s','s'],['q'])}<div class="lbl">2 karung kopi = ? kotak lokum</div></div>`},
+ tanya:'Berapa kotak lokum yang dibutuhkan agar timbangan ketiga seimbang?',
+ opsi:['6','8','10','12'],jawab:3,
+ bahas:`<p>1 karung kopi = 2 kotak teh, jadi 2 karung kopi = <b>4 kotak teh</b>.</p><p>1 kotak teh = 3 kotak lokum, jadi 4 kotak teh = 4 × 3 = <b>12 kotak lokum</b>.</p>`,
+ fakta:'Grand Bazaar di Istanbul mulai dibangun pada abad ke-15 dan menjadi salah satu pasar beratap tertua dan terbesar di dunia, dengan ribuan toko. Lokum adalah permen kenyal khas Turki yang ditaburi gula halus.'},
+
+/* 17 */{negara:'Kanada',kode:'CAN',wil:'Amerika Utara',budaya:'Inuksuk',warna:'#3B6E99',judul:'Menyusun Inuksuk',kemampuan:'Urutan Langkah',tingkat:'Sedang',
+ cerita:`<p>Orang Inuit menyusun batu menjadi <b>inuksuk</b>. Sebuah batu hanya bisa dipasang jika batu yang menopangnya sudah terpasang.</p><ul><li>A dan B (kaki) langsung di atas tanah.</li><li>C ditopang A dan B.</li><li>D ditopang C.</li><li>E, F, dan G masing-masing ditopang D.</li></ul>`,
+ visual(){let s=`<svg class="fig" viewBox="0 0 320 300" style="max-width:340px" role="img" aria-label="Inuksuk dari tujuh batu"><rect x="0" y="276" width="320" height="24" rx="6" fill="#DCE6EE"/><g id="q17g">`;
+  'ABCDEFG'.split('').forEach(k=>{const[x,y,w,h]=STONES[k];s+=`<g data-k="${k}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(w,h)/3}" fill="${STONEC[k]}" stroke="#56626D" stroke-width="2"/>${T(x+w/2,y+h/2,k,'t','style="fill:#1E2A33;font-size:16px"')}</g>`});
+  return s+'</g></svg>'},
+ tanya:'Urutan memasang batu mana yang TIDAK mungkin?',
+ opsi:['A, B, C, D, G, E, F','B, A, C, D, E, F, G','A, B, C, E, D, F, G','B, A, C, D, F, G, E'],jawab:2,
+ bahas:`<p>Batu E ditopang D, jadi D harus dipasang <b>sebelum</b> E. Pada pilihan C, E dipasang sebelum D, sehingga E tidak punya penopang dan akan jatuh.</p><p>Pilihan lain mungkin, karena A dan B boleh ditukar, dan E, F, G boleh dipasang dalam urutan apa pun setelah D.</p>`,
+ fakta:'Inuksuk adalah tumpukan batu buatan orang Inuit di Arktik Kanada. Bentuknya dipakai sebagai penunjuk arah dan penanda tempat. Gambar inuksuk ada di bendera wilayah Nunavut.',
+ reveal(el){const gs=[...el.querySelectorAll('#q17g > g')];gs.forEach(g=>g.style.opacity='0');gs.forEach((g,i)=>later(()=>{g.style.opacity='';g.setAttribute('class','drop')},300+i*350))}},
+
+/* 18 */{negara:'Prancis',kode:'FRA',wil:'Eropa Barat',budaya:'Galette des rois',warna:'#2F4FA8',judul:'Kue Raja Élodie',kemampuan:'Pencarian Biner',tingkat:'Sulit',
+ cerita:`<p>Élodie memotong kue <i>galette des rois</i> menjadi 16 potong bernomor. Di dalam salah satu potongan tersembunyi sebuah <b>fève</b> (patung kecil).</p><p>Bebi boleh bertanya kepada Élodie, tetapi Élodie hanya menjawab <b>"ya"</b> atau <b>"tidak"</b>. Contoh pertanyaan: "Apakah nomornya lebih dari 8?"</p>`,
+ visual(){let s=`<svg class="fig" viewBox="0 0 300 300" style="max-width:320px" role="img" aria-label="Kue bundar dibagi 16 potong"><circle cx="150" cy="150" r="138" fill="#B9772B"/>`;
+  for(let i=0;i<16;i++){const a1=(-90+22.5*i)*Math.PI/180,a2=(-90+22.5*(i+1))*Math.PI/180,r=128;s+=`<path id="q18p${i+1}" d="M150 150 L${(150+r*Math.cos(a1)).toFixed(1)} ${(150+r*Math.sin(a1)).toFixed(1)} A${r} ${r} 0 0 1 ${(150+r*Math.cos(a2)).toFixed(1)} ${(150+r*Math.sin(a2)).toFixed(1)} Z" fill="${i%2?'#E9B35B':'#F0C171'}" stroke="#8A5320" stroke-width="1.5" style="transition:opacity .4s"/>`;const am=(a1+a2)/2;s+=T((150+98*Math.cos(am)).toFixed(1),(150+98*Math.sin(am)).toFixed(1),i+1,'t','style="fill:#5A3410;font-size:13px"')}
+  s+=`<circle cx="150" cy="150" r="24" fill="#F7D99A" stroke="#8A5320"/><path d="M136 158 L136 142 L143 150 L150 140 L157 150 L164 142 L164 158 Z" fill="#E3A728" stroke="#8A5320"/></svg><div class="log" id="q18l"></div>`;return s},
+ tanya:'Paling sedikit, berapa pertanyaan yang Bebi perlukan agar PASTI tahu potongan mana yang berisi fève?',
+ opsi:['3','4','8','15'],jawab:1,
+ bahas:`<p>Pertanyaan terbaik selalu <b>membagi kemungkinan menjadi dua sama banyak</b>: 16 → 8 → 4 → 2 → 1. Jadi cukup <b>4 pertanyaan</b>.</p><p>Tiga pertanyaan tidak cukup. Setiap pertanyaan punya 2 jawaban, jadi 3 pertanyaan hanya bisa membedakan 2 × 2 × 2 = 8 kemungkinan, padahal ada 16 potongan.</p><p>Jika bertanya satu per satu ("Apakah nomor 1? nomor 2? ..."), Bebi bisa butuh sampai 15 pertanyaan.</p>`,
+ fakta:'Di Prancis, galette des rois dimakan pada awal Januari untuk merayakan Hari Raja (Epifani). Siapa yang mendapat fève menjadi "raja" atau "ratu" hari itu dan memakai mahkota kertas.',
+ reveal(el){const L=$(el,'#q18l');if(!L)return;const S=[['Lebih dari 8?','ya',9,16],['Lebih dari 12?','tidak',9,12],['Lebih dari 10?','ya',11,12],['Lebih dari 11?','tidak',11,11]];L.innerHTML='';
+  S.forEach(([q,a,lo,hi],i)=>later(()=>{L.insertAdjacentHTML('beforeend',`<div>${i+1}. "${q}" Élodie: <b>${a}</b>. Sisa: ${lo===hi?'<b>potongan '+lo+'</b>':'potongan '+lo+' sampai '+hi}</div>`);for(let k=1;k<=16;k++){const p=$(el,'#q18p'+k);if(p)p.style.opacity=(k<lo||k>hi)?'.18':'1'}},i*900+200))}},
+
+/* 19 */{negara:'Swiss',kode:'CHE',wil:'Eropa Tengah',budaya:'Kereta tepat waktu',warna:'#D52B1E',judul:'Ke Interlaken',kemampuan:'Penjadwalan',tingkat:'Sedang',
+ cerita:`<p>Lena ingin pergi dari <b>Zürich</b> ke <b>Interlaken</b> dan tiba secepat mungkin. Ia bisa naik bus langsung, atau naik kereta ke <b>Bern</b> lalu pindah ke kereta lain.</p><p>Di Bern, Lena butuh <b>paling sedikit 5 menit</b> untuk pindah peron.</p>`,
+ visual(){return `<div class="board"><h5>Kereta Zürich → Bern</h5><table><tr id="q19a"><td>Kereta 1</td><td class="tm2">08.10</td><td>tiba</td><td class="tm2">09.05</td></tr><tr id="q19b"><td>Kereta 2</td><td class="tm2">08.30</td><td>tiba</td><td class="tm2">09.25</td></tr></table>
+  <h5>Kereta Bern → Interlaken</h5><table><tr id="q19c"><td>berangkat</td><td class="tm2">09.00</td><td>tiba</td><td class="tm2">09.55</td></tr><tr id="q19d"><td>berangkat</td><td class="tm2">09.20</td><td>tiba</td><td class="tm2">10.15</td></tr><tr id="q19e"><td>berangkat</td><td class="tm2">09.40</td><td>tiba</td><td class="tm2">10.35</td></tr></table>
+  <h5>Bus langsung Zürich → Interlaken</h5><table style="margin:0"><tr id="q19f"><td>berangkat</td><td class="tm2">08.00</td><td>tiba</td><td class="tm2">10.20</td></tr></table></div>`},
+ tanya:'Paling cepat, jam berapa Lena bisa tiba di Interlaken?',
+ opsi:['09.55','10.15','10.20','10.35'],jawab:1,
+ bahas:`<ul><li>Kereta 1 tiba di Bern 09.05. Kereta 09.00 sudah berangkat. Lena siap pindah pukul 09.10, jadi ia naik kereta 09.20 dan tiba <b>10.15</b>.</li><li>Kereta 2 tiba di Bern 09.25, jadi Lena naik kereta 09.40 dan tiba 10.35.</li><li>Bus langsung tiba 10.20.</li></ul><p>Yang tercepat adalah <b>10.15</b>. Jawaban 09.55 tidak mungkin, karena kereta itu berangkat sebelum Lena sampai di Bern.</p>`,
+ fakta:'Kereta di Swiss terkenal sangat tepat waktu. Jam stasiun Swiss yang bulat dengan jarum detik merah dirancang oleh Hans Hilfiker pada tahun 1944.',
+ reveal(el){later(()=>['q19c','q19b','q19e'].forEach(id=>{const r=$(el,'#'+id);r&&r.classList.add('no')}),200);later(()=>['q19a','q19d'].forEach(id=>{const r=$(el,'#'+id);r&&r.classList.add('hl')}),800)}},
+
+/* 20 */{negara:'Polinesia',kode:'PAS',wil:'Samudra Pasifik',budaya:'Navigasi bintang',warna:'#0B7285',judul:'Kano Penjelajah',kemampuan:'Arah dan Rotasi',tingkat:'Mudah',
+ cerita:`<p>Pelaut Polinesia berlayar dengan kano bercadik. Kano Tama mula-mula menghadap ke <b>Utara</b>. Tama menjalankan lima perintah ini secara berurutan. Setiap belokan memutar kano seperempat putaran.</p>`,
+ visual(){const C=['belok kanan','belok kanan','belok kiri','belok kiri','belok kiri'];return `<div class="cmds">${C.map((c,i)=>`<div class="cmd" id="q20c${i}">${i+1}. ${c}</div>`).join('')}</div>
+  <svg class="fig" viewBox="0 0 260 260" style="max-width:300px" role="img" aria-label="Kompas dengan kano di tengah"><circle cx="130" cy="130" r="122" fill="#0B4F6C"/><circle cx="130" cy="130" r="108" fill="none" stroke="#7FD1E0" stroke-width="1.5" stroke-dasharray="2 6"/>
+  ${Array.from({length:32},(_,i)=>{const a=i*Math.PI/16;return `<line x1="${(130+112*Math.cos(a)).toFixed(1)}" y1="${(130+112*Math.sin(a)).toFixed(1)}" x2="${(130+(i%8?118:104)*Math.cos(a)).toFixed(1)}" y2="${(130+(i%8?118:104)*Math.sin(a)).toFixed(1)}" stroke="#BFEAF2" stroke-width="${i%8?1.5:3}"/>`}).join('')}
+  ${[['U',130,30],['T',230,130],['S',130,230],['B',30,130]].map(([l,x,y])=>T(x,y,l,'t','style="fill:#FFF3C4;font-size:20px"')).join('')}
+  ${[[60,60],[200,70],[190,200],[70,195],[110,52],[214,154]].map(([x,y])=>`<polygon points="${starPts(x,y,5,2)}" fill="#FFF3C4"/>`).join('')}
+  <g id="q20k" style="transform:translate(130px,130px) rotate(0deg);transition:transform .6s ease">${canoe}</g></svg><div class="lbl" id="q20d">Menghadap: Utara</div>`},
+ tanya:'Ke arah mana kano Tama menghadap setelah semua perintah?',
+ opsi:['Utara','Timur','Selatan','Barat'],jawab:3,
+ bahas:`<ol><li>Belok kanan: Utara → <b>Timur</b></li><li>Belok kanan: Timur → <b>Selatan</b></li><li>Belok kiri: Selatan → <b>Timur</b></li><li>Belok kiri: Timur → <b>Utara</b></li><li>Belok kiri: Utara → <b>Barat</b></li></ol><p>Cara cepat: 2 kali kanan dan 3 kali kiri. Dua belokan kanan saling menghapus dengan dua belokan kiri, sehingga tersisa <b>satu kali belok kiri</b> dari Utara, yaitu Barat.</p>`,
+ fakta:'Pelaut Polinesia menyeberangi Samudra Pasifik sejauh ribuan kilometer tanpa kompas. Mereka membaca posisi bintang, arah ombak, dan terbangnya burung laut.',
+ reveal(el){const R=[90,180,90,0,-90],D=['Timur','Selatan','Timur','Utara','Barat'];R.forEach((r,i)=>later(()=>{const k=$(el,'#q20k');if(k)k.style.transform=`translate(130px,130px) rotate(${r}deg)`;const c=$(el,'#q20c'+i);c&&c.classList.add('on');const d=$(el,'#q20d');if(d)d.textContent='Menghadap: '+D[i]},300+i*800))}}
+];
+
+/* ---------- cap paspor ---------- */
+const TILT=[-8,5,-3,9,-6,4,-10,7,-4,6,-7,3,8,-5,10,-9,2,-6,5,-3];
+function stamp(i,state){const q=Q[i],col=state==='ok'?q.warna:state==='bad'?'#8C93A8':'var(--muted)';const op=state?1:.55;
+  return `<svg viewBox="0 0 100 100" aria-hidden="true" style="color:${col};opacity:${op}"><g transform="rotate(${state?TILT[i]:0} 50 50)">
+  <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="3.5" ${state?'':'stroke-dasharray="5 5"'}/>
+  <circle cx="50" cy="50" r="37" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <text x="50" y="47" text-anchor="middle" dominant-baseline="central" fill="currentColor" style="font:700 22px var(--fm)">${q.kode}</text>
+  <text x="50" y="68" text-anchor="middle" fill="currentColor" style="font:900 8.5px var(--fb);letter-spacing:.06em">${q.negara.split(' ')[0].toUpperCase()}</text>
+  <text x="50" y="28" text-anchor="middle" fill="currentColor" style="font:900 9px var(--fb)">${state==='ok'?'★ LULUS ★':state==='bad'?'✕ COBA ✕':'· '+(i+1)+' ·'}</text></g></svg>`}
+
+/* ---------- aplikasi ---------- */
+const KEY='paspor-logika-dunia-v1';
+let st={cur:0,ans:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.ans)st=s}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const app=document.getElementById('app'),stampsEl=document.getElementById('stamps');
+const stateOf=i=>st.ans[i]===undefined?'':(st.ans[i]===Q[i].jawab?'ok':'bad');
+const score=()=>Q.filter((q,i)=>stateOf(i)==='ok').length;
+
+function renderTop(){
+  document.getElementById('score').innerHTML=`<small>Cap</small><b>${score()}</b><small>dari ${Q.length}</small>`;
+  stampsEl.innerHTML=Q.map((q,i)=>`<button class="sbtn ${i===st.cur?'cur':''}" data-i="${i}" aria-label="Soal ${i+1}, ${q.negara}${stateOf(i)==='ok'?', benar':stateOf(i)==='bad'?', belum tepat':''}" title="${i+1}. ${q.negara}">${stamp(i,stateOf(i)).replace('color:var(--muted)','color:#8FA0C8')}</button>`).join('');
+  stampsEl.querySelectorAll('.sbtn').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+}
+function go(i){st.cur=i;save();render();window.scrollTo({top:i>=Q.length?0:document.querySelector('main').offsetTop-8,behavior:RM?'auto':'smooth'})}
+
+function render(){
+  renderTop();
+  if(st.cur>=Q.length)return renderSummary();
+  const i=st.cur,q=Q[i];
+  app.innerHTML=`<article class="visa" style="--c:${q.warna}">
+    <div class="vhead"><div class="vt"><div class="pg">Halaman ${i+1} / ${Q.length} · ${q.wil}</div><h2>${q.negara}</h2><div class="cul">${q.budaya}</div></div><div class="vstamp" id="vst">${stamp(i,stateOf(i))}</div></div>
+    <div class="vbody">
+      <div class="tags"><span class="tag">${q.kemampuan}</span><span class="tag l ${q.tingkat}">${q.tingkat}</span></div>
+      <h3>${q.judul}</h3>
+      <div class="story">${q.cerita}</div>
+      <figure class="figbox">${q.visual()}</figure>
+      <div class="ask"><span class="ask-l">Pertanyaan</span><p>${q.tanya}</p></div>
+      <div class="opts" role="radiogroup" aria-label="Pilihan jawaban">${q.opsi.map((o,k)=>`<button class="opt" data-k="${k}" role="radio" aria-checked="false"><span class="let">${'ABCD'[k]}</span><span class="oc">${o}</span></button>`).join('')}</div>
+      <div><button id="cek" class="btn primary" disabled>Periksa dan Cap Paspor</button></div>
+      <section id="fb" class="fb" hidden></section>
+    </div>
+  </article>
+  <div class="nav"><button id="prev" class="btn" ${i===0?'disabled':''}>← Negara sebelumnya</button><button id="next" class="btn">${i===Q.length-1?'Lihat Paspor':'Negara berikutnya →'}</button></div>`;
+  const opts=[...app.querySelectorAll('.opt')],cek=$(app,'#cek');let sel=null;
+  opts.forEach(b=>b.onclick=()=>{sel=+b.dataset.k;opts.forEach(o=>{const on=o===b;o.classList.toggle('sel',on);o.setAttribute('aria-checked',on)});cek.disabled=false});
+  cek.onclick=()=>{if(sel===null)return;st.ans[i]=sel;save();renderTop();show(true)};
+  $(app,'#prev').onclick=()=>go(i-1);$(app,'#next').onclick=()=>go(i+1);
+  q.mount&&q.mount(app);
+  if(st.ans[i]!==undefined)show(false);
+
+  function show(fresh){
+    const p=st.ans[i],ok=p===q.jawab;
+    opts.forEach((o,k)=>{o.disabled=true;o.classList.remove('sel');if(k===q.jawab)o.classList.add('right');else if(k===p)o.classList.add('wrong')});
+    cek.parentElement.hidden=true;
+    const vs=$(app,'#vst');vs.innerHTML=stamp(i,ok?'ok':'bad');if(fresh){vs.classList.remove('thud');void vs.offsetWidth;vs.classList.add('thud')}
+    const fb=$(app,'#fb');fb.hidden=false;
+    fb.innerHTML=`<div class="verdict ${ok?'ok':'bad'}"><strong>${ok?'Benar! Paspormu mendapat cap '+q.negara+'.':'Belum tepat. Ayo lihat cara berpikirnya.'}</strong><span>Jawaban yang benar adalah <b>${'ABCD'[q.jawab]}</b>.</span></div>
+      <div class="bahas"><h4>Cara berpikirnya</h4>${q.bahas}</div>
+      <div class="budaya"><div class="ic"><svg viewBox="0 0 24 24" width="24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#fff" stroke-width="2"/><ellipse cx="12" cy="12" rx="4" ry="9" fill="none" stroke="#fff" stroke-width="1.6"/><line x1="3" y1="12" x2="21" y2="12" stroke="#fff" stroke-width="1.6"/></svg></div><div><h4>Jendela budaya: ${q.budaya}</h4><p>${q.fakta}</p></div></div>`;
+    q.reveal&&q.reveal(app);
+    if(fresh)$(app,'.figbox').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+  }
+}
+
+function renderSummary(){
+  const n=Object.keys(st.ans).length,s=score();
+  const msg=n<Q.length?`Kamu sudah mengunjungi ${n} dari ${Q.length} negara. Ketuk cap yang masih kosong untuk melanjutkan perjalanan.`:s>=17?'Penjelajah logika sejati! Hampir semua cap berhasil kamu kumpulkan.':s>=11?'Perjalanan yang hebat! Kunjungi lagi negara yang capnya masih abu-abu.':'Perjalanan baru dimulai. Baca cara berpikir setiap soal, lalu coba lagi.';
+  app.innerHTML=`<section class="sum"><div class="eyebrow" style="color:var(--muted)">Halaman cap paspor</div><div class="big">${s}<span style="font-size:.4em;color:var(--muted)"> / ${Q.length} cap</span></div><p style="margin:0;font-weight:700;max-width:60ch">${msg}</p>
+    <div class="book">${Q.map((q,i)=>`<button class="mini" data-i="${i}">${stamp(i,stateOf(i))}${i+1}. ${q.negara}</button>`).join('')}</div>
+    <div><button class="btn primary" id="again">Mulai Perjalanan Baru</button></div></section>`;
+  app.querySelectorAll('.mini').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+  $(app,'#again').onclick=()=>{st={cur:0,ans:{}};save();go(0)};
+}
+render();
+</script>

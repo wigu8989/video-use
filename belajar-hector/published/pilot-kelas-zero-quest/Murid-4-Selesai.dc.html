@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Selesai dan terkirim</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Nunito:wght@500;700;800&amp;family=Press+Start+2P&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FFC93C}a:hover{color:#FFE27A}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 36px 22px 28px; background: #160E30; color: #F6F1FF; font-family: Nunito, system-ui, sans-serif; display: flex; flex-direction: column; gap: 18px; align-items: center; text-align: center;">
+  <span style="font-family: 'Press Start 2P', monospace; font-size: 22px; color: #FFC93C; line-height: 1.4;">VICTORY!</span>
+  <div style="display: flex; gap: 8px;">
+    <svg width="58" height="58" viewBox="-12 -12 24 24" aria-hidden="true"><path d="M0 -10 L2.9 -3.6 L9.8 -3.1 L4.6 1.5 L6.1 8.3 L0 4.8 L-6.1 8.3 L-4.6 1.5 L-9.8 -3.1 L-2.9 -3.6Z" fill="#FFC93C" stroke="#C98A00" stroke-width="1.2"/></svg>
+    <svg width="58" height="58" viewBox="-12 -12 24 24" aria-hidden="true"><path d="M0 -10 L2.9 -3.6 L9.8 -3.1 L4.6 1.5 L6.1 8.3 L0 4.8 L-6.1 8.3 L-4.6 1.5 L-9.8 -3.1 L-2.9 -3.6Z" fill="#FFC93C" stroke="#C98A00" stroke-width="1.2"/></svg>
+    <svg width="58" height="58" viewBox="-12 -12 24 24" aria-hidden="true"><path d="M0 -10 L2.9 -3.6 L9.8 -3.1 L4.6 1.5 L6.1 8.3 L0 4.8 L-6.1 8.3 L-4.6 1.5 L-9.8 -3.1 L-2.9 -3.6Z" fill="#3A2E66" stroke="#5A4A8E" stroke-width="1.2"/></svg>
+  </div>
+  <h1 style="margin: 0; font-family: Fredoka, sans-serif; font-size: 30px;">Dungeon 1–2 selesai!</h1>
+  <p style="margin: 0; font-size: 16px; color: #BDB2E0; font-weight: 700;">Benar <b style="color: #F6F1FF;">16 dari 20</b> · Critical hit 13 · Gold 140</p>
+  <div style="width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; text-align: left;">
+    <div style="background: #1E1638; border: 2px solid #4A3A7E; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column;"><span style="font-size: 12px; font-weight: 800; color: #FF7A3A;">Damage Math</span><b style="font-family: Fredoka, sans-serif; font-size: 22px;">7/8</b></div>
+    <div style="background: #1E1638; border: 2px solid #4A3A7E; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column;"><span style="font-size: 12px; font-weight: 800; color: #3DA9FC;">English</span><b style="font-family: Fredoka, sans-serif; font-size: 22px;">3/4</b></div>
+    <div style="background: #1E1638; border: 2px solid #4A3A7E; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column;"><span style="font-size: 12px; font-weight: 800; color: #B07BFF;">Listening</span><b style="font-family: Fredoka, sans-serif; font-size: 22px;">1/2</b></div>
+    <div style="background: #1E1638; border: 2px solid #4A3A7E; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column;"><span style="font-size: 12px; font-weight: 800; color: #FF6B7F;">PKn</span><b style="font-family: Fredoka, sans-serif; font-size: 22px;">5/6</b></div>
+  </div>
+  <div style="width: 100%; box-sizing: border-box; background: #12402C; border: 2px solid #3DDC84; border-radius: 16px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; text-align: left;">
+    <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#3DDC84"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#12402C" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span style="font-weight: 800; font-size: 15px;">Nilai sudah terkirim ke Bu Guru</span>
+  </div>
+  <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+    <span style="font-weight: 800; font-size: 15px;">Bagaimana perasaanmu?</span>
+    <div style="display: flex; gap: 8px; justify-content: center;">
+      <sc-for list="{{faces}}" as="f" hint-placeholder-count="3">
+        <button onClick="{{f.pick}}" aria-label="{{f.label}}" style="{{f.style}}">{{f.label}}</button>
+      </sc-for>
+    </div>
+  </div>
+  <a href="Murid-2-Beranda.dc.html" style="margin-top: auto; width: 100%; box-sizing: border-box; text-decoration: none; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 20px; padding: 14px; border-radius: 999px; background: #FF2E4D; color: #fff; box-shadow: 0 4px 0 #8A1328;">Kembali ke beranda</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { face: '' }; }
+  renderVals() {
+    const opts = [['Senang', '#3DDC84'], ['Biasa', '#FFC93C'], ['Bingung', '#FF6B7F']];
+    return {
+      faces: opts.map(([label, c]) => ({
+        label,
+        pick: () => this.setState({ face: label }),
+        style: 'min-height: 48px; padding: 10px 16px; border-radius: 999px; font: 800 16px Nunito, sans-serif; cursor: pointer; border: 2px solid ' + c + '; ' + (this.state.face === label ? 'background: ' + c + '; color: #160E30;' : 'background: transparent; color: ' + c + ';')
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

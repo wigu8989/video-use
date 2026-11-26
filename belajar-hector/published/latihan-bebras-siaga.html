@@ -1,0 +1,566 @@
+<title>Latihan Bebras Siaga</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800;900&display=swap">
+<style>
+/* Layout: satu kolom selebar bacaan; satu kartu soal, navigasi nomor di atas, pembahasan muncul di bawah jawaban */
+:root{
+  --bg:#EAF3F1; --surface:#FFFFFF; --soft:#F1F7F6; --ink:#17323A; --muted:#58717A; --line:#C9DCDB;
+  --accent:#0D7A85; --accent-ink:#FFFFFF; --accent-soft:#D6EEF0;
+  --sun:#F2B630; --sun-soft:#FFF3D3; --wood:#8A5A35; --node:#FFFFFF; --off:#E3ECEC;
+  --ok:#1F9254; --ok-soft:#DDF3E6; --bad:#CF3F38; --bad-soft:#FBE3E1;
+  --fd:"Baloo 2","Nunito",system-ui,sans-serif; --fb:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D191C; --surface:#152529; --soft:#1B2F34; --ink:#E3EFEF; --muted:#9CB3B7; --line:#2C454B;
+  --accent:#3DB6C1; --accent-ink:#06272B; --accent-soft:#173D43;
+  --sun:#F6C24A; --sun-soft:#3A3115; --wood:#C79168; --node:#20363B; --off:#2A3F44;
+  --ok:#43C27F; --ok-soft:#163A28; --bad:#F2706A; --bad-soft:#41201F; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0D191C; --surface:#152529; --soft:#1B2F34; --ink:#E3EFEF; --muted:#9CB3B7; --line:#2C454B;
+  --accent:#3DB6C1; --accent-ink:#06272B; --accent-soft:#173D43;
+  --sun:#F6C24A; --sun-soft:#3A3115; --wood:#C79168; --node:#20363B; --off:#2A3F44;
+  --ok:#43C27F; --ok-soft:#163A28; --bad:#F2706A; --bad-soft:#41201F; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:18px;line-height:1.6;font-weight:500}
+.wrap{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 56px;display:flex;flex-direction:column;gap:18px}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.mascot{width:64px;height:64px;flex:none;animation:bob 3s ease-in-out infinite}
+.mascot.jump{animation:jump .7s ease}
+header .ttl{flex:1;min-width:0}
+h1{font-family:var(--fd);font-size:clamp(26px,5vw,36px);line-height:1.1;margin:0;text-wrap:balance}
+.sub{margin:2px 0 0;color:var(--muted);font-size:15px}
+.score{font-family:var(--fd);font-weight:700;font-size:17px;background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:6px 16px;white-space:nowrap}
+.score b{color:var(--accent);font-size:20px}
+
+.dots{display:flex;flex-wrap:wrap;gap:8px}
+.dot{width:40px;height:40px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--ink);font:800 15px var(--fb);cursor:pointer;transition:transform .15s}
+.dot:hover{transform:translateY(-2px)}
+.dot.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.dot.bad{background:var(--bad);border-color:var(--bad);color:#fff}
+.dot.cur{outline:3px solid var(--accent);outline-offset:2px}
+.dot.end{width:auto;padding:0 14px;border-radius:999px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:clamp(18px,4vw,34px);display:flex;flex-direction:column;gap:18px;animation:enter .35s ease}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.no{font-family:var(--fd);font-weight:800;font-size:18px;margin-right:6px}
+.no small{color:var(--muted);font-weight:600;font-size:15px}
+.chip{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.lvl{background:var(--soft);color:var(--muted)}
+.lvl-Sulit{background:var(--bad-soft);color:var(--bad)}
+.lvl-Sedang{background:var(--sun-soft);color:var(--wood)}
+h2{font-family:var(--fd);font-size:clamp(26px,4.5vw,34px);line-height:1.15;margin:0;text-wrap:balance}
+h3{font-family:var(--fd);font-size:21px;margin:0 0 6px}
+.story p{margin:0 0 10px;max-width:66ch}
+.story p:last-child{margin:0}
+.story ul,.story ol{margin:6px 0 10px;padding-left:24px}
+.figbox{margin:0;background:var(--soft);border-radius:18px;padding:18px;overflow-x:auto;display:flex;flex-direction:column;align-items:center;gap:14px}
+.fig{width:100%;height:auto;display:block}
+.ask{border-left:6px solid var(--sun);background:var(--sun-soft);border-radius:4px 14px 14px 4px;padding:12px 16px}
+.ask-l{display:block;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--wood)}
+.ask p{margin:2px 0 0;font-weight:800;font-size:19px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border-radius:16px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font:700 18px var(--fb);cursor:pointer;min-height:64px;transition:border-color .15s,background .15s,transform .15s}
+.opt:hover:not(:disabled){border-color:var(--accent);transform:translateY(-1px)}
+.opt:focus-visible,.btn:focus-visible,.dot:focus-visible,.swp:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opt .let{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font:800 17px var(--fd)}
+.opt .oc{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .let{background:var(--accent);color:var(--accent-ink)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.right .let{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .let{background:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:800 17px var(--fb);border-radius:999px;padding:12px 22px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent}
+.nav{display:flex;justify-content:space-between;gap:10px}
+
+.fb{display:flex;flex-direction:column;gap:16px;animation:enter .4s ease}
+.verdict{border-radius:16px;padding:14px 18px;font-size:18px;animation:pop .45s cubic-bezier(.3,1.6,.5,1)}
+.verdict.ok{background:var(--ok-soft);color:var(--ok)}
+.verdict.bad{background:var(--bad-soft);color:var(--bad)}
+.verdict strong{font-family:var(--fd);font-size:22px;display:block;line-height:1.2}
+.verdict span{color:var(--ink)}
+.bahas p{margin:0 0 8px;max-width:66ch}
+.bahas ol,.bahas ul{margin:4px 0 8px;padding-left:24px}
+.infor{background:var(--accent-soft);border-radius:16px;padding:16px 18px}
+.infor h3{color:var(--accent)}
+.infor p{margin:0 0 8px;max-width:66ch}
+.kk{font-size:15px;color:var(--muted)}
+
+/* SVG kelas bersama */
+.t{fill:var(--ink);font-family:var(--fb);font-weight:800;font-size:14px}
+.tm{fill:var(--muted);font-family:var(--fb);font-weight:700;font-size:12px}
+.ln{stroke:var(--ink);stroke-width:2.5;fill:none}
+.nd{fill:var(--node);stroke:var(--ink);stroke-width:2.5;transition:fill .4s}
+.nd.know{fill:var(--sun)}
+.cell{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.edge{stroke:var(--muted);stroke-width:4;fill:none;transition:stroke .3s,stroke-width .3s}
+.edge.hl{stroke:var(--accent);stroke-width:8}
+.wl{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.trail{fill:none;stroke:var(--accent);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;opacity:.75}
+.qb{fill:var(--surface);stroke:var(--ink);stroke-width:2}
+.lf{fill:var(--sun-soft);stroke:var(--wood);stroke-width:2;transition:fill .3s}
+.lf.hl{fill:var(--sun)}
+.qb.hl{stroke:var(--accent);stroke-width:4}
+.empty{fill:var(--surface);stroke:var(--muted);stroke-width:2;stroke-dasharray:4 4}
+.lampoff{fill:var(--off);stroke:var(--line);stroke-width:2}
+.region{stroke:var(--ink);stroke-width:3;fill:var(--surface);transition:fill .5s}
+
+.cmds{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.cmd{width:46px;height:46px;border-radius:12px;background:var(--surface);border:2px solid var(--line);display:grid;place-items:center;font-size:26px;font-weight:900;transition:background .2s}
+.cmd.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.lbl{font-size:13px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;width:100%;max-width:640px;padding:0;margin:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.steps li::before{content:counter(s);font:800 14px var(--fd);width:26px;height:26px;border-radius:50%;background:var(--soft);display:grid;place-items:center;flex:none}
+.plate{display:inline-block;width:34px;height:12px;border-radius:7px;border:1px solid rgba(0,0,0,.25);flex:none}
+.snaps{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.snap{display:flex;flex-direction:column;align-items:center;font-size:13px;font-weight:800;color:var(--muted);animation:pop .4s backwards}
+.seq{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.seqi{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-weight:800;animation:pop .4s backwards}
+.seqi small{color:var(--muted);font-size:12px}
+.seqi.last{border-color:var(--accent);background:var(--accent-soft)}
+.codebox{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+.ctab{border-collapse:separate;border-spacing:6px}
+.ctab td{background:var(--surface);border:2px solid var(--line);border-radius:10px;width:52px;height:46px;text-align:center;font:800 22px var(--fd)}
+.sym{font-size:26px;line-height:1;letter-spacing:.12em}
+.pipe{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.mach{display:flex;flex-direction:column;align-items:center;gap:6px}
+.mbox{width:64px;height:64px;border-radius:14px;background:var(--wood);color:#fff;font:800 28px var(--fd);display:grid;place-items:center;box-shadow:inset 0 -6px 0 rgba(0,0,0,.2)}
+.mout{width:48px;height:48px;border-radius:10px;border:2px dashed var(--line);display:grid;place-items:center}
+.mout svg{animation:pop .4s}
+.arrow{font-size:24px;font-weight:900;color:var(--muted)}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;width:100%;max-width:640px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.rule .row{display:flex;align-items:center;gap:6px;font-weight:800;color:var(--muted)}
+.rule b{color:var(--ink);font-family:var(--fd);font-size:18px}
+.prog{display:inline-flex;flex-direction:column;font-weight:800;font-size:17px}
+.blk{padding:8px 16px;border-radius:10px;color:#fff}
+.blk.rep{background:#D9822B;border-radius:10px 10px 0 0}
+.blk.in{background:#3B82F6;margin-left:22px;border-radius:6px;margin-block:2px}
+.blk.end{background:#D9822B;height:14px;padding:0;border-radius:0 0 10px 10px;width:100%}
+.draw{stroke-dasharray:240;stroke-dashoffset:240;transition:stroke-dashoffset 2.4s linear}
+.draw.go{stroke-dashoffset:0}
+.play{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
+.ncard{width:58px;height:78px;border-radius:12px;background:var(--surface);border:3px solid var(--wood);display:grid;place-items:center;font:800 34px var(--fd);box-shadow:0 4px 0 var(--line);transition:transform .25s}
+.ncard.flip{transform:translateY(-8px) rotate(-4deg)}
+.swp{width:36px;height:36px;border-radius:50%;border:2px solid var(--accent);background:var(--accent-soft);color:var(--accent);font:900 18px var(--fb);cursor:pointer}
+.playbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;font-weight:800}
+.okmsg{color:var(--ok)}
+.recipe{display:flex;flex-direction:column;gap:10px;width:100%;max-width:560px}
+.rrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px 12px;font-weight:800}
+.rrow .eq{color:var(--muted);font-size:15px}
+.pile{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;max-width:420px}
+.pile svg{animation:pop .35s backwards}
+.tasks{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;width:100%;max-width:640px}
+.task{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+.task b{font-family:var(--fd);font-size:19px;display:block}
+.task .min{font-weight:900;color:var(--accent)}
+.task small{display:block;color:var(--muted);font-weight:700;font-size:14px;line-height:1.35}
+.bar{transform-box:fill-box;transform-origin:left center;transform:scaleX(0);transition:transform .9s ease}
+.go .bar{transform:scaleX(1)}
+.code{font-family:var(--fd);font-weight:700;font-size:18px;display:grid;grid-template-columns:auto auto;gap:4px 14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 16px}
+.code span:nth-child(odd){color:var(--muted)}
+.kids{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;width:100%;max-width:640px}
+.kid{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800;transition:border-color .3s,background .3s}
+.kid.in{border-color:var(--ok);background:var(--ok-soft)}
+.kid.out{opacity:.55}
+.bag{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:var(--soft);border-radius:999px;padding:2px 8px 2px 4px}
+.gate{background:var(--surface);border:2px solid var(--accent);border-radius:14px;padding:10px 16px;font-weight:800;text-align:center;max-width:560px}
+.gate em{font-style:normal;color:var(--accent);font-family:var(--fd);font-size:19px}
+.animal{display:inline-block;padding:1px 10px;border-radius:999px;font-weight:800;font-size:15px;color:#fff}
+.anim-g{background:#6E7F86}.anim-k{background:#E07B24}.anim-t{background:#8D6A4F}
+
+.sum{display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.big{font-family:var(--fd);font-size:clamp(48px,10vw,72px);line-height:1;color:var(--accent);font-weight:800}
+.sumlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;width:100%}
+.sumi{display:flex;gap:10px;align-items:center;padding:8px 12px;border-radius:12px;background:var(--soft);font-weight:700;cursor:pointer;border:0;color:var(--ink);font-family:var(--fb);font-size:16px;text-align:left}
+.sumi i{font-style:normal;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;flex:none;font-size:14px}
+
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes jump{0%{transform:translateY(0) rotate(0)}40%{transform:translateY(-18px) rotate(-8deg)}70%{transform:translateY(0) rotate(4deg)}100%{transform:none}}
+@keyframes enter{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.6);opacity:.2}100%{transform:scale(1);opacity:1}}
+.popin{transform-box:fill-box;transform-origin:center;animation:pop .45s cubic-bezier(.3,1.6,.5,1) backwards}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <svg class="mascot" id="mascot" viewBox="0 0 64 64" aria-hidden="true"></svg>
+    <div class="ttl">
+      <h1>Latihan Bebras Siaga</h1>
+      <p class="sub">20 soal latihan berpikir komputasional untuk siswa SD. Baca ceritanya, pilih jawaban, lalu periksa.</p>
+    </div>
+    <div class="score" id="score">Skor <b>0</b>/20</div>
+  </header>
+  <nav class="dots" id="dots" aria-label="Nomor soal"></nav>
+  <main id="app"></main>
+</div>
+
+<script>
+const COL={merah:'#E5484D',biru:'#3B82F6',kuning:'#F5C518',hijau:'#30A46C',ungu:'#8E4EC6',oranye:'#F76B15',pink:'#EC5D9C',abu:'#94A3A8'};
+const BEAV='<circle cx="16" cy="16" r="7" fill="#7A4A2A"/><circle cx="48" cy="16" r="7" fill="#7A4A2A"/><circle cx="32" cy="34" r="24" fill="#9B6337"/><ellipse cx="32" cy="44" rx="13" ry="10" fill="#D9A877"/><circle cx="23" cy="29" r="3.6" fill="#1B1B1B"/><circle cx="41" cy="29" r="3.6" fill="#1B1B1B"/><circle cx="24" cy="28" r="1.1" fill="#fff"/><circle cx="42" cy="28" r="1.1" fill="#fff"/><ellipse cx="32" cy="38" rx="4.5" ry="3" fill="#3A2416"/><rect x="28" y="43" width="8" height="8" rx="1.5" fill="#fff" stroke="#3A2416"/><line x1="32" y1="43" x2="32" y2="51" stroke="#3A2416"/>';
+document.getElementById('mascot').innerHTML=BEAV;
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const later=(fn,ms)=>setTimeout(fn,RM?0:ms);
+const T=(x,y,s,cls='t',ex='')=>`<text x="${x}" y="${y}" class="${cls}" text-anchor="middle" dominant-baseline="central" ${ex}>${s}</text>`;
+const nm=c=>c[0].toUpperCase()+c.slice(1);
+
+/* ---------- gambar bantu ---------- */
+function itm(t,cx,cy){
+  if(t==='apel')return `<g><circle cx="${cx}" cy="${cy+3}" r="14" fill="${COL.merah}"/><path d="M${cx} ${cy-10} q2 -5 0 -9" stroke="#6B3E1F" stroke-width="3" fill="none"/><ellipse cx="${cx+7}" cy="${cy-13}" rx="7" ry="3.5" fill="${COL.hijau}" transform="rotate(-25 ${cx+7} ${cy-13})"/><circle cx="${cx-5}" cy="${cy-2}" r="3" fill="#fff" opacity=".5"/></g>`;
+  if(t==='pisang')return `<path d="M${cx-15} ${cy-10} Q${cx-10} ${cy+16} ${cx+16} ${cy+6} Q${cx-1} ${cy+5} ${cx-8} ${cy-13} Z" fill="${COL.kuning}" stroke="#A67C00" stroke-width="1.5"/>`;
+  if(t==='wortel')return `<g><path d="M${cx-9} ${cy-6} L${cx+9} ${cy-6} L${cx} ${cy+18} Z" fill="${COL.oranye}"/><path d="M${cx} ${cy-6} l-6 -9 M${cx} ${cy-6} l0 -11 M${cx} ${cy-6} l6 -9" stroke="${COL.hijau}" stroke-width="3" stroke-linecap="round"/></g>`;
+  if(t==='kayu')return `<g><rect x="${cx-17}" y="${cy-8}" width="34" height="16" rx="8" fill="#9B6337"/><ellipse cx="${cx+11}" cy="${cy}" rx="5" ry="8" fill="#D9A877" stroke="#7A4A2A"/></g>`;
+}
+const icon=(t,s=36)=>`<svg viewBox="0 0 40 40" width="${s}" height="${s}" aria-hidden="true">${itm(t,20,20)}</svg>`;
+const bead=(c,s=30)=>`<svg viewBox="0 0 30 30" width="${s}" height="${s}" aria-hidden="true"><circle cx="15" cy="15" r="12" fill="${COL[c]}" stroke="rgba(0,0,0,.25)" stroke-width="1.5"/><circle cx="11" cy="11" r="3" fill="#fff" opacity=".45"/></svg>`;
+const plate=c=>`<span class="plate" style="background:${COL[c]}"></span>`;
+function shp(t,c,s=44){const f=COL[c];let p;
+  if(t==='bulat')p=`<circle cx="22" cy="22" r="17" fill="${f}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>`;
+  else if(t==='kotak')p=`<rect x="6" y="6" width="32" height="32" rx="3" fill="${f}" stroke="rgba(0,0,0,.25)" stroke-width="2"/>`;
+  else p=`<path d="M22 4 L40 38 L4 38 Z" fill="${f}" stroke="rgba(0,0,0,.25)" stroke-width="2" stroke-linejoin="round"/>`;
+  return `<svg viewBox="0 0 44 44" width="${s}" height="${s}" aria-hidden="true">${p}</svg>`}
+function kidSvg(x,y,shirt,hair){return `<g><rect x="${x-17}" y="${y-8}" width="34" height="40" rx="12" fill="${shirt}"/><circle cx="${x}" cy="${y-24}" r="16" fill="#E8B88A"/><path d="M${x-16} ${y-26} a16 16 0 0 1 32 0 q-16 -8 -32 0z" fill="${hair}"/><circle cx="${x-5}" cy="${y-23}" r="2" fill="#2A1A10"/><circle cx="${x+5}" cy="${y-23}" r="2" fill="#2A1A10"/><path d="M${x-5} ${y-16} q5 4 10 0" stroke="#2A1A10" stroke-width="1.8" fill="none"/></g>`}
+const kidIcon=(shirt,hair,s=56)=>`<svg viewBox="0 0 60 64" width="${s}" height="${s}" aria-hidden="true">${kidSvg(30,40,shirt,hair)}</svg>`;
+function lamps(bits,vals,w=46){const n=bits.length,H=vals?84:50,cy=vals?52:25;let s=`<svg viewBox="0 0 ${n*w} ${H}" width="${n*w}" height="${H}" aria-hidden="true">`;
+  bits.forEach((b,i)=>{const cx=w/2+i*w;if(vals)s+=T(cx,12,vals[i],'t','style="font-size:16px"');
+    s+=`<rect x="${cx-4}" y="${cy+12}" width="8" height="8" rx="2" fill="#7B8B90"/>`;
+    s+=b?`<circle cx="${cx}" cy="${cy}" r="19" fill="${COL.kuning}" opacity=".3"/><circle cx="${cx}" cy="${cy}" r="14" fill="${COL.kuning}" stroke="#B88A00" stroke-width="2"/>`:`<circle cx="${cx}" cy="${cy}" r="14" class="lampoff"/>`});
+  return s+'</svg>'}
+function scale(L,R,heavy){const yl=heavy==='L'?66:38,yr=heavy==='L'?38:66;
+  const box=(x,y,l)=>`<rect x="${x-20}" y="${y-38}" width="40" height="36" rx="5" fill="#C98A4B" stroke="#7A4A2A" stroke-width="2"/>${T(x,y-20,l,'t','style="fill:#3A2416;font-size:19px"')}`;
+  return `<svg viewBox="0 0 200 140" width="180" aria-hidden="true"><path d="M78 132 L122 132 L100 104 Z" style="fill:var(--wood)"/><line x1="100" y1="104" x2="100" y2="52" style="stroke:var(--wood)" stroke-width="5"/><line x1="28" y1="${yl}" x2="172" y2="${yr}" style="stroke:var(--wood)" stroke-width="6" stroke-linecap="round"/><circle cx="100" cy="52" r="6" style="fill:var(--ink)"/>${box(32,yl-1,L)}${box(168,yr-1,R)}</svg>`}
+function pix(rows,w=96){const H=rows.length,W=rows[0].length;let s=`<svg viewBox="-0.1 -0.1 ${W+.2} ${H+.2}" width="${w}" aria-hidden="true">`;
+  rows.forEach((r,y)=>r.forEach((v,x)=>{s+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${v?'#1E2A2E':'#FFFFFF'}" stroke="#9AAAB0" stroke-width=".06"/>`}));return s+'</svg>'}
+const candy=(s=26)=>`<svg viewBox="0 0 40 24" width="${s*1.5}" height="${s*.9}" aria-hidden="true"><path d="M8 12 L0 4 L0 20 Z M32 12 L40 4 L40 20 Z" fill="${COL.pink}" opacity=".75"/><circle cx="20" cy="12" r="10" fill="${COL.pink}"/><path d="M14 8 q6 8 12 0" stroke="#fff" stroke-width="2" fill="none" opacity=".7"/></svg>`;
+const chest=(s=60)=>`<svg viewBox="0 0 60 48" width="${s}" aria-hidden="true"><rect x="4" y="18" width="52" height="28" rx="3" fill="#9B6337" stroke="#5E3A1E" stroke-width="2"/><path d="M4 18 Q30 0 56 18 Z" fill="#B5763F" stroke="#5E3A1E" stroke-width="2"/><rect x="26" y="20" width="8" height="10" rx="2" fill="${COL.kuning}"/></svg>`;
+const boxi=(c,s=44)=>`<svg viewBox="0 0 44 40" width="${s}" aria-hidden="true"><rect x="4" y="12" width="36" height="26" rx="3" fill="${c}" stroke="rgba(0,0,0,.3)" stroke-width="2"/><rect x="2" y="6" width="40" height="9" rx="2" fill="${c}" stroke="rgba(0,0,0,.3)" stroke-width="2"/><rect x="19" y="6" width="6" height="32" fill="#fff" opacity=".5"/></svg>`;
+const tkt=`<svg viewBox="0 0 24 16" width="22" aria-hidden="true"><path d="M1 2h22v4a2 2 0 0 0 0 4v4H1v-4a2 2 0 0 0 0-4z" fill="${COL.oranye}"/><line x1="8" y1="3" x2="8" y2="13" stroke="#fff" stroke-dasharray="2 2"/></svg>`;
+const topi=`<svg viewBox="0 0 24 16" width="22" aria-hidden="true"><path d="M5 12 Q5 2 12 2 Q19 2 19 12 Z" fill="${COL.biru}"/><rect x="2" y="11" width="20" height="3" rx="1.5" fill="#1F5FB8"/></svg>`;
+const bdr=`<svg viewBox="0 0 24 16" width="22" aria-hidden="true"><line x1="4" y1="1" x2="4" y2="16" stroke="#6B3E1F" stroke-width="2"/><path d="M5 2h15l-4 4 4 4H5z" fill="${COL.merah}"/></svg>`;
+function arrowMarker(id){return `<defs><marker id="${id}" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>`}
+function shrink(x1,y1,x2,y2,r1,r2){const dx=x2-x1,dy=y2-y1,d=Math.hypot(dx,dy);return [x1+dx/d*r1,y1+dy/d*r1,x2-dx/d*r2,y2-dy/d*r2]}
+
+/* ---------- 20 soal ---------- */
+const Q=[
+/* 1 */{judul:'Gelang Manik Rara',topik:'Pola',tingkat:'Mudah',
+ cerita:`<p>Rara membuat gelang dari manik-manik. Ia memasang manik dengan urutan warna yang selalu berulang dengan cara yang sama.</p><p>Delapan manik pertama sudah terpasang. Manik ke-9 sampai ke-12 belum.</p>`,
+ visual(){const P=['merah','biru','biru','kuning'];let s=`<svg class="fig" viewBox="0 0 520 100" style="max-width:600px" role="img" aria-label="Deretan 12 manik"><line x1="6" y1="40" x2="514" y2="40" style="stroke:var(--wood)" stroke-width="3"/>`;
+  for(let i=0;i<12;i++){const x=24+i*43;
+   if(i<8)s+=`<circle cx="${x}" cy="40" r="17" fill="${COL[P[i%4]]}" stroke="rgba(0,0,0,.25)" stroke-width="1.5"/><circle cx="${x-5}" cy="35" r="4" fill="#fff" opacity=".45"/>`;
+   else s+=`<circle id="q1b${i}" cx="${x}" cy="40" r="17" class="empty"/>`+(i===11?`<text id="q1q" x="${x}" y="40" class="t" text-anchor="middle" dominant-baseline="central" style="fill:var(--accent);font-size:20px">?</text>`:'');
+   s+=T(x,80,i+1,'tm',i===11?'style="fill:var(--accent);font-size:14px"':'');}
+  return s+'</svg>'},
+ tanya:'Apa warna manik ke-12?',
+ opsi:['merah','biru','kuning','hijau'].map(c=>bead(c)+nm(c)),jawab:2,
+ bahas:`<p>Perhatikan urutannya: <b>merah, biru, biru, kuning</b>, lalu urutan yang sama terulang lagi. Satu kelompok berisi 4 manik.</p><p>Manik ke-4 berwarna kuning, manik ke-8 juga kuning. Maka manik ke-12 (kelompok ketiga, posisi terakhir) juga <b>kuning</b>.</p>`,
+ info:`<p>Menemukan bagian yang berulang disebut <b>mengenali pola</b>. Dengan pola, kita tidak perlu menggambar semua manik satu per satu untuk tahu warna manik ke-12, bahkan manik ke-100.</p>`,kunci:'pola, pengulangan',
+ reveal(el){const P=['merah','biru','biru','kuning'];for(let i=8;i<12;i++)later(()=>{const b=el.querySelector('#q1b'+i);if(!b)return;b.setAttribute('class','popin');b.setAttribute('fill',COL[P[i%4]]);b.setAttribute('stroke','rgba(0,0,0,.25)');if(i===11){const q=el.querySelector('#q1q');q&&q.remove()}},(i-8)*350)}},
+
+/* 2 */{judul:'Jalan-Jalan Bebi',topik:'Algoritma',tingkat:'Mudah',
+ cerita:`<p>Bebi si berang-berang berdiri di kotak <b>MULAI</b>. Bebi menjalankan perintah panah dari kiri ke kanan. Setiap panah artinya Bebi pindah <b>satu kotak</b> ke arah panah itu.</p>`,
+ visual(){let s=`<svg class="fig" viewBox="0 0 320 260" style="max-width:400px" role="img" aria-label="Petak 5 kali 4 berisi benda">`;
+  for(let r=0;r<4;r++)for(let c=0;c<5;c++)s+=`<rect x="${10+60*c}" y="${10+60*r}" width="60" height="60" class="cell"/>`;
+  [['apel',3,1],['pisang',2,2],['wortel',3,2],['kayu',1,1]].forEach(([t,c,r])=>s+=itm(t,40+60*c,40+60*r));
+  s+=`<text x="16" y="24" class="tm" style="fill:var(--accent);font-size:11px;font-weight:900">MULAI</text><polyline id="q2trail" class="trail" points="40,40"/>`;
+  s+=`<g id="q2bot" style="transform:translate(10px,10px);transition:transform .4s ease"><g transform="translate(22,22) scale(.56)">${BEAV}</g></g></svg>`;
+  s+=`<div class="lbl">Perintah</div><div class="cmds">${['→','→','↓','↓','→','↑'].map(a=>`<div class="cmd">${a}</div>`).join('')}</div>`;return s},
+ tanya:'Setelah semua perintah selesai, Bebi berhenti di kotak yang berisi apa?',
+ opsi:[['apel','Apel'],['pisang','Pisang'],['wortel','Wortel'],['kayu','Kayu']].map(([t,n])=>icon(t)+n),jawab:0,
+ bahas:`<p>Mulai dari kotak kiri atas: <b>→ →</b> (dua kotak ke kanan), <b>↓ ↓</b> (dua kotak ke bawah, melewati pisang), <b>→</b> (ke kotak wortel), lalu <b>↑</b> (naik satu kotak). Bebi berhenti di kotak <b>apel</b>.</p><p>Hati-hati: Bebi memang melewati pisang dan wortel, tetapi tidak berhenti di sana.</p>`,
+ info:`<p>Daftar perintah yang dijalankan satu per satu sesuai urutan disebut <b>algoritma</b>. Robot dan komputer bekerja dengan cara ini. Kalau urutan perintahnya ditukar, tempat berhentinya juga bisa berubah.</p>`,kunci:'algoritma, urutan perintah',
+ reveal(el){const b=el.querySelector('#q2bot'),tr=el.querySelector('#q2trail'),cm=el.querySelectorAll('.cmd');if(!b)return;const P=[[0,0],[1,0],[2,0],[2,1],[2,2],[3,2],[3,1]];const pts=['40,40'];
+  P.forEach((p,i)=>{if(!i)return;later(()=>{b.style.transform=`translate(${10+60*p[0]}px,${10+60*p[1]}px)`;pts.push(`${40+60*p[0]},${40+60*p[1]}`);tr.setAttribute('points',pts.join(' '));cm[i-1]&&cm[i-1].classList.add('on')},i*550)})}},
+
+/* 3 */{judul:'Tumpukan Piring',topik:'Struktur Data',tingkat:'Mudah',
+ cerita:`<p>Bebi mencuci piring lalu menumpuknya di rak. Piring hanya bisa ditaruh di <b>atas tumpukan</b> dan hanya bisa diambil dari <b>atas tumpukan</b>.</p><p>Rak mula-mula kosong. Bebi melakukan langkah-langkah ini secara berurutan:</p>`,
+ visual(){const L=[['Taruh piring','merah'],['Taruh piring','biru'],['Taruh piring','hijau'],['Ambil 1 piring',null],['Taruh piring','kuning'],['Taruh piring','ungu'],['Ambil 2 piring',null]];
+  return `<ol class="steps">${L.map(([t,c])=>`<li>${c?plate(c):''}${t}${c?' '+c:''}</li>`).join('')}</ol><div class="snaps" id="q3snap"></div>`},
+ tanya:'Setelah langkah ke-7, piring warna apa yang ada di paling atas?',
+ opsi:['merah','biru','ungu','kuning'].map(c=>plate(c)+nm(c)),jawab:1,
+ bahas:`<p>Ikuti isi rak (dari bawah ke atas) setelah tiap langkah:</p><ol><li>merah</li><li>merah, biru</li><li>merah, biru, hijau</li><li>hijau diambil → merah, biru</li><li>merah, biru, kuning</li><li>merah, biru, kuning, ungu</li><li>ungu dan kuning diambil → merah, <b>biru</b></li></ol><p>Piring paling atas adalah <b>biru</b>.</p>`,
+ info:`<p>Tumpukan seperti ini disebut <b>stack</b>. Yang terakhir masuk, paling dulu keluar. Tombol <i>undo</i> (batalkan) di komputer memakai stack: aksi terakhir yang kamu lakukan dibatalkan lebih dulu.</p>`,kunci:'stack, tumpukan',
+ reveal(el){const box=el.querySelector('#q3snap');if(!box)return;const S=[['merah'],['merah','biru'],['merah','biru','hijau'],['merah','biru'],['merah','biru','kuning'],['merah','biru','kuning','ungu'],['merah','biru']];
+  box.innerHTML=S.map((a,i)=>{let s=`<svg viewBox="0 0 70 84" width="62" aria-hidden="true"><line x1="4" y1="80" x2="66" y2="80" class="ln"/>`;a.forEach((c,j)=>s+=`<rect x="8" y="${66-j*14}" width="54" height="11" rx="5.5" fill="${COL[c]}" stroke="rgba(0,0,0,.25)"/>`);return `<div class="snap" style="animation-delay:${RM?0:i*.25}s">${s}</svg>Langkah ${i+1}</div>`}).join('')}},
+
+/* 4 */{judul:'Sandi Bintang',topik:'Representasi Data',tingkat:'Mudah',
+ cerita:`<p>Bebi dan temannya menulis pesan rahasia. Setiap huruf diganti dengan satu simbol. Kata <b>BERAS</b> ditulis seperti ini:</p>`,
+ visual(){const S=[['B','★','#E0A100'],['E','●',COL.merah],['R','▲',COL.hijau],['A','■',COL.biru],['S','◆',COL.ungu]];
+  return `<table class="ctab"><tr>${S.map(s=>`<td>${s[0]}</td>`).join('')}</tr><tr>${S.map(s=>`<td style="color:${s[2]}">${s[1]}</td>`).join('')}</tr></table>`},
+ tanya:'Dengan sandi yang sama, bagaimana cara menulis kata SERBA?',
+ opsi:['◆●★▲■','◆●▲★■','■●▲★◆','◆▲●★■'].map(w=>`<span class="sym">${[...w].map(ch=>`<span style="color:${{'★':'#E0A100','●':COL.merah,'▲':COL.hijau,'■':COL.biru,'◆':COL.ungu}[ch]}">${ch}</span>`).join('')}</span>`),jawab:1,
+ bahas:`<p>Dari kata BERAS kita tahu: B = ★, E = ●, R = ▲, A = ■, S = ◆.</p><p>SERBA terdiri dari S, E, R, B, A, jadi sandinya <b>◆ ● ▲ ★ ■</b>.</p><p>Pilihan lain salah urutan: ◆●★▲■ terbaca SEBRA, ■●▲★◆ terbaca AERBS, ◆▲●★■ terbaca SREBA.</p>`,
+ info:`<p>Mengubah huruf menjadi simbol lain disebut <b>penyandian</b> (enkripsi). Komputer juga menyimpan setiap huruf sebagai kode. Selama pengirim dan penerima memakai tabel yang sama, pesan bisa dibaca kembali.</p>`,kunci:'sandi, enkripsi, kode'},
+
+/* 5 */{judul:'Mesin Ajaib',topik:'Algoritma',tingkat:'Sedang',
+ cerita:`<p>Di bengkel Bebi ada dua mesin ajaib.</p>`,
+ visual(){return `<div class="rules">
+  <div class="rule"><b>Mesin A</b> mengubah bentuk<div class="row">${shp('bulat','abu',30)}→${shp('kotak','abu',30)}</div><div class="row">${shp('kotak','abu',30)}→${shp('segitiga','abu',30)}</div><div class="row">${shp('segitiga','abu',30)}→${shp('bulat','abu',30)}</div></div>
+  <div class="rule"><b>Mesin B</b> mengubah warna<div class="row">biru ${shp('bulat','biru',28)}→ kuning ${shp('bulat','kuning',28)}</div><div class="row">kuning ${shp('bulat','kuning',28)}→ biru ${shp('bulat','biru',28)}</div><div class="row" style="font-weight:700;font-size:14px">Bentuknya tidak berubah.</div></div></div>
+  <div class="pipe">${shp('bulat','biru',48)}<span class="arrow">→</span>${['A','B','A'].map((m,i)=>`<div class="mach"><div class="mbox">${m}</div><div class="mout" id="q5o${i}">${i===2?'<b style="font-size:22px;color:var(--accent)">?</b>':''}</div></div>${i<2?'<span class="arrow">→</span>':''}`).join('')}</div>`},
+ tanya:'Sebuah lingkaran biru dimasukkan ke mesin A, lalu mesin B, lalu mesin A lagi. Benda apa yang keluar di akhir?',
+ opsi:[shp('segitiga','biru',40)+'Segitiga biru',shp('kotak','kuning',40)+'Kotak kuning',shp('segitiga','kuning',40)+'Segitiga kuning',shp('bulat','biru',40)+'Lingkaran biru'],jawab:2,
+ bahas:`<ol><li>Mesin A: lingkaran biru → <b>kotak biru</b></li><li>Mesin B: kotak biru → <b>kotak kuning</b></li><li>Mesin A: kotak kuning → <b>segitiga kuning</b></li></ol>`,
+ info:`<p>Setiap mesin adalah aturan yang mengubah masukan menjadi keluaran. Di informatika, aturan seperti ini disebut <b>fungsi</b>. Keluaran satu mesin bisa menjadi masukan mesin berikutnya, seperti program yang dirangkai langkah demi langkah.</p>`,kunci:'fungsi, masukan, keluaran',
+ reveal(el){const R=[['kotak','biru'],['kotak','kuning'],['segitiga','kuning']];R.forEach((r,i)=>later(()=>{const o=el.querySelector('#q5o'+i);if(o)o.innerHTML=shp(r[0],r[1],40)},500+i*700))}},
+
+/* 6 */{judul:'Antre Perosotan',topik:'Struktur Data',tingkat:'Sedang',
+ cerita:`<p>Ani, Budi, Cici, dan Dodi antre bermain perosotan. <b>Ani paling depan</b>, lalu Budi, Cici, dan Dodi di belakang.</p><ul><li>Anak paling depan meluncur.</li><li>Jika ia masih ingin meluncur lagi, ia langsung antre lagi di <b>paling belakang</b>.</li><li>Budi ingin meluncur <b>3 kali</b>. Anak lainnya ingin meluncur <b>2 kali</b>.</li></ul>`,
+ visual(){const K=[['Dodi',80,COL.hijau,'#3A2416'],['Cici',150,COL.ungu,'#1B1B1B'],['Budi',220,COL.biru,'#5A3A1E'],['Ani',290,COL.merah,'#2A1A10']];
+  let s=`<svg class="fig" viewBox="0 0 480 190" style="max-width:520px" role="img" aria-label="Empat anak antre di depan perosotan">`;
+  s+=`<line x1="10" y1="160" x2="470" y2="160" class="ln" style="stroke:var(--line)"/>`;
+  s+=`<g style="stroke:var(--wood)" stroke-width="5" stroke-linecap="round"><line x1="350" y1="160" x2="350" y2="50"/><line x1="380" y1="160" x2="380" y2="50"/>${[70,95,120,145].map(y=>`<line x1="350" y1="${y}" x2="380" y2="${y}" stroke-width="3"/>`).join('')}</g>`;
+  s+=`<path d="M378 48 Q420 50 430 110 Q440 156 472 158" stroke="${COL.oranye}" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+  K.forEach(([n,x,c,h])=>{s+=kidSvg(x,118,c,h)+T(x,175,n)});
+  s+=`<text x="290" y="58" class="tm" text-anchor="middle" style="fill:var(--accent);font-size:13px;font-weight:900">DEPAN</text>`;
+  return s+'</svg><div class="seq" id="q6seq"></div>'},
+ tanya:'Siapa yang meluncur paling terakhir?',
+ opsi:['Ani','Budi','Cici','Dodi'],jawab:1,
+ bahas:`<p>Urutan meluncurnya:</p><p><b>Ani, Budi, Cici, Dodi</b> (semua kembali antre) → <b>Ani, Budi, Cici, Dodi</b> (Ani, Cici, Dodi sudah 2 kali, hanya Budi yang antre lagi) → <b>Budi</b>.</p><p>Jadi yang terakhir meluncur adalah <b>Budi</b>, pada luncuran ke-9.</p>`,
+ info:`<p>Antrean yang masuk dari belakang dan keluar dari depan disebut <b>queue</b>. Yang pertama datang, pertama dilayani. Printer yang menerima banyak dokumen juga mencetaknya sesuai urutan antrean.</p>`,kunci:'queue, antrean',
+ reveal(el){const b=el.querySelector('#q6seq');if(!b)return;const S=['Ani','Budi','Cici','Dodi','Ani','Budi','Cici','Dodi','Budi'];b.innerHTML=S.map((n,i)=>`<div class="seqi ${i===8?'last':''}" style="animation-delay:${RM?0:i*.22}s"><small>ke-${i+1}</small>${n}</div>`).join('')}},
+
+/* 7 */{judul:'Timbangan Kayu',topik:'Logika',tingkat:'Sedang',
+ cerita:`<p>Bebi punya empat kotak kayu: A, B, C, dan D. Ia menimbang dua kotak sekaligus. Sisi timbangan yang <b>lebih rendah</b> berisi kotak yang <b>lebih berat</b>.</p><p>Inilah hasil tiga kali menimbang:</p>`,
+ visual(){return `<div class="codebox">${scale('A','B','L')}${scale('C','B','R')}${scale('A','D','R')}</div>`},
+ tanya:'Bagaimana urutan kotak dari yang paling berat ke yang paling ringan?',
+ opsi:['A, D, B, C','D, A, B, C','D, B, A, C','C, B, A, D'],jawab:1,
+ bahas:`<p>Timbangan 1: A lebih berat dari B. Timbangan 2: B lebih berat dari C. Timbangan 3: D lebih berat dari A.</p><p>Sambungkan: D lebih berat dari A, A lebih berat dari B, B lebih berat dari C. Urutannya <b>D, A, B, C</b>.</p>`,
+ info:`<p>Komputer mengurutkan data dengan cara yang mirip: <b>membandingkan dua benda</b> setiap kali, lalu menyusun hasilnya. Dari beberapa perbandingan saja kita bisa menyimpulkan urutan lengkap.</p>`,kunci:'pengurutan, perbandingan'},
+
+/* 8 */{judul:'Makhluk Hutan',topik:'Pohon Keputusan',tingkat:'Sedang',
+ cerita:`<p>Di hutan ada lima jenis makhluk: Zola, Momo, Kiki, Lulu, dan Tata. Bebi memakai diagram pertanyaan di bawah untuk mengenali mereka. Mulai dari pertanyaan paling atas, lalu ikuti garis <b>Ya</b> atau <b>Tidak</b>.</p>`,
+ visual(){const box=(x,y,t,id)=>`<rect id="${id}" x="${x-56}" y="${y-17}" width="112" height="34" rx="17" class="qb"/>`+T(x,y,t);
+  const leaf=(x,y,t,id)=>`<rect id="${id}" x="${x-36}" y="${y-16}" width="72" height="32" rx="8" class="lf"/>`+T(x,y,t);
+  const ed=(x1,y1,x2,y2,l,id)=>`<line id="${id}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="edge"/><rect x="${(x1+x2)/2-20}" y="${(y1+y2)/2-11}" width="40" height="22" rx="11" class="wl"/>`+T((x1+x2)/2,(y1+y2)/2,l,'tm');
+  let s=`<svg class="fig" viewBox="0 0 520 310" style="max-width:560px" role="img" aria-label="Diagram pertanyaan">`;
+  s+=ed(260,30,130,110,'Ya','q8e1')+ed(260,30,390,110,'Tidak','x1')+ed(130,110,60,200,'Ya','x2')+ed(130,110,210,200,'Tidak','q8e2')+ed(210,200,160,285,'Ya','q8e3')+ed(210,200,270,285,'Tidak','x3')+ed(390,110,340,200,'Ya','x4')+ed(390,110,450,200,'Tidak','x5');
+  s+=box(260,30,'Bertanduk?','q8n1')+box(130,110,'Bersayap?','q8n2')+box(390,110,'Bersayap?','x6')+box(210,200,'Berbintik?','q8n3');
+  s+=leaf(60,200,'Zola','x7')+leaf(160,285,'Momo','q8l')+leaf(270,285,'Kiki','x8')+leaf(340,200,'Lulu','x9')+leaf(450,200,'Tata','x10');
+  s+='</svg>';
+  const cr=`<svg viewBox="0 0 140 150" width="140" role="img" aria-label="Makhluk bertanduk, tanpa sayap, berbintik"><path d="M58 38 L70 6 L82 38 Z" fill="${COL.kuning}" stroke="#8A6A00" stroke-width="2"/><ellipse cx="45" cy="138" rx="14" ry="7" fill="#2E7D57"/><ellipse cx="95" cy="138" rx="14" ry="7" fill="#2E7D57"/><ellipse cx="70" cy="88" rx="50" ry="50" fill="#5BBF8A" stroke="#2E7D57" stroke-width="3"/><circle cx="42" cy="104" r="7" fill="#2E7D57"/><circle cx="96" cy="112" r="6" fill="#2E7D57"/><circle cx="104" cy="80" r="5" fill="#2E7D57"/><circle cx="60" cy="124" r="4" fill="#2E7D57"/><circle cx="34" cy="78" r="4" fill="#2E7D57"/><circle cx="56" cy="74" r="10" fill="#fff"/><circle cx="84" cy="74" r="10" fill="#fff"/><circle cx="58" cy="76" r="5" fill="#1B1B1B"/><circle cx="86" cy="76" r="5" fill="#1B1B1B"/><path d="M58 98 q12 10 24 0" stroke="#1B4D35" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`;
+  return `<div class="codebox">${cr}<div style="font-weight:800;max-width:180px">Bebi bertemu makhluk ini di tepi sungai.</div></div>`+s},
+ tanya:'Makhluk yang ditemui Bebi termasuk jenis apa?',
+ opsi:['Zola','Kiki','Tata','Momo'],jawab:3,
+ bahas:`<ol><li>Bertanduk? <b>Ya</b> (ada tanduk kuning di kepalanya) → ke kiri.</li><li>Bersayap? <b>Tidak</b> → ke kanan bawah.</li><li>Berbintik? <b>Ya</b> → <b>Momo</b>.</li></ol>`,
+ info:`<p>Diagram seperti ini disebut <b>pohon keputusan</b>. Setiap pertanyaan membagi pilihan menjadi dua. Dengan beberapa pertanyaan Ya/Tidak saja, kita bisa menemukan jawaban dari banyak kemungkinan. Aplikasi pengenal tanaman atau hewan bekerja dengan ide yang sama.</p>`,kunci:'pohon keputusan, klasifikasi',
+ reveal(el){['q8n1','q8e1','q8n2','q8e2','q8n3','q8e3','q8l'].forEach((id,i)=>later(()=>{const e=el.querySelector('#'+id);e&&e.classList.add('hl')},i*350))}},
+
+/* 9 */{judul:'Lampu Angka',topik:'Representasi Data',tingkat:'Sedang',
+ cerita:`<p>Bebi membuat papan dengan 4 lampu. Setiap lampu punya nilai yang tertulis di atasnya: 8, 4, 2, dan 1.</p><p>Angka yang ditunjukkan papan adalah <b>jumlah nilai lampu yang menyala</b>. Lampu yang mati tidak dihitung.</p>`,
+ visual(){return `<div class="lbl">Contoh</div>${lamps([0,1,0,1],[8,4,2,1])}<div style="font-weight:800">Lampu 4 dan 1 menyala: 4 + 1 = <span style="color:var(--accent);font-size:22px">5</span></div>`},
+ tanya:'Papan mana yang menunjukkan angka 11?',
+ opsi:[[1,1,0,1],[1,0,1,0],[1,0,1,1],[0,1,1,1]].map(b=>lamps(b,null,40)),jawab:2,
+ bahas:`<p>11 = 8 + 2 + 1. Jadi lampu 8, 2, dan 1 menyala, sedangkan lampu 4 mati.</p><p>Pilihan lain: A = 8+4+1 = 13, B = 8+2 = 10, D = 4+2+1 = 7.</p>`,
+ info:`<p>Komputer menyimpan angka dengan cara seperti ini, memakai <b>bilangan biner</b>. Setiap "lampu" hanya punya dua keadaan: nyala (1) atau mati (0). Angka 11 dalam biner ditulis <b>1011</b>.</p>`,kunci:'bilangan biner, bit'},
+
+/* 10 */{judul:'Pena Robot',topik:'Pengulangan',tingkat:'Sedang',
+ cerita:`<p>Pena Robot menggambar garis setiap kali ia maju. Mula-mula robot berada di titik hijau dan <b>menghadap ke atas</b>.</p><ul><li><b>maju 2 langkah</b>: berjalan lurus 2 kotak ke arah hadapnya.</li><li><b>belok kiri</b>: berputar di tempat seperempat putaran ke kiri.</li></ul><p>Robot menjalankan program ini:</p>`,
+ visual(){return `<div class="codebox"><div class="prog"><div class="blk rep">ulangi 3 kali</div><div class="blk in">maju 2 langkah</div><div class="blk in">belok kiri</div><div class="blk end"></div></div>
+  <svg viewBox="0 0 200 170" width="220" aria-hidden="true">${(()=>{let g='';for(let x=20;x<=180;x+=40)for(let y=10;y<=170;y+=40)g+=`<circle cx="${x}" cy="${y}" r="2.5" style="fill:var(--line)"/>`;return g})()}
+  <path id="q10p" d="M140 130 L140 50 L60 50 L60 130" class="draw" style="stroke:var(--accent)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="140" cy="130" r="9" fill="${COL.hijau}"/><path d="M140 104 l-8 12 h16 z" fill="${COL.hijau}"/></svg></div>`},
+ tanya:'Gambar apa yang dibuat Pena Robot?',
+ opsi:[[[75,82],[75,28],[25,28],[25,82]],[[25,28],[25,82],[75,82],[75,28]],[[75,28],[25,28],[25,82],[75,82]],[[25,28],[75,28],[75,82],[25,82]]].map(p=>`<svg viewBox="0 0 100 100" width="64" aria-hidden="true"><polyline points="${p.map(q=>q.join(',')).join(' ')}" style="stroke:var(--ink)" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`),jawab:0,
+ bahas:`<ol><li>Putaran 1: maju 2 ke <b>atas</b>, belok kiri (sekarang menghadap kiri).</li><li>Putaran 2: maju 2 ke <b>kiri</b>, belok kiri (sekarang menghadap bawah).</li><li>Putaran 3: maju 2 ke <b>bawah</b>, belok kiri.</li></ol><p>Hasilnya tiga sisi: kanan, atas, dan kiri. Bagian bawah terbuka, seperti huruf <b>n</b> besar (gambar A).</p>`,
+ info:`<p>Blok <b>ulangi</b> membuat program lebih pendek. Daripada menulis "maju 2, belok kiri" tiga kali, kita cukup menulisnya sekali di dalam pengulangan. Ini disebut <b>loop</b>.</p>`,kunci:'pengulangan, loop',
+ reveal(el){const p=el.querySelector('#q10p');if(p)later(()=>p.classList.add('go'),50)}},
+
+/* 11 */{judul:'Gambar Berkode',topik:'Representasi Data',tingkat:'Sedang',
+ cerita:`<p>Bebi mengirim gambar hitam-putih lewat surat. Supaya pendek, setiap baris ditulis sebagai kode. <b>P</b> berarti kotak putih, <b>H</b> berarti kotak hitam, dan angkanya menunjukkan berapa kotak berturut-turut.</p>`,
+ visual(){return `<div class="codebox"><div style="font-weight:800">Contoh: <span style="font-family:var(--fd)">2P 2H 2P</span> =</div>${pix([[0,0,1,1,0,0]],150)}</div><div class="code"><span>Baris 1</span><span>1P 4H 1P</span><span>Baris 2</span><span>6H</span><span>Baris 3</span><span>1P 4H 1P</span><span>Baris 4</span><span>2P 2H 2P</span></div>`},
+ tanya:'Gambar mana yang sesuai dengan kode di atas?',
+ opsi:[[[0,0,1,1,0,0],[1,1,1,1,1,1],[0,1,1,1,1,0],[0,0,1,1,0,0]],[[0,1,1,1,1,0],[1,1,1,1,1,1],[0,1,1,1,1,0],[0,1,1,1,1,0]],[[0,1,1,1,1,0],[1,1,0,0,1,1],[0,1,1,1,1,0],[0,0,1,1,0,0]],[[0,1,1,1,1,0],[1,1,1,1,1,1],[0,1,1,1,1,0],[0,0,1,1,0,0]]].map(r=>pix(r,90)),jawab:3,
+ bahas:`<p>Periksa setiap baris:</p><ul><li>A salah di baris 1 (2P 2H 2P, bukan 1P 4H 1P).</li><li>B salah di baris 4 (1P 4H 1P, bukan 2P 2H 2P).</li><li>C salah di baris 2 (2H 2P 2H, bukan 6H).</li><li><b>D</b> cocok di keempat baris.</li></ul>`,
+ info:`<p>Menulis "6H" lebih pendek daripada "H H H H H H". Cara meringkas ini disebut <b>kompresi data</b>. Komputer memakai ide serupa supaya file gambar lebih kecil dan lebih cepat dikirim.</p>`,kunci:'kompresi, piksel'},
+
+/* 12 */{judul:'Gerbang Taman',topik:'Logika',tingkat:'Sedang',
+ cerita:`<p>Taman bermain punya gerbang otomatis. Gerbang memeriksa barang bawaan setiap anak.</p>`,
+ visual(){const K=[['Ani',COL.merah,'#2A1A10',[tkt+'Tiket',topi+'Topi']],['Budi',COL.biru,'#5A3A1E',[topi+'Topi',bdr+'Bendera']],['Cici',COL.ungu,'#1B1B1B',[tkt+'Tiket']],['Dodi',COL.hijau,'#3A2416',[tkt+'Tiket',bdr+'Bendera']]];
+  return `<div class="gate">Gerbang terbuka jika anak membawa <em>tiket</em> DAN (memakai <em>topi</em> ATAU membawa <em>bendera</em>).</div><div class="kids">${K.map(([n,c,h,b],i)=>`<div class="kid" id="q12k${i}">${kidIcon(c,h)}${n}<div class="bag">${b.map(x=>`<span class="tag">${x}</span>`).join('')}</div></div>`).join('')}</div>`},
+ tanya:'Siapa saja yang bisa masuk melalui gerbang?',
+ opsi:['Ani saja','Ani dan Dodi','Ani, Cici, dan Dodi','Budi dan Dodi'],jawab:1,
+ bahas:`<ul><li>Ani: tiket ✓, topi ✓ → <b>masuk</b>.</li><li>Budi: tidak punya tiket → tidak bisa masuk, walaupun punya topi dan bendera.</li><li>Cici: tiket ✓, tetapi tidak punya topi maupun bendera → tidak bisa masuk.</li><li>Dodi: tiket ✓, bendera ✓ → <b>masuk</b>.</li></ul>`,
+ info:`<p>Kata <b>DAN</b> berarti kedua syarat harus benar. Kata <b>ATAU</b> berarti cukup salah satu yang benar. Program komputer memakai syarat seperti ini untuk memutuskan apa yang dilakukan, misalnya kapan pintu otomatis terbuka.</p>`,kunci:'logika DAN, ATAU, syarat',
+ reveal(el){[1,0,0,1].forEach((v,i)=>later(()=>{const k=el.querySelector('#q12k'+i);k&&k.classList.add(v?'in':'out')},i*350))}},
+
+/* 13 */{judul:'Peti Harta',topik:'Dekomposisi',tingkat:'Sedang',
+ cerita:`<p>Bebi menemukan sebuah peti harta. Ia membaca catatan tentang isinya:</p>`,
+ visual(){return `<div class="recipe"><div class="rrow">${chest(54)}<span class="eq">berisi</span>2 × ${boxi(COL.biru)}</div><div class="rrow">${boxi(COL.biru)}<span class="eq">berisi</span>3 × ${boxi(COL.hijau,34)}<span class="eq">dan</span>1 × ${candy(20)}</div><div class="rrow">${boxi(COL.hijau,34)}<span class="eq">berisi</span>2 × ${candy(20)}</div></div><div class="pile" id="q13p"></div>`},
+ tanya:'Berapa banyak permen di dalam peti seluruhnya?',
+ opsi:['12','13','14','16'],jawab:2,
+ bahas:`<p>Hitung dari kotak paling kecil:</p><ul><li>Satu kotak hijau: <b>2</b> permen.</li><li>Satu kotak biru: 3 kotak hijau (3 × 2 = 6) ditambah 1 permen = <b>7</b> permen.</li><li>Peti: 2 kotak biru = 2 × 7 = <b>14</b> permen.</li></ul>`,
+ info:`<p>Masalah besar lebih mudah dipecahkan jika dipecah menjadi bagian kecil, lalu hasilnya digabungkan. Ini disebut <b>dekomposisi</b>. Folder di dalam folder pada komputer juga tersusun bertingkat seperti peti ini.</p>`,kunci:'dekomposisi, struktur bertingkat',
+ reveal(el){const p=el.querySelector('#q13p');if(p)p.innerHTML=Array.from({length:14},(_,i)=>candy(20).replace('<svg',`<svg style="animation-delay:${RM?0:i*.08}s"`)).join('')}},
+
+/* 14 */{judul:'Teh Pagi',topik:'Penjadwalan',tingkat:'Sedang',
+ cerita:`<p>Bebi ingin membuat teh secepat mungkin. Ada tiga pekerjaan:</p>`,
+ visual(){return `<div class="tasks"><div class="task"><b>Merebus air</b><span class="min">5 menit</span><small>Kompor bekerja sendiri, Bebi tidak perlu menunggui.</small></div><div class="task"><b>Mencuci gelas</b><span class="min">3 menit</span><small>Bebi memakai kedua tangannya.</small></div><div class="task"><b>Menyeduh teh</b><span class="min">1 menit</span><small>Perlu air mendidih dan gelas yang bersih.</small></div></div><p style="margin:0;font-weight:700;max-width:60ch;text-align:center">Bebi hanya bisa mengerjakan satu pekerjaan tangan pada satu waktu. Menyalakan kompor tidak memakan waktu.</p><div id="q14g" style="width:100%;max-width:560px"></div>`},
+ tanya:'Paling cepat, berapa menit sampai teh Bebi siap?',
+ opsi:['5 menit','6 menit','8 menit','9 menit'],jawab:1,
+ bahas:`<p>Nyalakan kompor dulu. Selama air direbus (menit 0 sampai 5), Bebi mencuci gelas (menit 0 sampai 3). Saat air mendidih di menit ke-5, gelas sudah bersih. Bebi menyeduh teh selama 1 menit, jadi teh siap pada menit ke-<b>6</b>.</p><p>Jawaban 9 menit didapat jika semuanya dikerjakan bergantian satu per satu (5 + 3 + 1). Jawaban 5 menit tidak mungkin, karena menyeduh harus menunggu air mendidih.</p>`,
+ info:`<p>Mengerjakan beberapa hal pada waktu yang sama disebut <b>paralel</b>. Komputer menyusun urutan tugas (<b>penjadwalan</b>) supaya pekerjaan yang tidak saling menunggu bisa berjalan bersamaan dan semuanya selesai lebih cepat.</p>`,kunci:'penjadwalan, paralel',
+ reveal(el){const g=el.querySelector('#q14g');if(!g)return;const u=70,x0=100;let s=`<svg class="fig" viewBox="0 0 540 150" aria-label="Jadwal pekerjaan">`;
+  for(let m=0;m<=6;m++){s+=`<line x1="${x0+m*u}" y1="10" x2="${x0+m*u}" y2="118" style="stroke:var(--line)" stroke-width="1.5"/>`+T(x0+m*u,134,m,'tm')}
+  s+=T(48,40,'Kompor','t')+T(48,90,'Bebi','t');
+  s+=`<rect class="bar" style="transition-delay:.1s" x="${x0}" y="24" width="${5*u}" height="32" rx="8" fill="${COL.merah}"/>`+`<text x="${x0+2.5*u}" y="40" class="t" text-anchor="middle" dominant-baseline="central" style="fill:#fff">rebus air</text>`;
+  s+=`<rect class="bar" style="transition-delay:.4s" x="${x0}" y="74" width="${3*u}" height="32" rx="8" fill="${COL.biru}"/>`+`<text x="${x0+1.5*u}" y="90" class="t" text-anchor="middle" dominant-baseline="central" style="fill:#fff">cuci gelas</text>`;
+  s+=`<rect class="bar" style="transition-delay:1.2s" x="${x0+5*u}" y="74" width="${u}" height="32" rx="8" fill="${COL.hijau}"/>`+`<text x="${x0+5.5*u}" y="90" class="t" text-anchor="middle" dominant-baseline="central" style="fill:#fff">seduh</text>`;
+  s+=T(x0+4*u,90,'tunggu','tm')+`<text x="${x0+6*u}" y="146" class="tm" text-anchor="middle" style="fill:var(--accent)">menit</text>`;
+  g.innerHTML=s+'</svg>';later(()=>g.querySelector('svg').classList.add('go'),60)}},
+
+/* 15 */{judul:'Tukar Kartu',topik:'Pengurutan',tingkat:'Sulit',
+ cerita:`<p>Empat kartu angka berjajar di meja. Bebi ingin mengurutkannya dari yang terkecil di kiri ke yang terbesar di kanan.</p><p>Dalam satu langkah, Bebi hanya boleh <b>menukar dua kartu yang bersebelahan</b>.</p><p>Kamu bisa mencoba sendiri: tekan tombol ⇄ untuk menukar dua kartu.</p>`,
+ visual(){return `<div class="play" id="q15row"></div><div class="playbar"><span>Langkah: <span id="q15n" style="color:var(--accent);font-size:22px">0</span></span><span id="q15m" class="okmsg"></span><button class="btn" id="q15r" style="padding:6px 16px;font-size:15px">Ulangi</button></div>`},
+ mount(el){const row=el.querySelector('#q15row'),cnt=el.querySelector('#q15n'),msg=el.querySelector('#q15m');let a=[3,1,4,2],n=0,last=-1;
+  const draw=()=>{row.innerHTML=a.map((v,i)=>`<div class="ncard ${i===last||i===last+1?'flip':''}">${v}</div>`+(i<3?`<button class="swp" data-i="${i}" aria-label="Tukar kartu ${v} dan ${a[i+1]}">⇄</button>`:'')).join('');cnt.textContent=n;msg.textContent=a.join()==='1,2,3,4'?'Sudah urut!':'';
+   row.querySelectorAll('.swp').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;[a[i],a[i+1]]=[a[i+1],a[i]];n++;last=i;draw();setTimeout(()=>{last=-1;row.querySelectorAll('.flip').forEach(c=>c.classList.remove('flip'))},250)})};
+  el.querySelector('#q15r').onclick=()=>{a=[3,1,4,2];n=0;last=-1;draw()};draw()},
+ tanya:'Paling sedikit, berapa langkah yang Bebi perlukan?',
+ opsi:['1 langkah','2 langkah','3 langkah','4 langkah'],jawab:2,
+ bahas:`<p>Salah satu cara tercepat: <b>3 1 4 2</b> → tukar 3 dan 1 → <b>1 3 4 2</b> → tukar 4 dan 2 → <b>1 3 2 4</b> → tukar 3 dan 2 → <b>1 2 3 4</b>. Tiga langkah.</p><p>Mengapa tidak bisa kurang? Ada tiga pasang kartu yang urutannya terbalik: (3, 1), (3, 2), dan (4, 2). Satu kali tukar hanya bisa membetulkan satu pasang, jadi paling sedikit perlu 3 langkah.</p>`,
+ info:`<p>Menukar dua data yang bersebelahan berulang kali adalah inti dari cara mengurutkan bernama <b>bubble sort</b>. Ahli informatika juga menghitung berapa langkah yang dibutuhkan, supaya bisa memilih cara mengurutkan yang paling cepat.</p>`,kunci:'pengurutan, bubble sort'},
+
+/* 16 */{judul:'Jalur ke Taman',topik:'Graf',tingkat:'Sulit',
+ cerita:`<p>Bebi ingin pergi dari <b>Rumah</b> ke <b>Taman</b>. Semua jalan di peta adalah <b>jalan satu arah</b>, jadi hanya boleh dilalui searah panah. Dari D ke Taman ada dua jembatan yang berbeda.</p>`,
+ visual(){const N={R:[55,150,'Rumah'],A:[175,60,'A'],B:[175,245,'B'],C:[305,50,'C'],D:[305,195,'D'],T:[455,125,'Taman']};const rr=k=>(k==='R'||k==='T')?34:24;
+  let s=`<svg class="fig" viewBox="0 0 500 290" style="max-width:540px" role="img" aria-label="Peta jalan satu arah">${arrowMarker('q16a')}`;
+  [['R','A'],['R','B'],['A','C'],['A','D'],['B','D'],['C','T']].forEach(([a,b])=>{const[x1,y1,x2,y2]=shrink(N[a][0],N[a][1],N[b][0],N[b][1],rr(a),rr(b)+4);s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="edge" marker-end="url(#q16a)"/>`});
+  s+=`<path d="M325 181 Q392 132 422 128" class="edge" marker-end="url(#q16a)"/><path d="M327 204 Q402 196 428 148" class="edge" marker-end="url(#q16a)"/>`;
+  Object.entries(N).forEach(([k,[x,y,l]])=>{s+=`<circle cx="${x}" cy="${y}" r="${rr(k)}" class="nd" ${k==='R'||k==='T'?'style="fill:var(--sun-soft)"':''}/>`+T(x,y,l,'t',rr(k)>30?'style="font-size:13px"':'style="font-size:17px"')});
+  return s+'</svg>'},
+ tanya:'Ada berapa jalur berbeda dari Rumah ke Taman?',
+ opsi:['4','5','6','7'],jawab:1,
+ bahas:`<p>Daftar semua jalurnya:</p><ol><li>Rumah → A → C → Taman</li><li>Rumah → A → D → Taman (jembatan atas)</li><li>Rumah → A → D → Taman (jembatan bawah)</li><li>Rumah → B → D → Taman (jembatan atas)</li><li>Rumah → B → D → Taman (jembatan bawah)</li></ol><p>Cara cepat: ada 2 jalan menuju D (lewat A atau B), dan dari D ada 2 jembatan, jadi 2 × 2 = 4 jalur lewat D. Ditambah 1 jalur lewat C, totalnya <b>5</b>.</p>`,
+ info:`<p>Peta titik dan garis seperti ini disebut <b>graf</b>. Aplikasi peta di ponsel memakai graf untuk mencari semua kemungkinan rute, lalu memilih yang terbaik.</p>`,kunci:'graf berarah, menghitung jalur'},
+
+/* 17 */{judul:'Kebun Bunga',topik:'Graf',tingkat:'Sulit',
+ cerita:`<p>Pak Tani membagi kebunnya menjadi 5 petak: P, Q, R, S, dan T. Setiap petak ditanami bunga dengan satu warna.</p><p>Aturannya: dua petak yang <b>berbagi garis batas</b> harus memakai warna bunga yang <b>berbeda</b>.</p>`,
+ visual(){return `<svg class="fig" viewBox="0 0 260 260" style="max-width:280px" role="img" aria-label="Kebun dengan lima petak">
+  <rect id="q17P" x="10" y="10" width="120" height="120" class="region"/><rect id="q17Q" x="130" y="10" width="120" height="120" class="region"/><rect id="q17R" x="130" y="130" width="120" height="120" class="region"/><rect id="q17S" x="10" y="130" width="120" height="120" class="region"/><circle id="q17T" cx="130" cy="130" r="54" class="region"/>
+  ${T(45,45,'P','t','style="font-size:22px"')}${T(215,45,'Q','t','style="font-size:22px"')}${T(215,215,'R','t','style="font-size:22px"')}${T(45,215,'S','t','style="font-size:22px"')}${T(130,130,'T','t','style="font-size:22px"')}</svg>`},
+ tanya:'Paling sedikit, berapa warna bunga yang dibutuhkan?',
+ opsi:['2 warna','3 warna','4 warna','5 warna'],jawab:1,
+ bahas:`<p>Petak P dan R tidak berbagi garis batas (pojoknya tertutup petak T), jadi boleh sama warna. Begitu juga Q dan S. Maka P dan R bisa <b>merah</b>, Q dan S bisa <b>biru</b>.</p><p>Petak T bersebelahan dengan keempat petak lain, jadi T tidak boleh merah atau biru. T perlu warna ketiga, misalnya <b>kuning</b>.</p><p>Dua warna tidak cukup, karena P, Q, dan T saling bersebelahan, sehingga ketiganya harus berbeda. Jadi paling sedikit <b>3 warna</b>.</p>`,
+ info:`<p>Masalah ini disebut <b>pewarnaan graf</b>. Ide yang sama dipakai untuk menyusun jadwal ujian: dua ujian yang diikuti siswa yang sama harus diberi "warna" (jam) yang berbeda.</p>`,kunci:'pewarnaan graf',
+ reveal(el){[['P','merah'],['Q','biru'],['R','merah'],['S','biru'],['T','kuning']].forEach(([k,c],i)=>later(()=>{const r=el.querySelector('#q17'+k);if(r)r.style.fill=COL[c]},i*400))}},
+
+/* 18 */{judul:'Turnamen Kartu Hewan',topik:'Algoritma',tingkat:'Sulit',
+ cerita:`<p>Empat anak mengadakan turnamen kartu hewan. Setiap anak selalu memakai kartu hewan yang sama di setiap pertandingan.</p><ul><li><span class="animal anim-g">Gajah</span> mengalahkan <span class="animal anim-k">Kucing</span></li><li><span class="animal anim-k">Kucing</span> mengalahkan <span class="animal anim-t">Tikus</span></li><li><span class="animal anim-t">Tikus</span> mengalahkan <span class="animal anim-g">Gajah</span></li></ul><p>Pemenang setiap pertandingan maju ke babak berikutnya.</p>`,
+ visual(){const P=[['Ani','Kucing','#E07B24',12],['Budi','Tikus','#8D6A4F',62],['Cici','Gajah','#6E7F86',142],['Dedi','Kucing','#E07B24',192]];
+  let s=`<svg class="fig" viewBox="0 0 470 240" style="max-width:520px" role="img" aria-label="Bagan turnamen">`;
+  P.forEach(([n,a,c,y])=>{s+=`<rect x="8" y="${y}" width="150" height="38" rx="10" class="qb"/>${T(48,y+19,n)}<rect x="84" y="${y+8}" width="66" height="22" rx="11" fill="${c}"/>${T(117,y+19,a,'t','style="fill:#fff;font-size:13px"')}`});
+  const L=(x1,y1,x2,y2)=>`<path d="M${x1} ${y1} H${(x1+x2)/2} V${y2} H${x2}" class="edge" style="stroke-width:3"/>`;
+  s+=L(158,31,200,56)+L(158,81,200,56)+L(158,161,200,186)+L(158,211,200,186)+L(320,56,340,121)+L(320,186,340,121);
+  s+=`<rect x="200" y="37" width="120" height="38" rx="10" class="qb"/><text id="q18s1" x="260" y="56" class="t" text-anchor="middle" dominant-baseline="central">?</text>`;
+  s+=`<rect x="200" y="167" width="120" height="38" rx="10" class="qb"/><text id="q18s2" x="260" y="186" class="t" text-anchor="middle" dominant-baseline="central">?</text>`;
+  s+=`<rect id="q18fb" x="340" y="100" width="122" height="42" rx="12" class="lf"/><text id="q18f" x="401" y="121" class="t" text-anchor="middle" dominant-baseline="central">Juara ?</text>`;
+  return s+'</svg>'},
+ tanya:'Siapa juara turnamen ini?',
+ opsi:['Ani','Budi','Cici','Dedi'],jawab:2,
+ bahas:`<ol><li>Ani (Kucing) melawan Budi (Tikus): Kucing mengalahkan Tikus → <b>Ani</b> menang.</li><li>Cici (Gajah) melawan Dedi (Kucing): Gajah mengalahkan Kucing → <b>Cici</b> menang.</li><li>Final, Ani (Kucing) melawan Cici (Gajah): Gajah mengalahkan Kucing → <b>Cici</b> juara.</li></ol><p>Menariknya, Budi (Tikus) sebenarnya bisa mengalahkan Cici, tetapi Budi sudah kalah di babak pertama.</p>`,
+ info:`<p>Bagan turnamen adalah contoh <b>struktur pohon</b>. Hasil akhirnya bergantung pada aturan dan juga pada <b>urutan</b> pertandingan. Komputer sering menyelesaikan masalah dengan memecahnya menjadi pertandingan-pertandingan kecil seperti ini.</p>`,kunci:'struktur pohon, aturan',
+ reveal(el){later(()=>{const a=el.querySelector('#q18s1');if(a)a.textContent='Ani'},400);later(()=>{const a=el.querySelector('#q18s2');if(a)a.textContent='Cici'},900);later(()=>{const a=el.querySelector('#q18f'),b=el.querySelector('#q18fb');if(a)a.textContent='Cici';b&&b.classList.add('hl')},1500)}},
+
+/* 19 */{judul:'Jalan Tersingkat',topik:'Graf',tingkat:'Sulit',
+ cerita:`<p>Bebi berangkat dari <b>Rumah</b> ke <b>Sekolah</b>. Angka di setiap jalan menunjukkan panjang jalan itu (dalam ratus meter). Jalan boleh dilewati ke dua arah.</p>`,
+ visual(){const N={R:[55,170,'Rumah'],A:[175,60,'A'],B:[190,250,'B'],C:[330,85,'C'],S:[445,195,'Sekolah']};
+  const E=[['R','A',2],['R','B',5],['A','B',1],['A','C',6],['B','C',2],['B','S',4],['C','S',1]];const rr=k=>(k==='R'||k==='S')?36:24;
+  let s=`<svg class="fig" viewBox="0 0 490 300" style="max-width:540px" role="img" aria-label="Peta jalan dengan panjangnya">`;
+  E.forEach(([a,b])=>s+=`<line id="q19${a}${b}" x1="${N[a][0]}" y1="${N[a][1]}" x2="${N[b][0]}" y2="${N[b][1]}" class="edge"/>`);
+  E.forEach(([a,b,w])=>{const x=(N[a][0]+N[b][0])/2,y=(N[a][1]+N[b][1])/2;s+=`<circle cx="${x}" cy="${y}" r="15" class="wl"/>`+T(x,y,w,'t','style="font-size:16px;fill:var(--accent)"')});
+  Object.entries(N).forEach(([k,[x,y,l]])=>{s+=`<circle cx="${x}" cy="${y}" r="${rr(k)}" class="nd" ${rr(k)>30?'style="fill:var(--sun-soft)"':''}/>`+T(x,y,l,'t',rr(k)>30?'style="font-size:13px"':'style="font-size:17px"')});
+  return s+'</svg>'},
+ tanya:'Berapa panjang jalan tersingkat dari Rumah ke Sekolah?',
+ opsi:['6','7','8','9'],jawab:0,
+ bahas:`<p>Bandingkan beberapa jalur:</p><ul><li>Rumah → B → Sekolah = 5 + 4 = 9</li><li>Rumah → A → B → Sekolah = 2 + 1 + 4 = 7</li><li>Rumah → B → C → Sekolah = 5 + 2 + 1 = 8</li><li>Rumah → A → C → Sekolah = 2 + 6 + 1 = 9</li><li><b>Rumah → A → B → C → Sekolah = 2 + 1 + 2 + 1 = 6</b></li></ul><p>Jalur yang melewati paling banyak tempat ternyata yang paling pendek: <b>6</b>.</p>`,
+ info:`<p>Mencari <b>jalur terpendek</b> adalah salah satu masalah terpenting di informatika. Aplikasi peta dan ojek daring menyelesaikannya setiap hari untuk jutaan perjalanan, dengan cara yang lebih teliti daripada menebak.</p>`,kunci:'jalur terpendek, graf berbobot',
+ reveal(el){['q19RA','q19AB','q19BC','q19CS'].forEach((id,i)=>later(()=>{const e=el.querySelector('#'+id);e&&e.classList.add('hl')},i*450))}},
+
+/* 20 */{judul:'Kabar Berantai',topik:'Graf',tingkat:'Sulit',
+ cerita:`<p>Ani punya kabar gembira: besok sekolah libur! Garis di gambar menunjukkan siapa berteman dengan siapa.</p><ul><li>Pada menit ke-0, hanya Ani yang tahu kabar itu.</li><li>Setiap menit, <b>semua</b> anak yang sudah tahu memberi tahu <b>semua</b> temannya sekaligus.</li></ul>`,
+ visual(){const N={Ani:[55,150],Budi:[165,60],Cici:[165,240],Dodi:[285,150],Gita:[300,275],Eka:[395,80],Fani:[490,165]};
+  const E=[['Ani','Budi'],['Ani','Cici'],['Budi','Dodi'],['Cici','Dodi'],['Dodi','Eka'],['Eka','Fani'],['Cici','Gita']];
+  let s=`<svg class="fig" viewBox="0 0 540 310" style="max-width:560px" role="img" aria-label="Jaringan pertemanan">`;
+  E.forEach(([a,b])=>s+=`<line x1="${N[a][0]}" y1="${N[a][1]}" x2="${N[b][0]}" y2="${N[b][1]}" class="edge"/>`);
+  Object.entries(N).forEach(([k,[x,y]])=>{s+=`<circle id="q20${k}" cx="${x}" cy="${y}" r="30" class="nd ${k==='Ani'?'know':''}"/>`+T(x,y,k,'t','style="font-size:14px"')+`<g id="q20m${k}" style="display:none"><circle cx="${x+24}" cy="${y-24}" r="12" style="fill:var(--accent)"/>${T(x+24,y-24,'','t','style="fill:var(--accent-ink);font-size:13px" class="mm"')}</g>`});
+  return s+'</svg><div class="lbl" id="q20t">Kuning = sudah tahu kabar</div>'},
+ tanya:'Pada menit ke berapa semua anak sudah tahu kabar itu?',
+ opsi:['2','3','4','5'],jawab:2,
+ bahas:`<ul><li>Menit 1: Budi dan Cici (teman Ani) tahu.</li><li>Menit 2: Dodi (teman Budi dan Cici) dan Gita (teman Cici) tahu.</li><li>Menit 3: Eka (teman Dodi) tahu.</li><li>Menit 4: Fani (teman Eka) tahu.</li></ul><p>Semua anak tahu pada menit ke-<b>4</b>. Fani paling lama karena ia paling "jauh" dari Ani.</p>`,
+ info:`<p>Pesan berantai di grup chat atau di internet menyebar dengan cara yang sama. Di informatika, menelusuri graf selapis demi selapis seperti ini disebut <b>penelusuran melebar</b> (breadth-first search).</p>`,kunci:'graf, penyebaran, breadth-first search',
+ reveal(el){const D={Ani:0,Budi:1,Cici:1,Dodi:2,Gita:2,Eka:3,Fani:4};Object.entries(D).forEach(([k,d])=>later(()=>{const n=el.querySelector('#q20'+k),m=el.querySelector('#q20m'+k);if(n)n.classList.add('know');if(m){m.style.display='';m.querySelector('text').textContent=d}const t=el.querySelector('#q20t');if(t)t.textContent='Menit '+d},d*800+200))}}
+];
+
+/* ---------- aplikasi ---------- */
+const KEY='bebras-siaga-latihan-v1';
+let st={cur:0,ans:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.ans)st=s}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const app=document.getElementById('app'),dots=document.getElementById('dots');
+const score=()=>Object.entries(st.ans).filter(([i,p])=>Q[i]&&Q[i].jawab===p).length;
+
+function renderTop(){
+  document.getElementById('score').innerHTML=`Skor <b>${score()}</b>/${Q.length}`;
+  dots.innerHTML=Q.map((q,i)=>{const p=st.ans[i];const c=p===undefined?'':(p===q.jawab?'ok':'bad');return `<button class="dot ${c} ${i===st.cur?'cur':''}" data-i="${i}" aria-label="Soal ${i+1}${c==='ok'?', benar':c==='bad'?', salah':''}">${i+1}</button>`}).join('')+`<button class="dot end ${st.cur===Q.length?'cur':''}" data-i="${Q.length}">Hasil</button>`;
+  dots.querySelectorAll('.dot').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+}
+function go(i){st.cur=i;save();render();window.scrollTo({top:0,behavior:RM?'auto':'smooth'})}
+
+function render(){
+  renderTop();
+  if(st.cur>=Q.length)return renderSummary();
+  const i=st.cur,q=Q[i];let pick=st.ans[i];
+  app.innerHTML=`<article class="card">
+    <div class="meta"><span class="no">Soal ${i+1} <small>dari ${Q.length}</small></span><span class="chip">${q.topik}</span><span class="chip lvl lvl-${q.tingkat}">${q.tingkat}</span></div>
+    <h2>${q.judul}</h2>
+    <div class="story">${q.cerita}</div>
+    <figure class="figbox">${q.visual()}</figure>
+    <div class="ask"><span class="ask-l">Pertanyaan</span><p>${q.tanya}</p></div>
+    <div class="opts" role="radiogroup" aria-label="Pilihan jawaban">${q.opsi.map((o,k)=>`<button class="opt" data-k="${k}" role="radio" aria-checked="false"><span class="let">${'ABCD'[k]}</span><span class="oc">${o}</span></button>`).join('')}</div>
+    <div class="actions"><button id="cek" class="btn primary" disabled>Periksa Jawaban</button></div>
+    <section id="fb" class="fb" hidden></section>
+  </article>
+  <div class="nav"><button id="prev" class="btn ghost" ${i===0?'disabled':''}>← Sebelumnya</button><button id="next" class="btn">${i===Q.length-1?'Lihat Hasil':'Berikutnya →'}</button></div>`;
+  const opts=[...app.querySelectorAll('.opt')],cek=app.querySelector('#cek');let sel=null;
+  opts.forEach(b=>b.onclick=()=>{sel=+b.dataset.k;opts.forEach(o=>{const on=o===b;o.classList.toggle('sel',on);o.setAttribute('aria-checked',on)});cek.disabled=false});
+  cek.onclick=()=>{if(sel===null)return;st.ans[i]=sel;save();renderTop();show(true)};
+  app.querySelector('#prev').onclick=()=>go(i-1);
+  app.querySelector('#next').onclick=()=>go(i+1);
+  q.mount&&q.mount(app);
+  if(pick!==undefined)show(false);
+
+  function show(fresh){
+    const p=st.ans[i],ok=p===q.jawab;
+    opts.forEach((o,k)=>{o.disabled=true;o.classList.remove('sel');if(k===q.jawab)o.classList.add('right');else if(k===p)o.classList.add('wrong')});
+    cek.hidden=true;
+    const fb=app.querySelector('#fb');fb.hidden=false;
+    fb.innerHTML=`<div class="verdict ${ok?'ok':'bad'}"><strong>${ok?'Hebat, jawabanmu benar!':'Belum tepat, ayo pelajari pembahasannya.'}</strong><span>Jawaban yang benar adalah <b>${'ABCD'[q.jawab]}</b>.</span></div>
+      <div class="bahas"><h3>Pembahasan</h3>${q.bahas}</div>
+      <div class="infor"><h3>Ini Informatika!</h3>${q.info}<p class="kk"><b>Kata kunci:</b> ${q.kunci}</p></div>`;
+    q.reveal&&q.reveal(app);
+    if(fresh){if(ok){const m=document.getElementById('mascot');m.classList.remove('jump');void m.offsetWidth;m.classList.add('jump')}
+      app.querySelector('.figbox').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'})}
+  }
+}
+
+function renderSummary(){
+  const n=Object.keys(st.ans).length,s=score();
+  const msg=n<Q.length?`Kamu sudah menjawab ${n} dari ${Q.length} soal. Soal yang belum dijawab bisa dibuka dari daftar di bawah.`:s>=16?'Luar biasa! Kamu siap menghadapi Tantangan Bebras.':s>=10?'Bagus! Baca lagi pembahasan soal yang belum tepat.':'Terus berlatih! Baca pembahasan setiap soal pelan-pelan, lalu coba lagi.';
+  app.innerHTML=`<article class="card sum"><div class="meta"><span class="chip">Hasil Latihan</span></div><div class="big">${s}<span style="font-size:.45em;color:var(--muted)"> / ${Q.length}</span></div><p style="margin:0;font-weight:700;max-width:60ch">${msg}</p>
+    <div class="sumlist">${Q.map((q,i)=>{const p=st.ans[i];const c=p===undefined?'var(--muted)':p===q.jawab?'var(--ok)':'var(--bad)';const sym=p===undefined?'–':p===q.jawab?'✓':'✗';return `<button class="sumi" data-i="${i}"><i style="background:${c}">${sym}</i>${i+1}. ${q.judul}</button>`}).join('')}</div>
+    <div class="actions"><button class="btn primary" id="again">Ulangi dari Awal</button></div></article>`;
+  app.querySelectorAll('.sumi').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+  app.querySelector('#again').onclick=()=>{st={cur:0,ans:{}};save();go(0)};
+}
+render();
+</script>

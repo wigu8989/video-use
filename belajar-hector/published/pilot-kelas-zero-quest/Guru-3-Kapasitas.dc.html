@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Monitor uji kapasitas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Nunito:wght@500;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4B32B8}a:hover{color:#2E1E80}
+</style>
+</helmet>
+<div style="box-sizing: border-box; min-height: 1000px; background: #F4F2FA; color: #1E1638; font-family: Nunito, system-ui, sans-serif; padding: 32px 24px;">
+<div style="max-width: 1220px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px;">
+    <div style="display: flex; flex-direction: column; gap: 2px; flex: 1 1 320px; min-width: 0;">
+      <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #4B32B8;">Gladi bersih & sesi pilot · data contoh</span>
+      <h1 style="margin: 0; font-family: Fredoka, sans-serif; font-size: 34px;">Monitor uji kapasitas</h1>
+      <span style="font-size: 15px; color: #5E5878; font-weight: 700;">Apakah 10 perangkat bisa bermain bersamaan dengan lancar?</span>
+    </div>
+    <span style="background: #E6F6EC; color: #1C6B3E; border-radius: 999px; padding: 8px 16px; font-weight: 800;">Lancar · 9 dari 10 perangkat terhubung</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+    <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column;"><span style="font-size: 14px; font-weight: 800; color: #5E5878;">Waktu kirim jawaban</span><b style="font-family: Fredoka, sans-serif; font-size: 32px;">0,8 dtk</b><span style="font-size: 13px; font-weight: 700; color: #1C6B3E;">target &lt; 3 dtk</span></div>
+    <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column;"><span style="font-size: 14px; font-weight: 800; color: #5E5878;">Jawaban tertunda</span><b style="font-family: Fredoka, sans-serif; font-size: 32px;">3</b><span style="font-size: 13px; font-weight: 700; color: #7A4A00;">di HP Joko, menunggu sinyal</span></div>
+    <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column;"><span style="font-size: 14px; font-weight: 800; color: #5E5878;">Aplikasi macet</span><b style="font-family: Fredoka, sans-serif; font-size: 32px;">0</b><span style="font-size: 13px; font-weight: 700; color: #1C6B3E;">target 0</span></div>
+    <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column;"><span style="font-size: 14px; font-weight: 800; color: #5E5878;">Total jawaban masuk</span><b style="font-family: Fredoka, sans-serif; font-size: 32px;">132</b><span style="font-size: 13px; font-weight: 700; color: #5E5878;">≈ 7 per menit</span></div>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+    <div style="flex: 999 1 560px; min-width: 0; background: #fff; border: 1px solid #E0DBF2; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+      <h2 style="margin: 0; font-family: Fredoka, sans-serif; font-size: 22px;">Perangkat</h2>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; min-width: 540px; border-collapse: collapse; font-size: 15px;">
+          <thead><tr style="text-align: left; color: #5E5878; font-size: 13px;"><th style="padding: 8px 6px;">Murid</th><th style="padding: 8px 6px;">Perangkat</th><th style="padding: 8px 6px;">Sinyal</th><th style="padding: 8px 6px;">Kirim</th><th style="padding: 8px 6px;">Aktif terakhir</th></tr></thead>
+          <tbody>
+            <sc-for list="{{devs}}" as="d" hint-placeholder-count="10">
+              <tr style="border-top: 1px solid #EEEAF8;">
+                <td style="padding: 9px 6px; font-weight: 800;">{{d.name}}</td>
+                <td style="padding: 9px 6px; color: #5E5878;">{{d.dev}}</td>
+                <td style="padding: 9px 6px;"><span style="{{d.sigStyle}}">{{d.sig}}</span></td>
+                <td style="padding: 9px 6px;">{{d.ms}}</td>
+                <td style="padding: 9px 6px; color: #5E5878;">{{d.last}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px;">
+      <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+        <h2 style="margin: 0; font-family: Fredoka, sans-serif; font-size: 20px;">Jawaban masuk per menit</h2>
+        <div style="display: flex; align-items: flex-end; gap: 6px; height: 120px; border-bottom: 1px solid #D5CFEA;">
+          <sc-for list="{{bars}}" as="b" hint-placeholder-count="18">
+            <div style="{{b.style}}"></div>
+          </sc-for>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #5E5878; font-weight: 700;"><span>menit 1</span><span>menit 18</span></div>
+      </div>
+      <div style="background: #fff; border: 1px solid #E0DBF2; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 8px;">
+        <h2 style="margin: 0; font-family: Fredoka, sans-serif; font-size: 20px;">Target uji</h2>
+        <sc-for list="{{checks}}" as="c" hint-placeholder-count="5">
+          <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 14px; border-bottom: 1px solid #EEEAF8; padding-bottom: 6px;"><span>{{c.t}}</span><b style="{{c.style}}">{{c.v}}</b></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const SIG = { Kuat: ['#E6F6EC', '#1C6B3E'], Sedang: ['#FFF4DA', '#7A4A00'], Lemah: ['#FFE3E3', '#8C1D18'], '–': ['#EEEAF0', '#5E5878'] };
+    const devs = [
+      ['Aisyah', 'Tablet', 'Kuat', '0,6 dtk', 'baru saja'], ['Bima', 'HP Android', 'Kuat', '0,7 dtk', '1 menit lalu'], ['Citra', 'Laptop', 'Kuat', '0,4 dtk', 'baru saja'],
+      ['Dimas', 'HP Android', 'Sedang', '1,4 dtk', 'baru saja'], ['Eka', 'Tablet', 'Kuat', '0,6 dtk', 'baru saja'], ['Fajar', 'HP Android', 'Kuat', '0,8 dtk', 'baru saja'],
+      ['Gita', 'Laptop', 'Kuat', '0,5 dtk', 'baru saja'], ['Hana', '–', '–', '–', 'belum masuk'], ['Iqbal', 'HP lama', 'Sedang', '1,9 dtk', 'baru saja'], ['Joko', 'HP Android', 'Lemah', 'tertunda', '2 menit lalu']
+    ];
+    const counts = [2, 5, 6, 8, 7, 9, 8, 7, 9, 8, 6, 8, 9, 7, 8, 6, 5, 4];
+    const checks = [['Waktu kirim < 3 dtk', 'Lulus', 1], ['0 aplikasi macet', 'Lulus', 1], ['Jawaban tidak hilang saat sinyal lemah', 'Lulus', 1], ['≥ 9 murid masuk sendiri', 'Belum (9/10)', 0], ['HP paling lama tetap lancar', 'Lulus', 1]];
+    return {
+      devs: devs.map(([name, dev, sig, ms, last]) => ({ name, dev, sig, ms, last, sigStyle: 'display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 800; background: ' + SIG[sig][0] + '; color: ' + SIG[sig][1] + ';' })),
+      bars: counts.map((n) => ({ style: 'flex: 1; min-width: 0; height: ' + Math.round(n / 9 * 100) + '%; background: #5B3FC4; border-radius: 4px 4px 0 0;' })),
+      checks: checks.map(([t, v, ok]) => ({ t, v, style: 'white-space: nowrap; color: ' + (ok ? '#1C6B3E' : '#7A4A00') + ';' }))
+    };
+  }
+}
+</script>
+</body>
+</html>
